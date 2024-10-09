@@ -1,12 +1,10 @@
-# Vue
+# vue
 
-## 🔗 链接
+## 🔗 links
 
+- [TODO](./TODO.md) - **待办清单，记录代办事项。** - **根据知识点对笔记进行了分类，方便查找，可以作为目录参考。**
+- https://www.yuque.com/huyouda/programming-public - yuque - 在线笔记 - 存储一些笔记的静态资源。
+- https://github.com/Tdahuyou/vue - GitHub - vue 学习笔记。
 - https://cn.vuejs.org/ - vue 官方文档。
 - https://github.com/vuejs - vue github。
-- https://www.yuque.com/huyouda/programming-public - yuque 在线笔记
 
-## ⏰ TODO
-
-- [ ] 搬运 yuque 上的笔记到 github 上。
-- [ ] 每个编号下添加一个 README.md，和当前内容相关的一些笔记都统一丢到这个 README.md 文件中。
