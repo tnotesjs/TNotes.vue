@@ -2,7 +2,7 @@
 
 ## 📝 summary
 
-## 📝 notes
+## 📒 notes
 
 ## 💻 demo
 

@@ -7,7 +7,7 @@
   - MVC 是什么
   - MVVM 和 MVC 之间的主要区别
 
-## 📝 notes - 参考回答
+## 📒 notes - 参考回答
 
 - MVVM
   - 参考图
