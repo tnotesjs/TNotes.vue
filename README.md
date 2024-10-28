@@ -1,8 +1,7 @@
 # vue
 
-## 📝 summary
-
-vue 学习笔记。
+- 📝 summary
+  - vue 学习笔记。
 
 ## 🔗 links
 
