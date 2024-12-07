@@ -1,0 +1,8 @@
+{
+    "scripts": {
+        "merge": "      node ./node_modules/tnotes   --mergeREADME         --repoName=vue",
+        "update": "     node ./node_modules/tnotes   --updateREADME        --repoName=vue",
+        "distribute": " node ./node_modules/tnotes   --distributeREADME    --repoName=vue",
+        "sync": "       node ./node_modules/tnotes   --syncREADME          --repoName=vue"
+    }
+}
