@@ -92,5 +92,3 @@
   - [ ] [0010. defineModel](https://github.com/Tdahuyou/vue/tree/main/0010.%20defineModel/README.md) <!-- [locale](./0010.%20defineModel/README.md) -->  
   pending
   
-
-- [ ] [9999. template--vue-ts](https://github.com/Tdahuyou/vue/tree/main/9999.%20template--vue-ts/README.md) <!-- [locale](./9999.%20template--vue-ts/README.md) -->
