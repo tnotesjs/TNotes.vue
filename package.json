@@ -1,14 +1,95 @@
 {
-    "scripts": {
-        "merge": "      node ./node_modules/tnotes   --mergeREADME         --repoName=vue",
-        "update": "     node ./node_modules/tnotes   --updateREADME        --repoName=vue",
-        "distribute": " node ./node_modules/tnotes   --distributeREADME    --repoName=vue",
-        "sync": "       node ./node_modules/tnotes   --syncREADME          --repoName=vue"
-    },
-    "tnotesConfig": {
-      "ignoreDirs": [
-        ".vscode",
-        ".git"
-      ]
+  "scripts": {
+    "distribute": "      node ./node_modules/tnotes   --distributeREADME    --repoName=vue",
+    "docs:publish": "    node ./node_modules/tnotes/scripts/docs-publish.js",
+    "merge": "           node ./node_modules/tnotes   --mergeREADME         --repoName=vue",
+    "sync": "            node ./node_modules/tnotes   --syncREADME          --repoName=vue",
+    "update": "          node ./node_modules/tnotes   --updateREADME        --repoName=vue"
+  },
+  "tnotesConfig": {
+    "dirList": {
+      ".git": {
+        "ignore": true
+      },
+      ".vscode": {
+        "ignore": true
+      },
+      "0001": {
+        "bilibili": [],
+        "done": false,
+        "ignore": false
+      },
+      "0002": {
+        "bilibili": [],
+        "done": false,
+        "ignore": false
+      },
+      "0003": {
+        "bilibili": [],
+        "done": false,
+        "ignore": false
+      },
+      "0004": {
+        "bilibili": [],
+        "done": false,
+        "ignore": false
+      },
+      "0005": {
+        "bilibili": [],
+        "done": false,
+        "ignore": false
+      },
+      "0006": {
+        "bilibili": [],
+        "done": false,
+        "ignore": false
+      },
+      "0007": {
+        "bilibili": [],
+        "done": false,
+        "ignore": false
+      },
+      "0008": {
+        "bilibili": [],
+        "done": false,
+        "ignore": false
+      },
+      "0009": {
+        "bilibili": [],
+        "done": false,
+        "ignore": false
+      },
+      "0010": {
+        "bilibili": [],
+        "done": false,
+        "ignore": false
+      },
+      "0011": {
+        "bilibili": [],
+        "done": false,
+        "ignore": false
+      },
+      "0012": {
+        "bilibili": [],
+        "done": false,
+        "ignore": false
+      },
+      "0013": {
+        "bilibili": [],
+        "done": false,
+        "ignore": false
+      },
+      "0014": {
+        "bilibili": [],
+        "done": false,
+        "ignore": false
+      },
+      "assets": {
+        "ignore": true
+      },
+      "md-imgs": {
+        "ignore": true
+      }
     }
+  }
 }
