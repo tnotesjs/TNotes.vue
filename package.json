@@ -1,14 +1,14 @@
 {
-    "scripts": {
-        "merge": "      node ./node_modules/tnotes   --mergeREADME         --repoName=vue",
-        "update": "     node ./node_modules/tnotes   --updateREADME        --repoName=vue",
-        "distribute": " node ./node_modules/tnotes   --distributeREADME    --repoName=vue",
-        "sync": "       node ./node_modules/tnotes   --syncREADME          --repoName=vue"
-    },
-    "tnotesConfig": {
-      "ignoreDirs": [
-        ".vscode",
-        ".git"
-      ]
-    }
+  "scripts": {
+    "distribute": " node ./node_modules/tnotes   --distributeREADME    --repoName=vue",
+    "merge": "      node ./node_modules/tnotes   --mergeREADME         --repoName=vue",
+    "sync": "       node ./node_modules/tnotes   --syncREADME          --repoName=vue",
+    "update": "     node ./node_modules/tnotes   --updateREADME        --repoName=vue"
+  },
+  "tnotesConfig": {
+    "ignoreDirs": [
+      ".vscode",
+      ".git"
+    ]
+  }
 }
