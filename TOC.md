@@ -56,3 +56,20 @@
 - `defineModel`
   - [ ] [0010. defineModel](https://tdahuyou.github.io/TNotes.vue/notes/0010.%20defineModel/README)
   pending
+
+## 8. 国际化
+
+- [ ] [0018. i18n 基本使用](https://tdahuyou.github.io/TNotes.vue/notes/0018.%20i18n%20%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/README)
+  - [1. 📝 summary](https://tdahuyou.github.io/TNotes.vue/notes/0018.%20i18n%20%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/README#1--summary)
+  - [2. 💻 demo - i18n 基本是用](https://tdahuyou.github.io/TNotes.vue/notes/0018.%20i18n%20%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/README#2--demo---i18n-基本是用)
+- [ ] [0019. i18n 的 message 缓存机制](https://tdahuyou.github.io/TNotes.vue/notes/0019.%20i18n%20%E7%9A%84%20message%20%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6/README)
+  - [1. 📝 summary](https://tdahuyou.github.io/TNotes.vue/notes/0019.%20i18n%20%E7%9A%84%20message%20%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6/README#1--summary)
+  - [2. 🔗 links](https://tdahuyou.github.io/TNotes.vue/notes/0019.%20i18n%20%E7%9A%84%20message%20%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6/README#2--links)
+  - [3. 📒 notes](https://tdahuyou.github.io/TNotes.vue/notes/0019.%20i18n%20%E7%9A%84%20message%20%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6/README#3--notes)
+  - [4. 💻 demo](https://tdahuyou.github.io/TNotes.vue/notes/0019.%20i18n%20%E7%9A%84%20message%20%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6/README#4--demo)
+- [ ] [0020. 术语](https://tdahuyou.github.io/TNotes.vue/notes/0020.%20%E6%9C%AF%E8%AF%AD/README)
+  - [1. 📝 summary](https://tdahuyou.github.io/TNotes.vue/notes/0020.%20%E6%9C%AF%E8%AF%AD/README#1--summary)
+  - [2. 💡 mindmap](https://tdahuyou.github.io/TNotes.vue/notes/0020.%20%E6%9C%AF%E8%AF%AD/README#2--mindmap)
+  - [3. 🔗 links](https://tdahuyou.github.io/TNotes.vue/notes/0020.%20%E6%9C%AF%E8%AF%AD/README#3--links)
+- [ ] [0021. vue-i18n 简介](https://tdahuyou.github.io/TNotes.vue/notes/0021.%20vue-i18n%20%E7%AE%80%E4%BB%8B/README)
+  - [1. 🔗 links](https://tdahuyou.github.io/TNotes.vue/notes/0021.%20vue-i18n%20%E7%AE%80%E4%BB%8B/README#1--links)
