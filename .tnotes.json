@@ -1,7 +1,9 @@
 {
   "author": "Tdahuyou",
   "repoName": "TNotes.vue",
-  "keywords": ["TNotes.vue"],
+  "keywords": [
+    "TNotes.vue"
+  ],
   "ignore_dirs": [
     ".vscode",
     "0000",
