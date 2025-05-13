@@ -12,6 +12,15 @@
     "assets"
   ],
   "rootDocsSrcDir": "../_/docs/src",
+  "home.features.item": {
+    "icon": {
+      "src": "https://cdn.jsdelivr.net/gh/Tdahuyou/imgs@main/assets/icon--vue.svg"
+    },
+    "title": "Vue.js 笔记",
+    "completed_notes_count": 0,
+    "details": "待搬运语雀上的笔记。",
+    "link": "https://tdahuyou.github.io/TNotes.vue/"
+  },
   "port": 9379,
   "menuItems": [
     {
