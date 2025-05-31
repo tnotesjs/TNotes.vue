@@ -2,8 +2,10 @@
 layout: home
 
 hero:
-  name: 'vue'
+  name: 'Vue 笔记'
   image:
     src: /logo.png
     alt: TNotes logo
 ---
+
+<SidebarCard pending />
