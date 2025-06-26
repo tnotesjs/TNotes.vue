@@ -18,9 +18,9 @@
     "icon": {
       "src": "https://cdn.jsdelivr.net/gh/Tdahuyou/imgs@main/assets/icon--vue.svg"
     },
-    "title": "Vue.js 笔记",
+    "title": "vue",
     "completed_notes_count": 0,
-    "details": "待搬运语雀上的笔记。",
+    "details": "Vue.js 笔记",
     "link": "https://tdahuyou.github.io/TNotes.vue/"
   },
   "port": 9379,
