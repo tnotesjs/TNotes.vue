@@ -13,15 +13,18 @@
     "demos",
     "assets"
   ],
-  "rootDocsSrcDir": "../_/docs/src",
-  "home.features.item": {
+  "rootSidebarDir": "../_/sidebars",
+  "root_item": {
     "icon": {
       "src": "https://cdn.jsdelivr.net/gh/Tdahuyou/imgs@main/assets/icon--vue.svg"
     },
     "title": "vue",
     "completed_notes_count": 0,
     "details": "Vue.js 笔记",
-    "link": "https://tdahuyou.github.io/TNotes.vue/"
+    "link": "https://tdahuyou.github.io/TNotes.vue/",
+    "created_at": 1727047134000,
+    "updated_at": 1753580675000,
+    "days_since_birth": 9219
   },
   "port": 9379,
   "menuItems": [
