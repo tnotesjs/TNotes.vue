@@ -13,7 +13,7 @@
     "demos",
     "assets"
   ],
-  "rootSidebarDir": "../_/sidebars",
+  "rootSidebarDir": "../TNotes/sidebars",
   "root_item": {
     "icon": {
       "src": "https://cdn.jsdelivr.net/gh/Tdahuyou/imgs@main/assets/icon--vue.svg"
@@ -23,7 +23,7 @@
     "details": "Vue.js 笔记",
     "link": "https://tdahuyou.github.io/TNotes.vue/",
     "created_at": 1727047134000,
-    "updated_at": 1754494587960,
+    "updated_at": 1757163554246,
     "days_since_birth": 9219
   },
   "port": 9379,
@@ -62,7 +62,7 @@
     },
     {
       "ariaLabel": "TNotes.vue github 仓库链接",
-      "link": "https://github.com/Tdahuyou/TNotes.vue",
+      "link": "https://github.com/tnotesjs/TNotes.vue",
       "icon": "github"
     }
   ],
