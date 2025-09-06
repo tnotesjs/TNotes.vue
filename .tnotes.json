@@ -1,5 +1,5 @@
 {
-  "author": "Tdahuyou",
+  "author": "tnotesjs",
   "repoName": "TNotes.vue",
   "keywords": ["TNotes.vue"],
   "ignore_dirs": [
@@ -19,7 +19,7 @@
     "title": "vue",
     "completed_notes_count": 0,
     "details": "Vue.js 笔记",
-    "link": "https://tdahuyou.github.io/TNotes.vue/",
+    "link": "https://tnotesjs.github.io/TNotes.vue/",
     "created_at": 1727047134000,
     "updated_at": 1757163554246,
     "days_since_birth": 9219
@@ -36,7 +36,7 @@
     },
     {
       "text": "📒 TNotes",
-      "link": "https://tdahuyou.github.io/notes"
+      "link": "https://tnotesjs.github.io/notes"
     },
     {
       "text": "📂 TNotes.yuque",
