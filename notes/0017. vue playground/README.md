@@ -1,4 +1,4 @@
-# [0017. vue playground](https://github.com/Tdahuyou/TNotes.vue/tree/main/notes/0017.%20vue%20playground)
+# [0017. vue playground](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0017.%20vue%20playground)
 
 <!-- region:toc -->
 

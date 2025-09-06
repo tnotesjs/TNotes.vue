@@ -1,4 +1,4 @@
-# [0001. 属性](https://github.com/Tdahuyou/TNotes.vue/tree/main/notes/0001.%20%E5%B1%9E%E6%80%A7)
+# [0001. 属性](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0001.%20%E5%B1%9E%E6%80%A7)
 
 
 ## 📝 summary

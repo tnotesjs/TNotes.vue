@@ -1,4 +1,4 @@
-# [0020. 术语](https://github.com/Tdahuyou/TNotes.vue/tree/main/notes/0020.%20%E6%9C%AF%E8%AF%AD)
+# [0020. 术语](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0020.%20%E6%9C%AF%E8%AF%AD)
 
 <!-- region:toc -->
 

@@ -1,4 +1,4 @@
-# [0021. vue-i18n 简介](https://github.com/Tdahuyou/TNotes.vue/tree/main/notes/0021.%20vue-i18n%20%E7%AE%80%E4%BB%8B)
+# [0021. vue-i18n 简介](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0021.%20vue-i18n%20%E7%AE%80%E4%BB%8B)
 
 <!-- region:toc -->
 

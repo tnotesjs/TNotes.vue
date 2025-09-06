@@ -1,4 +1,4 @@
-# [0019. i18n 的 message 缓存机制](https://github.com/Tdahuyou/TNotes.vue/tree/main/notes/0019.%20i18n%20%E7%9A%84%20message%20%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6)
+# [0019. i18n 的 message 缓存机制](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0019.%20i18n%20%E7%9A%84%20message%20%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6)
 
 <!-- region:toc -->
 

@@ -1,7 +1,9 @@
 {
   "author": "tnotesjs",
   "repoName": "TNotes.vue",
-  "keywords": ["TNotes.vue"],
+  "keywords": [
+    "TNotes.vue"
+  ],
   "ignore_dirs": [
     ".vscode",
     "0000",
@@ -21,7 +23,7 @@
     "details": "Vue.js 笔记",
     "link": "https://tnotesjs.github.io/TNotes.vue/",
     "created_at": 1727047134000,
-    "updated_at": 1757163554246,
+    "updated_at": 1757172137950,
     "days_since_birth": 9219
   },
   "port": 9379,
