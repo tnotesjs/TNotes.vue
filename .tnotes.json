@@ -23,7 +23,7 @@
     "details": "Vue.js 笔记",
     "link": "https://tnotesjs.github.io/TNotes.vue/",
     "created_at": 1727047134000,
-    "updated_at": 1757172137950,
+    "updated_at": 1757554193972,
     "days_since_birth": 9219
   },
   "port": 9379,
@@ -38,7 +38,7 @@
     },
     {
       "text": "📒 TNotes",
-      "link": "https://tnotesjs.github.io/notes"
+      "link": "https://tnotesjs.github.io/TNotes"
     },
     {
       "text": "📂 TNotes.yuque",
