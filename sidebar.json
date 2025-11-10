@@ -62,6 +62,14 @@
       {
         "text": "⏰ 0004. 插槽",
         "link": "/notes/0004. 插槽/README"
+      },
+      {
+        "text": "⏰ 0011. 特殊元素 component",
+        "link": "/notes/0011. 特殊元素 component/README"
+      },
+      {
+        "text": "⏰ 0012. 内置组件 keep-alive",
+        "link": "/notes/0012. 内置组件 keep-alive/README"
       }
     ]
   },
@@ -94,7 +102,12 @@
   {
     "text": "7. 宏",
     "collapsed": true,
-    "items": []
+    "items": [
+      {
+        "text": "⏰ 0010. defineModel",
+        "link": "/notes/0010. defineModel/README"
+      }
+    ]
   },
   {
     "text": "8. 国际化",

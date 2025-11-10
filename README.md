@@ -2,14 +2,14 @@
 
 <!-- region:toc -->
 
-  - [1. vue github 仓库](#1-vue-github-仓库)
-  - [2. vue 官方文档](#2-vue-官方文档)
-  - [3. vue playground](#3-vue-playground)
-  - [4. 面试题](#4-面试题)
-  - [5. 组件](#5-组件)
-  - [6. 指令 `v-model`](#6-指令-v-model)
-  - [7. 宏](#7-宏)
-  - [8. 国际化](#8-国际化)
+- [1. vue github 仓库](#1-vue-github-仓库)
+- [2. vue 官方文档](#2-vue-官方文档)
+- [3. vue playground](#3-vue-playground)
+- [4. 面试题](#4-面试题)
+- [5. 组件](#5-组件)
+- [6. 指令 `v-model`](#6-指令-v-model)
+- [7. 宏](#7-宏)
+- [8. 国际化](#8-国际化)
 
 <!-- endregion:toc -->
 
@@ -36,8 +36,8 @@
 - [ ] [0002. 事件](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0002.%20%E4%BA%8B%E4%BB%B6/README.md)
 - [ ] [0003. toRef](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0003.%20toRef/README.md)
 - [ ] [0004. 插槽](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0004.%20%E6%8F%92%E6%A7%BD/README.md)
-  - [ ] [0011. 特殊元素 component](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0011.%20%E7%89%B9%E6%AE%8A%E5%85%83%E7%B4%A0%20component/README.md)
-  - [ ] [0012. 内置组件 keep-alive](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0012.%20%E5%86%85%E7%BD%AE%E7%BB%84%E4%BB%B6%20keep-alive/README.md)
+- [ ] [0011. 特殊元素 component](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0011.%20%E7%89%B9%E6%AE%8A%E5%85%83%E7%B4%A0%20component/README.md)
+- [ ] [0012. 内置组件 keep-alive](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0012.%20%E5%86%85%E7%BD%AE%E7%BB%84%E4%BB%B6%20keep-alive/README.md)
 
 ## 6. 指令 `v-model`
 
@@ -50,7 +50,7 @@
 ## 7. 宏
 
 - `defineModel`
-  - [ ] [0010. defineModel](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0010.%20defineModel/README.md)
+- [ ] [0010. defineModel](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0010.%20defineModel/README.md)
 
 ## 8. 国际化
 
@@ -58,7 +58,6 @@
 - [ ] [0019. i18n 的 message 缓存机制](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0019.%20i18n%20%E7%9A%84%20message%20%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6/README.md)
 - [ ] [0020. 术语](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0020.%20%E6%9C%AF%E8%AF%AD/README.md)
 - [ ] [0021. vue-i18n 简介](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0021.%20vue-i18n%20%E7%AE%80%E4%BB%8B/README.md)
-
-- [ ] [0010. defineModel](https://github.com/tnotesjs/TNotes.introduction/tree/main/notes/0010.%20defineModel/README.md)
-- [ ] [0011. 特殊元素 component](https://github.com/tnotesjs/TNotes.introduction/tree/main/notes/0011.%20%E7%89%B9%E6%AE%8A%E5%85%83%E7%B4%A0%20component/README.md)
-- [ ] [0012. 内置组件 keep-alive](https://github.com/tnotesjs/TNotes.introduction/tree/main/notes/0012.%20%E5%86%85%E7%BD%AE%E7%BB%84%E4%BB%B6%20keep-alive/README.md)
+- [ ] [0010. defineModel](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0010.%20defineModel/README.md)
+- [ ] [0011. 特殊元素 component](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0011.%20%E7%89%B9%E6%AE%8A%E5%85%83%E7%B4%A0%20component/README.md)
+- [ ] [0012. 内置组件 keep-alive](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0012.%20%E5%86%85%E7%BD%AE%E7%BB%84%E4%BB%B6%20keep-alive/README.md)
