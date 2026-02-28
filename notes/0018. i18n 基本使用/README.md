@@ -13,8 +13,7 @@
 - 理解 legacy 配置
 - 理解 locale 配置
 - 理解 fallbackLocale 配置
-- 理解 messages 配置
-本文介绍了如何将 i18n 加入到 vite 搭建的 vue-ts 工程中，并对其中的一些常见配置项做了简单的介绍。
+- 理解 messages 配置本文介绍了如何将 i18n 加入到 vite 搭建的 vue-ts 工程中，并对其中的一些常见配置项做了简单的介绍。
 
 ## 2. 💻 demo - i18n 基本是用
 
@@ -76,7 +75,8 @@ const i18n = createI18n({
   // 比如 $t('message.tdahuyou')
   // 最终界面会直接将字符串 message.tdahuyou 渲染出来。
 
-  messages: { // 定义各语言的翻译消息
+  messages: {
+    // 定义各语言的翻译消息
     en: {
       message: {
         hello: 'hello world',
@@ -90,10 +90,10 @@ const i18n = createI18n({
     },
     fr: {
       message: {
-        'abc': 'c\'est ABC',
+        abc: "c'est ABC",
         'hello-world': 'bonjour le monde',
       },
-    }
+    },
   },
 })
 
@@ -111,7 +111,7 @@ app.mount('#app')
 
 **测试**
 
-```vue
+```html
 <!-- App.vue -->
 <script setup lang="ts"></script>
 
