@@ -20,10 +20,6 @@
     },
     "title": "vue",
     "completed_notes_count": {
-      "25.01": 0,
-      "25.02": 0,
-      "25.03": 0,
-      "25.04": 0,
       "25.05": 0,
       "25.06": 0,
       "25.07": 0,
@@ -34,13 +30,14 @@
       "25.12": 0,
       "26.01": 0,
       "26.02": 0,
-      "26.03": 0
+      "26.03": 0,
+      "26.04": 0
     },
     "details": "Vue.js 笔记",
     "link": "https://tnotesjs.github.io/TNotes.vue/",
     "created_at": 1727047134000,
-    "updated_at": 1772368329734,
-    "days_since_birth": 9219
+    "updated_at": 1775000971000,
+    "days_since_birth": 9774
   },
   "port": 9379,
   "menuItems": [
