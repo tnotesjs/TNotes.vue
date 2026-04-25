@@ -41,7 +41,7 @@ Vue 的核心特性可以从以下几个方面来理解：
 下面是一个最简单的 Vue 3 应用示例：
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>Hello Vue</title>
