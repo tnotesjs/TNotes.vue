@@ -2,10 +2,10 @@
   "bilibili": [],
   "tnotes": [],
   "yuque": [],
-  "done": false,
+  "done": true,
   "enableDiscussions": true,
-  "description": "",
+  "description": "对 vuejs 官方文档做一个简单的介绍。",
   "id": "95835a0e-ba66-4e17-8f15-50a34775ea58",
   "created_at": 1777124496000,
-  "updated_at": 1777124588661
+  "updated_at": 1777127913299
 }
