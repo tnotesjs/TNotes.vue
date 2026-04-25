@@ -1,4 +1,4 @@
-# [0023. 邂逅 Vue.js](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0023.%20%E9%82%82%E9%80%85%20Vue.js)
+# [0023. Vue 简介](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0023.%20Vue%20%E7%AE%80%E4%BB%8B)
 
 <!-- region:toc -->
 

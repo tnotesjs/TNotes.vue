@@ -1,4 +1,4 @@
-# [0067. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0067.%20new)
+# [0077. 开始](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0077.%20%E5%BC%80%E5%A7%8B)
 
 <!-- region:toc -->
 

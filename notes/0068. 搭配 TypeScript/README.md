@@ -1,4 +1,4 @@
-# [0066. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0066.%20new)
+# [0068. 搭配 TypeScript](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0068.%20%E6%90%AD%E9%85%8D%20TypeScript)
 
 <!-- region:toc -->
 

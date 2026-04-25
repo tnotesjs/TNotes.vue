@@ -1,4 +1,4 @@
-# [0070. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0070.%20new)
+# [0081. 内置组件](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0081.%20%E5%86%85%E7%BD%AE%E7%BB%84%E4%BB%B6)
 
 <!-- region:toc -->
 

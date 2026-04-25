@@ -1,4 +1,4 @@
-# [0081. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0081.%20new)
+# [0066. 规模化应用](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0066.%20%E8%A7%84%E6%A8%A1%E5%8C%96%E5%BA%94%E7%94%A8)
 
 <!-- region:toc -->
 
