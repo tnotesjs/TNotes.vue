@@ -31,12 +31,12 @@
       "26.01": 0,
       "26.02": 0,
       "26.03": 0,
-      "26.04": 0
+      "26.04": 1
     },
     "details": "Vue.js 笔记",
     "link": "https://tnotesjs.github.io/TNotes.vue/",
     "created_at": 1727047134000,
-    "updated_at": 1777112327000,
+    "updated_at": 1777124496000,
     "days_since_birth": 9798
   },
   "port": 9379,
@@ -44,10 +44,6 @@
     {
       "text": "🏠 Home",
       "link": "/"
-    },
-    {
-      "text": "⚙️ Settings",
-      "link": "/Settings"
     },
     {
       "text": "📒 TNotes",

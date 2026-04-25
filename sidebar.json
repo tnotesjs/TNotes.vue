@@ -4,17 +4,43 @@
     "collapsed": true,
     "items": [
       {
-        "text": "⏰ 0064. TNotes.vue",
+        "text": "✅ 0064. TNotes.vue",
         "link": "/notes/0064. TNotes.vue/README"
-      },
-      {
-        "text": "⏰ 0065. Vue 学习资料",
-        "link": "/notes/0065. Vue 学习资料/README"
       }
     ]
   },
   {
-    "text": "2. Vue.js 基础入门",
+    "text": "2. Vue 学习资料",
+    "collapsed": true,
+    "items": [
+      {
+        "text": "⏰ 0065. Vue 学习资料",
+        "link": "/notes/0065. Vue 学习资料/README"
+      },
+      {
+        "text": "⏰ 0072. new",
+        "link": "/notes/0072. new/README"
+      },
+      {
+        "text": "⏰ 0073. new",
+        "link": "/notes/0073. new/README"
+      },
+      {
+        "text": "⏰ 0074. new",
+        "link": "/notes/0074. new/README"
+      },
+      {
+        "text": "⏰ 0075. new",
+        "link": "/notes/0075. new/README"
+      },
+      {
+        "text": "⏰ 0076. new",
+        "link": "/notes/0076. new/README"
+      }
+    ]
+  },
+  {
+    "text": "3. Vue.js 基础入门",
     "collapsed": true,
     "items": [
       {
@@ -36,7 +62,7 @@
     ]
   },
   {
-    "text": "3. 核心概念与组件化",
+    "text": "4. 核心概念与组件化",
     "collapsed": true,
     "items": [
       {
@@ -62,7 +88,7 @@
     ]
   },
   {
-    "text": "4. 组件化开发",
+    "text": "5. 组件化开发",
     "collapsed": true,
     "items": [
       {
@@ -88,7 +114,7 @@
     ]
   },
   {
-    "text": "5. Vue 生态系统（路由与状态管理）",
+    "text": "6. Vue 生态系统（路由与状态管理）",
     "collapsed": true,
     "items": [
       {
@@ -110,7 +136,7 @@
     ]
   },
   {
-    "text": "6. Vue 3 核心特性",
+    "text": "7. Vue 3 核心特性",
     "collapsed": true,
     "items": [
       {
@@ -132,7 +158,7 @@
     ]
   },
   {
-    "text": "7. 工程化与工具链",
+    "text": "8. 工程化与工具链",
     "collapsed": true,
     "items": [
       {
@@ -154,7 +180,7 @@
     ]
   },
   {
-    "text": "8. 测试与部署",
+    "text": "9. 测试与部署",
     "collapsed": true,
     "items": [
       {
@@ -172,7 +198,7 @@
     ]
   },
   {
-    "text": "9. 进阶实战与性能优化",
+    "text": "10. 进阶实战与性能优化",
     "collapsed": true,
     "items": [
       {
@@ -202,7 +228,7 @@
     ]
   },
   {
-    "text": "10. 服务端渲染与全栈",
+    "text": "11. 服务端渲染与全栈",
     "collapsed": true,
     "items": [
       {
@@ -220,7 +246,7 @@
     ]
   },
   {
-    "text": "11. 原理与源码解析",
+    "text": "12. 原理与源码解析",
     "collapsed": true,
     "items": [
       {
@@ -242,7 +268,7 @@
     ]
   },
   {
-    "text": "12. TODO",
+    "text": "13. TODO",
     "collapsed": true,
     "items": [
       {
@@ -276,7 +302,7 @@
     ]
   },
   {
-    "text": "13. vue 官方文档",
+    "text": "14. vue 官方文档",
     "collapsed": true,
     "items": [
       {
@@ -286,7 +312,7 @@
     ]
   },
   {
-    "text": "14. vue playground",
+    "text": "15. vue playground",
     "collapsed": true,
     "items": [
       {
@@ -296,7 +322,7 @@
     ]
   },
   {
-    "text": "15. 面试题",
+    "text": "16. 面试题",
     "collapsed": true,
     "items": [
       {
@@ -310,7 +336,7 @@
     ]
   },
   {
-    "text": "16. 组件",
+    "text": "17. 组件",
     "collapsed": true,
     "items": [
       {
@@ -340,7 +366,7 @@
     ]
   },
   {
-    "text": "17. 指令 `v-model`",
+    "text": "18. 指令 `v-model`",
     "collapsed": true,
     "items": [
       {
@@ -366,7 +392,7 @@
     ]
   },
   {
-    "text": "18. 宏",
+    "text": "19. 宏",
     "collapsed": true,
     "items": [
       {
@@ -376,7 +402,7 @@
     ]
   },
   {
-    "text": "19. 国际化",
+    "text": "20. 国际化",
     "collapsed": true,
     "items": [
       {
@@ -406,6 +432,26 @@
       {
         "text": "⏰ 0012. 内置组件 keep-alive",
         "link": "/notes/0012. 内置组件 keep-alive/README"
+      },
+      {
+        "text": "⏰ 0077. new",
+        "link": "/notes/0077. new/README"
+      },
+      {
+        "text": "⏰ 0078. new",
+        "link": "/notes/0078. new/README"
+      },
+      {
+        "text": "⏰ 0079. new",
+        "link": "/notes/0079. new/README"
+      },
+      {
+        "text": "⏰ 0080. new",
+        "link": "/notes/0080. new/README"
+      },
+      {
+        "text": "⏰ 0081. new",
+        "link": "/notes/0081. new/README"
       }
     ]
   }
