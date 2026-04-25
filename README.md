@@ -14,14 +14,14 @@
 - [10. 进阶实战与性能优化](#10-进阶实战与性能优化)
 - [11. 服务端渲染与全栈](#11-服务端渲染与全栈)
 - [12. 原理与源码解析](#12-原理与源码解析)
-- [13. TODO](#13-todo)
-- [14. vue 官方文档](#14-vue-官方文档)
-- [15. vue playground](#15-vue-playground)
-- [16. 面试题](#16-面试题)
-- [17. 组件](#17-组件)
-- [18. 指令 `v-model`](#18-指令-v-model)
-- [19. 宏](#19-宏)
-- [20. 国际化](#20-国际化)
+- [13. vue 官方文档](#13-vue-官方文档)
+- [14. vue playground](#14-vue-playground)
+- [15. 面试题](#15-面试题)
+- [16. 组件](#16-组件)
+- [17. 指令 `v-model`](#17-指令-v-model)
+- [18. 宏](#18-宏)
+- [19. 国际化](#19-国际化)
+- [20. TODO](#20-todo)
 
 <!-- endregion:toc -->
 
@@ -31,12 +31,8 @@
 
 ## 2. Vue 学习资料
 
-- [ ] [0065. Vue 学习资料](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0065.%20Vue%20%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99/README.md)
+- [x] [0065. Vue 学习资料](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0065.%20Vue%20%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99/README.md)
 - [x] [0072. vuejs 官方文档](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0072.%20vuejs%20%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3/README.md)
-- [ ] [0073. vue 风格指南](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0073.%20vue%20%E9%A3%8E%E6%A0%BC%E6%8C%87%E5%8D%97/README.md)
-- [ ] [0074. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0074.%20new/README.md)
-- [ ] [0075. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0075.%20new/README.md)
-- [ ] [0076. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0076.%20new/README.md)
 
 ## 3. Vue.js 基础入门
 
@@ -110,30 +106,20 @@
 - [ ] [0062. 编译原理初探](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0062.%20%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%88%9D%E6%8E%A2/README.md)
 - [ ] [0063. 源码结构与设计思想](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0063.%20%E6%BA%90%E7%A0%81%E7%BB%93%E6%9E%84%E4%B8%8E%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3/README.md)
 
-## 13. TODO
-
-- [ ] [0015. vue github 仓库](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0015.%20vue%20github%20%E4%BB%93%E5%BA%93/README.md)
-- [ ] [0066. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0066.%20new/README.md)
-- [ ] [0067. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0067.%20new/README.md)
-- [ ] [0068. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0068.%20new/README.md)
-- [ ] [0069. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0069.%20new/README.md)
-- [ ] [0070. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0070.%20new/README.md)
-- [ ] [0071. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0071.%20new/README.md)
-
-## 14. vue 官方文档
+## 13. vue 官方文档
 
 - [ ] [0016. vue 官方文档](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0016.%20vue%20%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3/README.md)
 
-## 15. vue playground
+## 14. vue playground
 
 - [ ] [0017. vue playground](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0017.%20vue%20playground/README.md)
 
-## 16. 面试题
+## 15. 面试题
 
 - [ ] [0013. 谈谈你对 MVVM 模式的理解，可以对比 MVC 来讲讲。](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0013.%20%E8%B0%88%E8%B0%88%E4%BD%A0%E5%AF%B9%20MVVM%20%E6%A8%A1%E5%BC%8F%E7%9A%84%E7%90%86%E8%A7%A3%EF%BC%8C%E5%8F%AF%E4%BB%A5%E5%AF%B9%E6%AF%94%20MVC%20%E6%9D%A5%E8%AE%B2%E8%AE%B2%E3%80%82/README.md)
 - [ ] [0014. 谈谈你知道的 Vue 的优点](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0014.%20%E8%B0%88%E8%B0%88%E4%BD%A0%E7%9F%A5%E9%81%93%E7%9A%84%20Vue%20%E7%9A%84%E4%BC%98%E7%82%B9/README.md)
 
-## 17. 组件
+## 16. 组件
 
 - [ ] [0001. 属性](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0001.%20%E5%B1%9E%E6%80%A7/README.md)
 - [ ] [0002. 事件](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0002.%20%E4%BA%8B%E4%BB%B6/README.md)
@@ -142,7 +128,7 @@
 - [ ] [0011. 特殊元素 component](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0011.%20%E7%89%B9%E6%AE%8A%E5%85%83%E7%B4%A0%20component/README.md)
 - [ ] [0012. 内置组件 keep-alive](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0012.%20%E5%86%85%E7%BD%AE%E7%BB%84%E4%BB%B6%20keep-alive/README.md)
 
-## 18. 指令 `v-model`
+## 17. 指令 `v-model`
 
 - [ ] [0005. v-model 表单元素的双向绑定](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0005.%20v-model%20%E8%A1%A8%E5%8D%95%E5%85%83%E7%B4%A0%E7%9A%84%E5%8F%8C%E5%90%91%E7%BB%91%E5%AE%9A/README.md)
 - [ ] [0006. v-on 键盘按键修饰符](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0006.%20v-on%20%E9%94%AE%E7%9B%98%E6%8C%89%E9%94%AE%E4%BF%AE%E9%A5%B0%E7%AC%A6/README.md)
@@ -150,11 +136,11 @@
 - [ ] [0008. v-on 鼠标按键修饰符](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0008.%20v-on%20%E9%BC%A0%E6%A0%87%E6%8C%89%E9%94%AE%E4%BF%AE%E9%A5%B0%E7%AC%A6/README.md)
 - [ ] [0009. v-on 事件修饰符](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0009.%20v-on%20%E4%BA%8B%E4%BB%B6%E4%BF%AE%E9%A5%B0%E7%AC%A6/README.md)
 
-## 19. 宏
+## 18. 宏
 
 - [ ] [0010. defineModel](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0010.%20defineModel/README.md)
 
-## 20. 国际化
+## 19. 国际化
 
 - [ ] [0018. i18n 基本使用](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0018.%20i18n%20%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/README.md)
 - [ ] [0019. i18n 的 message 缓存机制](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0019.%20i18n%20%E7%9A%84%20message%20%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6/README.md)
@@ -168,3 +154,17 @@
 - [ ] [0079. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0079.%20new/README.md)
 - [ ] [0080. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0080.%20new/README.md)
 - [ ] [0081. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0081.%20new/README.md)
+
+## 20. TODO
+
+- [ ] [0015. vue github 仓库](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0015.%20vue%20github%20%E4%BB%93%E5%BA%93/README.md)
+- [ ] [0066. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0066.%20new/README.md)
+- [ ] [0067. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0067.%20new/README.md)
+- [ ] [0068. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0068.%20new/README.md)
+- [ ] [0069. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0069.%20new/README.md)
+- [ ] [0070. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0070.%20new/README.md)
+- [ ] [0071. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0071.%20new/README.md)
+- [ ] [0073. vue 风格指南](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0073.%20vue%20%E9%A3%8E%E6%A0%BC%E6%8C%87%E5%8D%97/README.md)
+- [ ] [0074. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0074.%20new/README.md)
+- [ ] [0075. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0075.%20new/README.md)
+- [ ] [0076. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0076.%20new/README.md)

@@ -14,28 +14,12 @@
     "collapsed": true,
     "items": [
       {
-        "text": "⏰ 0065. Vue 学习资料",
+        "text": "✅ 0065. Vue 学习资料",
         "link": "/notes/0065. Vue 学习资料/README"
       },
       {
         "text": "✅ 0072. vuejs 官方文档",
         "link": "/notes/0072. vuejs 官方文档/README"
-      },
-      {
-        "text": "⏰ 0073. vue 风格指南",
-        "link": "/notes/0073. vue 风格指南/README"
-      },
-      {
-        "text": "⏰ 0074. new",
-        "link": "/notes/0074. new/README"
-      },
-      {
-        "text": "⏰ 0075. new",
-        "link": "/notes/0075. new/README"
-      },
-      {
-        "text": "⏰ 0076. new",
-        "link": "/notes/0076. new/README"
       }
     ]
   },
@@ -268,41 +252,7 @@
     ]
   },
   {
-    "text": "13. TODO",
-    "collapsed": true,
-    "items": [
-      {
-        "text": "⏰ 0015. vue github 仓库",
-        "link": "/notes/0015. vue github 仓库/README"
-      },
-      {
-        "text": "⏰ 0066. new",
-        "link": "/notes/0066. new/README"
-      },
-      {
-        "text": "⏰ 0067. new",
-        "link": "/notes/0067. new/README"
-      },
-      {
-        "text": "⏰ 0068. new",
-        "link": "/notes/0068. new/README"
-      },
-      {
-        "text": "⏰ 0069. new",
-        "link": "/notes/0069. new/README"
-      },
-      {
-        "text": "⏰ 0070. new",
-        "link": "/notes/0070. new/README"
-      },
-      {
-        "text": "⏰ 0071. new",
-        "link": "/notes/0071. new/README"
-      }
-    ]
-  },
-  {
-    "text": "14. vue 官方文档",
+    "text": "13. vue 官方文档",
     "collapsed": true,
     "items": [
       {
@@ -312,7 +262,7 @@
     ]
   },
   {
-    "text": "15. vue playground",
+    "text": "14. vue playground",
     "collapsed": true,
     "items": [
       {
@@ -322,7 +272,7 @@
     ]
   },
   {
-    "text": "16. 面试题",
+    "text": "15. 面试题",
     "collapsed": true,
     "items": [
       {
@@ -336,7 +286,7 @@
     ]
   },
   {
-    "text": "17. 组件",
+    "text": "16. 组件",
     "collapsed": true,
     "items": [
       {
@@ -366,7 +316,7 @@
     ]
   },
   {
-    "text": "18. 指令 `v-model`",
+    "text": "17. 指令 `v-model`",
     "collapsed": true,
     "items": [
       {
@@ -392,7 +342,7 @@
     ]
   },
   {
-    "text": "19. 宏",
+    "text": "18. 宏",
     "collapsed": true,
     "items": [
       {
@@ -402,7 +352,7 @@
     ]
   },
   {
-    "text": "20. 国际化",
+    "text": "19. 国际化",
     "collapsed": true,
     "items": [
       {
@@ -452,6 +402,56 @@
       {
         "text": "⏰ 0081. new",
         "link": "/notes/0081. new/README"
+      }
+    ]
+  },
+  {
+    "text": "20. TODO",
+    "collapsed": true,
+    "items": [
+      {
+        "text": "⏰ 0015. vue github 仓库",
+        "link": "/notes/0015. vue github 仓库/README"
+      },
+      {
+        "text": "⏰ 0066. new",
+        "link": "/notes/0066. new/README"
+      },
+      {
+        "text": "⏰ 0067. new",
+        "link": "/notes/0067. new/README"
+      },
+      {
+        "text": "⏰ 0068. new",
+        "link": "/notes/0068. new/README"
+      },
+      {
+        "text": "⏰ 0069. new",
+        "link": "/notes/0069. new/README"
+      },
+      {
+        "text": "⏰ 0070. new",
+        "link": "/notes/0070. new/README"
+      },
+      {
+        "text": "⏰ 0071. new",
+        "link": "/notes/0071. new/README"
+      },
+      {
+        "text": "⏰ 0073. vue 风格指南",
+        "link": "/notes/0073. vue 风格指南/README"
+      },
+      {
+        "text": "⏰ 0074. new",
+        "link": "/notes/0074. new/README"
+      },
+      {
+        "text": "⏰ 0075. new",
+        "link": "/notes/0075. new/README"
+      },
+      {
+        "text": "⏰ 0076. new",
+        "link": "/notes/0076. new/README"
       }
     ]
   }
