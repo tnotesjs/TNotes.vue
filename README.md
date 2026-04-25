@@ -32,8 +32,8 @@
 ## 2. Vue 学习资料
 
 - [ ] [0065. Vue 学习资料](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0065.%20Vue%20%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99/README.md)
-- [ ] [0072. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0072.%20new/README.md)
-- [ ] [0073. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0073.%20new/README.md)
+- [ ] [0072. vuejs 官方文档](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0072.%20vuejs%20%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3/README.md)
+- [ ] [0073. vue 风格指南](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0073.%20vue%20%E9%A3%8E%E6%A0%BC%E6%8C%87%E5%8D%97/README.md)
 - [ ] [0074. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0074.%20new/README.md)
 - [ ] [0075. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0075.%20new/README.md)
 - [ ] [0076. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0076.%20new/README.md)
