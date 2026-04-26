@@ -28,7 +28,7 @@
     "collapsed": true,
     "items": [
       {
-        "text": "⏰ 0077. 开始",
+        "text": "✅ 0077. 开始",
         "link": "/notes/0077. 开始/README"
       },
       {
@@ -36,7 +36,11 @@
         "link": "/notes/0023. Vue 简介/README"
       },
       {
-        "text": "⏰ 0076. 快速上手",
+        "text": "⏰ 0071. new",
+        "link": "/notes/0071. new/README"
+      },
+      {
+        "text": "✅ 0076. 快速上手",
         "link": "/notes/0076. 快速上手/README"
       }
     ]
@@ -98,10 +102,6 @@
       {
         "text": "⏰ 0079. 深入组件",
         "link": "/notes/0079. 深入组件/README"
-      },
-      {
-        "text": "⏰ 0071. new",
-        "link": "/notes/0071. new/README"
       },
       {
         "text": "⏰ 0074. new",

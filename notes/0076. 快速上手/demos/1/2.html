@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">
+      <p>{{ message }}</p>
+    </div>
+    <script type="module">
+      // CDN 引入还有一种 ES Module 的方式
+      // 适合在现代浏览器中使用原生模块系统
+      import {
+        createApp,
+        ref,
+      } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+
+      createApp({
+        setup() {
+          const message = ref('通过 ES Module 引入 Vue')
+          return { message }
+        },
+      }).mount('#app')
+    </script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">
+      <p>{{ message }}</p>
+    </div>
+    <!-- 开发版本，包含完整的警告和调试信息 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+      // 使用 CDN 引入后，Vue 会被注册为一个全局变量，可以直接使用：
+      const { createApp, ref } = Vue
+
+      createApp({
+        setup() {
+          const message = ref('通过 CDN 引入 Vue')
+          return { message }
+        },
+      }).mount('#app')
+    </script>
+  </body>
+</html>

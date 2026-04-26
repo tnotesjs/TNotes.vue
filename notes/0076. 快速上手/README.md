@@ -15,8 +15,20 @@
 ## 1. 🎯 本节内容
 
 - Vue 开发环境搭建简介
+- CDN 方式集成 Vue
+- NPM 方式集成 Vue
+- Vite 创建 Vue 项目的具体流程
 
 ## 2. 🫧 评价
+
+在正式开始学习 Vue 的相关知识点之前，首先要做的就是把本地的环境给搭建好。
+
+这一节主要介绍两种快速初始化 Vue 工程的方式：
+
+1. 通过 CDN 的方式引入 Vue，适合快速验证一些 Vue 相关的概念和代码片段
+2. 通过 NPM 包的方式引入 Vue，适合正式项目开发（推荐使用 Vite 创建项目）
+
+两种方式都提供了对应的 demos 完整的示例代码。
 
 ## 3. 🤔 本地开发环境和线上学习环境如何选择？
 
@@ -192,7 +204,109 @@ app.mount('#app')
 
 ## 5. 💻 demos.1 - 通过 CDN 的方式引入 Vue
 
+::: code-group
+
+<<< ./demos/1/1.html
+
+<<< ./demos/1/2.html
+
+<<< ./demos/1/3.html
+
+:::
+
 ## 6. 💻 demos.2 - 通过 NPM 包的方式引入 Vue
+
+::: code-group
+
+```bash [工程初始化]
+$ pnpm create vue@latest
+# .../19dc92f7831-11d4a                    | Progress: resolved 1, reused 0.../19dc92f7831-11d4a                    |   +1 +
+# .../19dc92f7831-11d4a                    | Progress: resolved 1, reused 0.../19dc92f7831-11d4a                    | Progress: resolved 1, reused 0.../19dc92f7831-11d4a                    | Progress: resolved 1, reused 0, downloaded 1, added 1, done
+# ┌  Vue.js - The Progressive JavaScript Framework
+# │
+# ◇  请输入项目名称：
+# │  vue-project
+# │
+# ◇  是否使用 TypeScript 语法？
+# │  Yes
+# │
+# ◇  请选择要包含的功能： (↑/↓ 切换，空格选择，a 全选，回车确认)
+# │  none
+# │
+# ◇  选择要包含的试验特性： (↑/↓ 切换，空格选择，a
+# │  全选，回车确认)
+# │  none
+# │
+# ◇  跳过所有示例代码，创建一个空白的 Vue 项目？
+# │  Yes
+
+# 正在初始化项目 /Users/huyouda/tnotesjs/TNotes.vue/notes/0076. 快速上手/demos/2/vue-project...
+# │
+# └  项目初始化完成，可执行以下命令：
+
+#    cd vue-project
+#    pnpm install
+#    pnpm dev
+
+# | 可选：使用以下命令在项目目录中初始化 Git：
+
+#    git init && git add -A && git commit -m "initial commit"
+
+# -----------------------------------
+# 切换目录
+$ cd vue-project
+
+# 安装依赖
+$ pnpm install --ignore-workspace
+# 正常情况下不需要加 --ignore-workspace 参数
+# 这里添加 --ignore-workspace 参数的原因是：
+# TNotes.vue 目录下有 pnpm-workspace.yaml，pnpm 把整个 TNotes.vue 当作 monorepo workspace 根目录。
+# 在子目录里执行 pnpm i 时，pnpm 只是快速扫描了 workspace，并没有在 demos/2/vue-project 中安装依赖，导致依赖安装行为异常。
+# --ignore-workspace 参数告诉 pnpm 忽略 workspace 配置，直接在当前目录安装依赖。
+# 这样 pnpm 会忽略上级的 workspace 配置，直接在当前项目目录的 node_modules 里安装所有依赖。
+
+# -----------------------------------
+# 启动
+$ pnpm dev
+# > vue-project@0.0.0 dev /Users/huyouda/tnotesjs/TNotes.vue/notes/0076. 快速上手/demos/2/vue-project
+# > vite
+
+
+#   VITE v8.0.10  ready in 461 ms
+
+#   ➜  Local:   http://localhost:5173/
+#   ➜  Network: use --host to expose
+#   ➜  Vue DevTools: Open http://localhost:5173/__devtools__/ as a separate window
+#   ➜  Vue DevTools: Press Option(⌥)+Shift(⇧)+D in App to toggle the Vue DevTools
+#   ➜  press h + enter to show help
+
+# -----------------------------------
+# 查看效果
+# 使用浏览器访问：http://localhost:5173/
+```
+
+<<< ./demos/2/vue-project/src/App.vue
+
+<<< ./demos/2/vue-project/src/main.ts
+
+<<< ./demos/2/vue-project/index.html
+
+<<< ./demos/2/vue-project/package.json
+
+:::
+
+::: swiper
+
+![1](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-04-26-18-00-49.png)
+
+![2](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-04-26-18-01-03.png)
+
+:::
+
+- 图1：启动成功之后，默认看到的内容
+- 图2：尝试将 `App.vue` 中的 `<h1>You did it!</h1>` 替换为 `<h1>hello VUE3</h1>` 之后，保存文件，浏览器会自动刷新并显示新的内容（这就是数据响应式 => 数据变化驱动视图更新）
+
+启动成功之后，就相当于初始化了一个最基础的 vue 工程，本地环境也就准备好了。
 
 ## 7. 🔗 引用
 
