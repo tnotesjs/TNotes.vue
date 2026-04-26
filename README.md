@@ -47,7 +47,7 @@
 
 - [x] [0077. 开始](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0077.%20%E5%BC%80%E5%A7%8B/README.md)
 - [x] [0023. Vue 简介](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0023.%20Vue%20%E7%AE%80%E4%BB%8B/README.md)
-- [ ] [0071. new](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0071.%20new/README.md)
+- [x] [0071. 必要前置知识](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0071.%20%E5%BF%85%E8%A6%81%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86/README.md)
 - [x] [0076. 快速上手](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0076.%20%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/README.md)
 
 ## 4. 基础
