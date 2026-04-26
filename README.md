@@ -59,8 +59,8 @@
 - [ ] [0028. 计算属性与侦听器](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0028.%20%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7%E4%B8%8E%E4%BE%A6%E5%90%AC%E5%99%A8/README.md)
 - [ ] [0029. Class 与 Style 绑定](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0029.%20Class%20%E4%B8%8E%20Style%20%E7%BB%91%E5%AE%9A/README.md)
 - [ ] [0030. 条件渲染与列表渲染](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0030.%20%E6%9D%A1%E4%BB%B6%E6%B8%B2%E6%9F%93%E4%B8%8E%E5%88%97%E8%A1%A8%E6%B8%B2%E6%9F%93/README.md)
-- [ ] [0007. 使用 v-on 绑定事件及事件对象 $event 的获取](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0007.%20%E4%BD%BF%E7%94%A8%20v-on%20%E7%BB%91%E5%AE%9A%E4%BA%8B%E4%BB%B6%E5%8F%8A%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1%20%24event%20%E7%9A%84%E8%8E%B7%E5%8F%96/README.md)
-- [ ] [0005. v-model 表单元素的双向绑定](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0005.%20v-model%20%E8%A1%A8%E5%8D%95%E5%85%83%E7%B4%A0%E7%9A%84%E5%8F%8C%E5%90%91%E7%BB%91%E5%AE%9A/README.md)
+- [ ] [0007. 事件处理](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0007.%20%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86/README.md)
+- [ ] [0005. 表单输入绑定](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0005.%20%E8%A1%A8%E5%8D%95%E8%BE%93%E5%85%A5%E7%BB%91%E5%AE%9A/README.md)
 - [ ] [0032. 组件基础](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0032.%20%E7%BB%84%E4%BB%B6%E5%9F%BA%E7%A1%80/README.md)
 - [ ] [0024. Vue 实例与生命周期](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0024.%20Vue%20%E5%AE%9E%E4%BE%8B%E4%B8%8E%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/README.md)
 
