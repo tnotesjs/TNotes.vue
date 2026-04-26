@@ -2,10 +2,10 @@
   "bilibili": [],
   "tnotes": [],
   "yuque": [],
-  "done": false,
-  "enableDiscussions": false,
-  "description": "",
+  "done": true,
+  "enableDiscussions": true,
+  "description": "掌握 createApp() API 的基本使用，知道如何创建一个 Vue 应用。",
   "id": "d978dd26-3990-49fb-85cb-fa443554023f",
   "created_at": 1772288553000,
-  "updated_at": 1772288553000
+  "updated_at": 1777215195929
 }
