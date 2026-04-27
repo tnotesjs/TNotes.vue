@@ -24,11 +24,11 @@
 
 ## 3. 🤔 什么是插值语法（Mustache）？
 
-插值语法（Mustache Syntax）是 Vue 模板中最基本的数据绑定方式，使用双大括号 `{{ }}` 将表达式包裹起来，Vue 会将其替换为对应数据的值。之所以被称为"Mustache"（胡子），是因为双大括号的形状像两撇胡子。这种语法在许多模板引擎中都有使用，Vue 沿用了这一直观的设计。
+插值语法（Mustache Syntax）是 Vue 模板中最基本的数据绑定方式，使用双大括号 <span v-pre>`{{ }}`</span> 将表达式包裹起来，Vue 会将其替换为对应数据的值。之所以被称为“Mustache”（胡子），是因为双大括号的形状像两撇胡子。这种语法在许多模板引擎中都有使用，Vue 沿用了这一直观的设计。
 
 最基本的用法是将一个响应式变量的值渲染到页面上：
 
-```html
+```vue
 <template>
   <div>
     <p>{{ message }}</p>
@@ -38,17 +38,21 @@
 </template>
 
 <script setup>
-  import { ref, reactive } from 'vue'
+import { ref, reactive } from 'vue'
 
-  const message = ref('Hello Vue')
-  const user = reactive({ name: '张三', age: 25 })
-  const items = ref(['苹果', '香蕉', '橙子'])
+const message = ref('Hello Vue')
+const user = reactive({ name: '张三', age: 25 })
+const items = ref(['苹果', '香蕉', '橙子'])
 </script>
 ```
 
+最终渲染结果：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-04-27-21-08-02.png)
+
 双大括号中不仅可以是简单的变量引用，还可以使用任意合法的 JavaScript 表达式。Vue 会在当前组件实例的作用域内对表达式进行求值：
 
-```html
+```vue
 <template>
   <div>
     <!-- 算术运算 -->
@@ -71,23 +75,33 @@
 </template>
 
 <script setup>
-  import { ref, reactive } from 'vue'
+import { ref, reactive } from 'vue'
 
-  const count = ref(10)
-  const price = ref(9.9)
-  const quantity = ref(3)
-  const isActive = ref(true)
-  const message = ref('hello vue')
-  const items = ref(['Vue', 'React', 'Angular'])
-  const user = reactive({ name: '张三' })
-  const a = ref(5)
-  const b = ref(8)
+const count = ref(10)
+const price = ref(9.9)
+const quantity = ref(3)
+const isActive = ref(true)
+const message = ref('hello vue')
+const items = ref(['Vue', 'React', 'Angular'])
+const user = reactive({ name: '张三' })
+const a = ref(5)
+const b = ref(8)
 </script>
 ```
 
+最终渲染结果：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-04-27-21-09-15.png)
+
+::: tip 扩展知识点：JS 浮点数计算问题
+
+由于 JavaScript 采用 IEEE 754 双精度浮点数运算，9.9 无法精确表示为二进制小数，乘以 3 后产生舍入误差，因此得到 29.700000000000003 而非预期的 29.7。这是 JavaScript 中常见的浮点数计算问题，与 Vue 无关。
+
+:::
+
 但是表达式有一些限制。首先，每个绑定位置只能包含单个表达式，不能包含语句（如 if 条件语句、for 循环、变量声明等）：
 
-```html
+```vue
 <template>
   <!-- 这些都不会生效 -->
   <p>{{ var x = 1 }}</p>
@@ -103,7 +117,7 @@
 
 插值语法默认会对内容进行 HTML 转义处理，即把 HTML 标签当作纯文本来显示，这是出于安全考虑，可以防止 XSS 攻击。如果你确实需要渲染原始 HTML 内容，应该使用 v-html 指令：
 
-```html
+```vue
 <template>
   <div>
     <!-- 会被转义为纯文本 -->
@@ -117,9 +131,9 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue'
+import { ref } from 'vue'
 
-  const rawHtml = ref('<span style="color: red">红色文字</span>')
+const rawHtml = ref('<span style="color: red">红色文字</span>')
 </script>
 ```
 
@@ -127,7 +141,7 @@
 
 插值语法只能用于 HTML 元素的文本内容中，不能用于 HTML 属性中。如果要将数据动态绑定到元素属性上，需要使用 v-bind 指令：
 
-```html
+```vue
 <template>
   <!-- 错误：不能在属性中使用插值 -->
   <div id="{{ dynamicId }}"></div>
@@ -139,7 +153,7 @@
 
 Vue 3.4 引入了一个便捷的同名简写语法。当属性名和绑定的变量名相同时，可以省略属性值：
 
-```html
+```vue
 <template>
   <!-- 完整写法 -->
   <div :id="id"></div>
@@ -149,8 +163,8 @@ Vue 3.4 引入了一个便捷的同名简写语法。当属性名和绑定的变
 </template>
 
 <script setup>
-  import { ref } from 'vue'
-  const id = ref('my-element')
+import { ref } from 'vue'
+const id = ref('my-element')
 </script>
 ```
 
@@ -160,7 +174,7 @@ Vue 的指令（Directives）是带有 `v-` 前缀的特殊属性，用于在模
 
 v-bind 是最常用的指令之一，用于将表达式的值动态绑定到 HTML 元素的属性上。它的简写形式是 `:`：
 
-```html
+```vue
 <template>
   <!-- 完整语法 -->
   <img v-bind:src="imageSrc" />
@@ -181,22 +195,22 @@ v-bind 是最常用的指令之一，用于将表达式的值动态绑定到 HTM
 </template>
 
 <script setup>
-  import { ref, reactive } from 'vue'
+import { ref, reactive } from 'vue'
 
-  const imageSrc = ref('/logo.png')
-  const url = ref('https://vuejs.org')
-  const linkTitle = ref('Vue.js 官网')
-  const linkText = ref('访问 Vue.js')
-  const isActive = ref(true)
-  const baseClass = ref('container')
-  const errorClass = ref('text-danger')
-  const textColor = ref('#333')
-  const size = ref(16)
-  const attrs = reactive({
-    id: 'wrapper',
-    class: 'box',
-    'data-type': 'container',
-  })
+const imageSrc = ref('/logo.png')
+const url = ref('https://vuejs.org')
+const linkTitle = ref('Vue.js 官网')
+const linkText = ref('访问 Vue.js')
+const isActive = ref(true)
+const baseClass = ref('container')
+const errorClass = ref('text-danger')
+const textColor = ref('#333')
+const size = ref(16)
+const attrs = reactive({
+  id: 'wrapper',
+  class: 'box',
+  'data-type': 'container',
+})
 </script>
 ```
 
