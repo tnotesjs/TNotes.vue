@@ -2,10 +2,10 @@
   "bilibili": [],
   "tnotes": [],
   "yuque": [],
-  "done": false,
+  "done": true,
   "enableDiscussions": true,
-  "description": "",
+  "description": "模板语法和指令是开发 Vue 组件必备的基础知识点。",
   "id": "e2030fad-a1a4-4651-a881-226c5f7c924e",
   "created_at": 1772287513405,
-  "updated_at": 1777329968530
+  "updated_at": 1777383109147
 }

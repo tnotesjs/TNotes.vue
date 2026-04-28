@@ -54,7 +54,7 @@
 
 - [x] [0078. 基础](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0078.%20%E5%9F%BA%E7%A1%80/README.md)
 - [x] [0070. 创建一个应用](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0070.%20%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%BA%94%E7%94%A8/README.md)
-- [ ] [0025. 模板语法与指令](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0025.%20%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95%E4%B8%8E%E6%8C%87%E4%BB%A4/README.md)
+- [x] [0025. 模板语法与指令](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0025.%20%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95%E4%B8%8E%E6%8C%87%E4%BB%A4/README.md)
 - [ ] [0027. 数据响应式原理](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0027.%20%E6%95%B0%E6%8D%AE%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86/README.md)
 - [ ] [0028. 计算属性与侦听器](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0028.%20%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7%E4%B8%8E%E4%BE%A6%E5%90%AC%E5%99%A8/README.md)
 - [ ] [0029. Class 与 Style 绑定](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0029.%20Class%20%E4%B8%8E%20Style%20%E7%BB%91%E5%AE%9A/README.md)
