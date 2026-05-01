@@ -32,7 +32,6 @@
 - 计算属性（computed）的使用场景
 - 计算属性 vs 方法
 - 计算属性的 setter 与 getter
-- computed 的参数（Vue 3.4+）
 - 计算属性的最佳实践
 
 ## 2. 🫧 评价
