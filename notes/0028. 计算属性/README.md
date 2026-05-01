@@ -1,14 +1,18 @@
-# [0028. 计算属性与侦听器](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0028.%20%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7%E4%B8%8E%E4%BE%A6%E5%90%AC%E5%99%A8)
+# [0028. 计算属性](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0028.%20%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7)
 
 <!-- region:toc -->
 
 - [1. 🎯 本节内容](#1--本节内容)
 - [2. 🫧 评价](#2--评价)
 - [3. 🤔 计算属性（computed）有哪些使用场景？](#3--计算属性computed有哪些使用场景)
+  - [3.1. 对数据进行格式化或转换](#31-对数据进行格式化或转换)
+  - [3.2. 列表过滤和排序](#32-列表过滤和排序)
+  - [3.3. 条件判断和状态聚合](#33-条件判断和状态聚合)
+  - [3.4. 小结](#34-小结)
 - [4. 🤔 计算属性的缓存和方法调用有什么区别？](#4--计算属性的缓存和方法调用有什么区别)
 - [5. 🤔 计算属性的 setter 和 getter 是什么？](#5--计算属性的-setter-和-getter-是什么)
-- [6. 🤔 侦听器（watch）的深度监听与立即执行是什么？](#6--侦听器watch的深度监听与立即执行是什么)
-- [7. 🤔 computed 和 watch 应该如何选择？](#7--computed-和-watch-应该如何选择)
+- [6. 🤔 计算属性的最佳实践](#6--计算属性的最佳实践)
+- [7. 🔗 引用](#7--引用)
 
 <!-- endregion:toc -->
 
@@ -17,22 +21,33 @@
 - 计算属性（computed）的使用场景
 - 计算属性的缓存 vs 方法调用
 - 计算属性的 setter 与 getter
-- 侦听器（watch）的深度监听与立即执行
-- computed 与 watch 的选择
+- 计算属性的最佳实践
 
 ## 2. 🫧 评价
 
-- todo
+计算属性在开发中是非常常用的特性，理解它的使用场景和工作机制还是很重要的。
 
 ## 3. 🤔 计算属性（computed）有哪些使用场景？
 
 计算属性（computed）是 Vue 中用于声明式地派生新数据的核心特性。当你需要基于已有的响应式数据经过一些计算或转换来得到新值时，计算属性就是最佳选择。与直接在模板中编写复杂表达式或使用方法调用相比，计算属性具有自动缓存和声明式依赖追踪的优势。
+
+### 3.1. 对数据进行格式化或转换
 
 最常见的使用场景是对数据进行格式化或转换：
 
 ```html
 <template>
   <p>全名：{{ fullName }}</p>
+  <!--
+    当然，你完全可以不使用计算属性
+    比如 fullName 你可以直接在模板中书写表达式：
+    <p>全名：{{ lastName + firstName }}</p> 
+    
+    使用计算属性的优势在于：
+    - 让模板更简洁
+    - 更好的语义
+    - 缓存功能
+  -->
   <p>格式化价格：{{ formattedPrice }}</p>
   <p>倒序消息：{{ reversedMessage }}</p>
 </template>
@@ -49,16 +64,18 @@
   const fullName = computed(() => lastName.value + firstName.value)
 
   // 格式化价格
-  const formattedPrice = computed(() => {
-    return '¥' + price.value.toFixed(2)
-  })
+  const formattedPrice = computed(() => '¥' + price.value.toFixed(2))
 
   // 字符串反转
-  const reversedMessage = computed(() => {
-    return message.value.split('').reverse().join('')
-  })
+  const reversedMessage = computed(() =>
+    message.value.split('').reverse().join(''),
+  )
 </script>
 ```
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-01-13-11-09.png)
+
+### 3.2. 列表过滤和排序
 
 列表过滤和排序是计算属性另一个非常重要的使用场景。当你有一个原始数据列表，需要根据搜索条件或排序规则展示一部分数据时，使用计算属性可以保持原始数据不变，同时自动追踪过滤条件的变化：
 
@@ -102,23 +119,28 @@
     }
 
     // 排序
-    return result.slice().sort((a, b) => {
-      if (sortKey.value === 'price') {
-        return a.price - b.price
-      }
-      return a.name.localeCompare(b.name)
-    })
+    return result
+      .slice()
+      .sort((a, b) =>
+        sortKey.value === 'price'
+          ? a.price - b.price
+          : a.name.localeCompare(b.name),
+      )
   })
 
   const filteredCount = computed(() => filteredAndSortedItems.value.length)
 </script>
 ```
 
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-01-13-16-25.png)
+
+### 3.3. 条件判断和状态聚合
+
 条件判断和状态聚合也是计算属性的典型应用。当你需要根据多个条件组合来决定某个状态时，计算属性可以将复杂的逻辑从模板中提取出来：
 
 ```html
 <template>
-  <form @submit.prevent="submit">
+  <form @submit.prevent="handleSubmit">
     <input v-model="username" />
     <input v-model="password" type="password" />
     <input v-model="confirmPassword" type="password" />
@@ -159,8 +181,20 @@
     if (!isFormValid.value) return '请填写完整信息'
     return '提交'
   })
+
+  function handleSubmit() {
+    // 处理表单提交逻辑
+  }
 </script>
 ```
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-01-13-21-14.png)
+
+如果提交的信息不满足规范，那么提交按钮不可用。
+
+### 3.4. 小结
+
+计算属性的使用场景几乎无处不在，上述举的几个场景示例是我们在开发中经常会遇到的用法，只要你需要根据响应式数据派生出新的值，并且希望这个值能够在响应式数据变化时自动更新，那么计算属性就是你的首选工具。它让你的模板保持简洁，同时提供了强大的声明式数据处理能力。
 
 ## 4. 🤔 计算属性的缓存和方法调用有什么区别？
 
@@ -204,6 +238,12 @@
 ```
 
 在上面的例子中，当你点击按钮修改 unrelatedData 时，组件会重新渲染。此时计算属性 expensiveResult 因为它的依赖 items 没有变化，会直接返回缓存值，不会重新计算。而方法 getExpensiveResult 会被调用 3 次（模板中引用了 3 次），每次都执行一遍 reduce 逻辑。
+
+::: tip 注意：方法调用的执行次数没有缓存
+
+即使是同一个渲染周期内，模板中写了多少次方法调用，方法体就会执行多少次。不要依赖"方法只执行一次"来做逻辑假设——方法没有缓存机制，每次渲染时都会重新执行。
+
+:::
 
 缓存的优势在处理开销较大的计算时尤为明显：
 
@@ -369,318 +409,16 @@ export default {
 
 需要注意的是，计算属性的 setter 应该只用于更新源数据，不应该包含复杂的副作用逻辑（如网络请求、DOM 操作等）。如果 setter 中的逻辑很复杂，通常意味着应该将其拆分为一个方法调用或使用侦听器来处理。
 
-## 6. 🤔 侦听器（watch）的深度监听与立即执行是什么？
+## 6. 🤔 计算属性的最佳实践
 
-侦听器（watch）用于在响应式数据变化时执行副作用操作，比如发起 API 请求、操作 DOM、将数据同步到本地存储等。与计算属性不同，watch 不需要返回值，它的作用是"当数据变化时，做某件事"。Vue 3 提供了两种侦听 API：watch 和 watchEffect。
+Getter 不应有副作用。计算属性的 getter 应该只做计算，不要在里面修改其他状态、发起异步请求或操作 DOM。计算属性的职责是根据已有数据派生新值，而不是触发其他行为。如果需要在数据变化时执行副作用操作（如网络请求、日志记录等），应该使用侦听器（watch）来处理。
 
-watch 的基本用法是监听一个或多个响应式数据源，在数据变化时执行回调：
+避免直接修改计算属性的值。从计算属性返回的值可以看作是一个"临时快照"——每当源状态发生变化时，就会创建一个新的快照。更改快照是没有意义的，因此计算属性的返回值应该被视为只读的，永远不应该被直接修改。如果需要"反向修改"，应该使用带有 setter 的计算属性（见第 5 节），或者直接更新它所依赖的源数据。
 
-```html
-<script setup>
-  import { ref, watch } from 'vue'
+computed 和 watch 各有分工。computed 用于声明式地派生数据，适合"数据变了，需要产生新数据"的场景；watch 用于响应数据变化并执行副作用，适合"数据变了，需要做某件事"的场景。一个简单的判断方法：如果你在 watch 回调中只是在给另一个 ref 赋值，而没有做任何异步或副作用操作，那几乎可以肯定应该用 computed 来替代。
 
-  const searchQuery = ref('')
-  const page = ref(1)
+## 7. 🔗 引用
 
-  // 监听单个 ref
-  watch(searchQuery, (newValue, oldValue) => {
-    console.log(`搜索词从 "${oldValue}" 变为 "${newValue}"`)
-    fetchSearchResults(newValue)
-  })
+- [Vue.js 官方文档 - 计算属性][1]
 
-  // 监听多个数据源
-  watch([searchQuery, page], ([newQuery, newPage], [oldQuery, oldPage]) => {
-    console.log(`搜索词：${newQuery}，页码：${newPage}`)
-    fetchSearchResults(newQuery, newPage)
-  })
-
-  // 监听 reactive 对象的某个属性（需要使用 getter 函数）
-  import { reactive } from 'vue'
-  const state = reactive({ count: 0 })
-
-  watch(
-    () => state.count,
-    (newCount) => {
-      console.log('count 变为：', newCount)
-    },
-  )
-</script>
-```
-
-深度监听（deep watch）用于监听对象内部属性的变化。默认情况下，watch 只会在被监听的引用本身发生变化时触发。如果你需要监听对象内部任意层级属性的变化，需要设置 deep: true：
-
-```html
-<script setup>
-  import { ref, watch, reactive } from 'vue'
-
-  const userInfo = ref({
-    name: '张三',
-    address: {
-      city: '北京',
-      district: '海淀区',
-    },
-  })
-
-  // 没有 deep 选项时，修改 userInfo.value.name 不会触发回调
-  // 除非整体替换 userInfo.value
-
-  // 深度监听：对象内部任何属性变化都会触发
-  watch(
-    userInfo,
-    (newValue) => {
-      console.log('用户信息变化了：', newValue)
-      saveToLocalStorage(newValue)
-    },
-    { deep: true },
-  )
-
-  // 注意：reactive 对象默认就是深度监听的
-  const state = reactive({
-    nested: { count: 0 },
-  })
-
-  watch(state, (newState) => {
-    // state 内部任何变化都会触发
-    console.log('state 变化了')
-  })
-</script>
-```
-
-需要注意的是，深度监听需要遍历被监听对象的所有嵌套属性，对于大型数据结构可能会有性能问题。如果你只关心对象中的某个特定属性，建议使用 getter 函数来精确监听：
-
-```html
-<script setup>
-  import { reactive, watch } from 'vue'
-
-  const state = reactive({
-    user: {
-      name: '张三',
-      address: {
-        city: '北京',
-      },
-    },
-  })
-
-  // 精确监听某个属性，避免不必要的深度监听
-  watch(
-    () => state.user.address.city,
-    (newCity) => {
-      console.log('城市变为：', newCity)
-      fetchCityData(newCity)
-    },
-  )
-</script>
-```
-
-立即执行（immediate）用于在侦听器创建时立即执行一次回调。默认情况下，watch 的回调只在数据变化后才执行，不会在初始化时触发。设置 immediate: true 后，回调会在侦听器创建时立即执行一次：
-
-```html
-<script setup>
-  import { ref, watch } from 'vue'
-
-  const userId = ref(1)
-
-  // 不使用 immediate：初始时不会获取数据
-  watch(userId, (newId) => {
-    fetchUserData(newId) // 只在 userId 变化后触发
-  })
-
-  // 使用 immediate：初始时就获取数据
-  watch(
-    userId,
-    (newId) => {
-      fetchUserData(newId)
-    },
-    { immediate: true },
-  )
-
-  // 使用 watchEffect 可以替代 immediate: true 的场景
-  import { watchEffect } from 'vue'
-
-  watchEffect(() => {
-    // 会立即执行一次，之后在依赖变化时重新执行
-    fetchUserData(userId.value)
-  })
-</script>
-```
-
-watchEffect 是 Vue 3 新引入的 API，它与 watch 的主要区别在于：watchEffect 会自动追踪其回调函数中使用到的所有响应式依赖，不需要显式指定监听的数据源；它会在创建时立即执行一次（相当于自带 `immediate: true`）；它的回调函数不接收新值和旧值参数：
-
-```html
-<script setup>
-  import { ref, watchEffect } from 'vue'
-
-  const keyword = ref('')
-  const category = ref('all')
-  const page = ref(1)
-
-  // watchEffect 自动追踪所有使用到的响应式变量
-  const stopWatch = watchEffect(async () => {
-    const results = await fetch(
-      `/api/search?q=${keyword.value}&cat=${category.value}&page=${page.value}`,
-    )
-    // keyword、category、page 中任何一个变化都会重新执行
-  })
-
-  // 停止侦听
-  // stopWatch()
-</script>
-```
-
-watch 还支持 flush 选项来控制回调的执行时机。默认值 'pre' 表示在 DOM 更新之前执行；'post' 表示在 DOM 更新之后执行（适合需要访问更新后的 DOM 的场景）；'sync' 表示同步执行（不推荐，可能导致性能问题）：
-
-```html
-<script setup>
-  import { ref, watch, watchPostEffect } from 'vue'
-
-  const count = ref(0)
-
-  // flush: 'post' 确保回调中可以访问更新后的 DOM
-  watch(
-    count,
-    () => {
-      console.log('DOM 已更新，可以安全访问')
-    },
-    { flush: 'post' },
-  )
-
-  // 等价的简写
-  watchPostEffect(() => {
-    console.log('DOM 更新后执行')
-  })
-</script>
-```
-
-## 7. 🤔 computed 和 watch 应该如何选择？
-
-computed 和 watch 是 Vue 中处理响应式数据变化的两种主要方式，它们在功能上有一些重叠，但设计目的和适用场景有着明确的区分。选择错误不会导致程序无法运行，但会影响代码的可读性、可维护性和性能。
-
-computed 的核心用途是声明式地派生数据。它是一个纯函数——接收响应式数据作为输入，返回一个新的值。computed 适合用于"A 数据变了，B 数据也应该相应地变"的场景：
-
-```html
-<script setup>
-  import { ref, computed } from 'vue'
-
-  const price = ref(100)
-  const quantity = ref(2)
-  const discount = ref(0.8)
-
-  // computed 派生数据：total 由 price、quantity、discount 共同决定
-  const total = computed(() => price.value * quantity.value * discount.value)
-</script>
-```
-
-watch 的核心用途是响应数据变化并执行副作用。它适合用于"A 数据变了，我需要做某件事"的场景——这件事通常是模板渲染以外的操作，比如网络请求、日志记录、存储同步等：
-
-```html
-<script setup>
-  import { ref, watch } from 'vue'
-
-  const searchQuery = ref('')
-
-  // watch 执行副作用：searchQuery 变了，发起搜索请求
-  watch(searchQuery, async (query) => {
-    if (query.length < 2) return
-    const results = await fetch(`/api/search?q=${query}`)
-    // 处理搜索结果
-  })
-</script>
-```
-
-以下是几个常见的选择判断准则：
-
-如果你需要从已有数据计算出一个新值，并在模板中使用这个值，用 computed：
-
-```html
-<script setup>
-  import { ref, computed } from 'vue'
-
-  const items = ref([
-    { name: '苹果', price: 5, inStock: true },
-    { name: '香蕉', price: 3, inStock: false },
-    { name: '橙子', price: 4, inStock: true },
-  ])
-
-  // 用 computed：从 items 派生出有库存的商品列表
-  const availableItems = computed(() =>
-    items.value.filter((item) => item.inStock),
-  )
-
-  // 用 computed：从 items 派生出总价
-  const totalPrice = computed(() =>
-    items.value.reduce((sum, item) => sum + item.price, 0),
-  )
-</script>
-```
-
-如果你需要在数据变化时执行异步操作，用 watch：
-
-```html
-<script setup>
-  import { ref, watch } from 'vue'
-
-  const userId = ref(1)
-  const userData = ref(null)
-
-  // 用 watch：userId 变化时获取用户数据
-  watch(
-    userId,
-    async (newId) => {
-      userData.value = null
-      try {
-        const response = await fetch(`/api/users/${newId}`)
-        userData.value = await response.json()
-      } catch (error) {
-        console.error('获取用户数据失败：', error)
-      }
-    },
-    { immediate: true },
-  )
-</script>
-```
-
-如果你需要在数据变化时执行有限次数的操作（如只执行一次），用 watch 并在回调中停止侦听：
-
-```html
-<script setup>
-  import { ref, watch } from 'vue'
-
-  const data = ref(null)
-
-  const stopWatch = watch(data, (newValue) => {
-    if (newValue) {
-      // 数据加载完成后执行某些初始化操作，然后停止监听
-      initializeComponent(newValue)
-      stopWatch()
-    }
-  })
-</script>
-```
-
-一个常见的反模式是用 watch 来做 computed 的工作：
-
-```html
-<script setup>
-  import { ref, watch, computed } from 'vue'
-
-  const firstName = ref('三')
-  const lastName = ref('张')
-
-  // 反模式：使用 watch 来维护一个派生值
-  const fullName = ref('')
-  watch(
-    [firstName, lastName],
-    ([first, last]) => {
-      fullName.value = last + first
-    },
-    { immediate: true },
-  )
-
-  // 正确做法：使用 computed
-  const fullNameCorrect = computed(() => lastName.value + firstName.value)
-</script>
-```
-
-反模式的问题在于：代码更冗长、需要手动设置 immediate 以获取初始值、fullName 作为一个独立的 ref 可能被意外修改、依赖关系不如 computed 清晰。computed 版本更简洁，依赖关系一目了然，并且有缓存优化。
-
-简单总结：computed 用于数据转换和派生，watch 用于副作用响应。如果你发现自己在 watch 回调中只是在给另一个 ref 赋值、没有做任何异步或副作用操作，那几乎可以肯定应该用 computed 来替代。
+[1]: https://cn.vuejs.org/guide/essentials/computed.html
