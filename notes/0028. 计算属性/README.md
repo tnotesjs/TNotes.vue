@@ -12,8 +12,17 @@
 - [4. 🤔 计算属性的缓存和方法调用有什么区别？](#4--计算属性的缓存和方法调用有什么区别)
   - [4.1. 缓存差异](#41-缓存差异)
   - [4.2. 使用方法的场景](#42-使用方法的场景)
+  - [4.3. computed 和 method 的选择策略](#43-computed-和-method-的选择策略)
 - [5. 🤔 计算属性的 setter 和 getter 是什么？](#5--计算属性的-setter-和-getter-是什么)
-- [6. 🤔 计算属性的最佳实践](#6--计算属性的最佳实践)
+  - [5.1. 给计算属性添加 setter](#51-给计算属性添加-setter)
+  - [5.2. 应用场景：华氏度、摄氏度的单位转换（双向绑定）](#52-应用场景华氏度摄氏度的单位转换双向绑定)
+  - [5.3. 应用场景：配合 v-model 使用（双向绑定）](#53-应用场景配合-v-model-使用双向绑定)
+  - [5.4. 获取计算属性上一次的值（Vue 3.4+）](#54-获取计算属性上一次的值vue-34)
+    - [如何评价这一特性？](#如何评价这一特性)
+- [6. 🤔 计算属性的最佳实践是？](#6--计算属性的最佳实践是)
+  - [6.1. Getter 不应有副作用](#61-getter-不应有副作用)
+  - [6.2. 只读原则](#62-只读原则)
+  - [6.3. 不要依赖计算属性对依赖变更的监听特性来触发副作用操作](#63-不要依赖计算属性对依赖变更的监听特性来触发副作用操作)
 - [7. 🔗 引用](#7--引用)
 
 <!-- endregion:toc -->
@@ -21,13 +30,15 @@
 ## 1. 🎯 本节内容
 
 - 计算属性（computed）的使用场景
-- 计算属性的缓存 vs 方法调用
+- 计算属性 vs 方法
 - 计算属性的 setter 与 getter
 - 计算属性的最佳实践
 
 ## 2. 🫧 评价
 
-计算属性在开发中是非常常用的特性，理解它的使用场景和工作机制还是很重要的。
+计算属性在开发中是非常常用的特性，理解它的使用场景和工作机制还是很重要的。它本身的使用并不难，难在判断什么时候应该使用计算属性（比如权衡使用 computed 还是 method 还是 watch），以及计算属性中为什么不应该出现副作用操作（比如网络请求、DOM 操作等）。
+
+关于笔记中提到的计算属性的 setter，在实际开发中使用频率较低，更多时候都是只有一个默认的 getter，和 setter 相关的内容可以先作简单了解即可。
 
 ## 3. 🤔 计算属性（computed）有哪些使用场景？
 
@@ -309,16 +320,71 @@
 当你需要执行有副作用的操作（如修改 DOM、发起网络请求等）时，也应该使用方法或侦听器，而不是计算属性。计算属性应该是纯函数（相同的输入总是得到相同的输出，不会产生副作用）。
 
 ```html
-<template> </template>
+<template>
+  <p>{{ message }}</p>
+  <button @click="fetchData">获取数据</button>
+  <p v-if="loading">加载中...</p>
+  <p v-else-if="error" class="error">{{ error }}</p>
+  <ul v-else>
+    <li v-for="item in data" :key="item.id">{{ item.name }}</li>
+  </ul>
+</template>
 
-<script setup></script>
+<script setup>
+  import { ref, computed, watch } from 'vue'
+
+  const message = ref('Hello Vue')
+
+  // ✅ 正确：计算属性是纯函数，只是派生数据
+  const reversedMessage = computed(() =>
+    message.value.split('').reverse().join(''),
+  )
+
+  // ❌ 错误示范：计算属性中不应有副作用
+  // const badExample = computed(() => {
+  //   fetch('/api/data') // 副作用！不应该在计算属性中做
+  //   return message.value
+  // })
+
+  // ✅ 正确：有副作用的操作应该放在方法中
+  const data = ref([])
+  const loading = ref(false)
+  const error = ref('')
+
+  async function fetchData() {
+    loading.value = true
+    error.value = ''
+    try {
+      const res = await fetch('/api/data')
+      data.value = await res.json()
+    } catch (e) {
+      error.value = '数据获取失败'
+    } finally {
+      loading.value = false
+    }
+  }
+
+  // ✅ 正确：使用侦听器处理副作用
+  watch(message, (newVal) => {
+    // 当 message 变化时，执行副作用操作
+    console.log('message 发生了变化：', newVal)
+    document.title = newVal // 修改 DOM
+  })
+</script>
 ```
 
-总结来说，选择 computed 还是 method 的原则是：如果一个派生值依赖于响应式数据、不需要参数、没有副作用，并且可能被多次使用，那就使用 computed；如果需要传参、有副作用，或者特意希望每次渲染都重新执行，那就使用 method。
+> 这里对 `watch` 的使用只是一个简单的演示，关于 `watch` 的详细说明会在对应的侦听器相关笔记中详细讲解。
+
+### 4.3. computed 和 method 的选择策略
+
+- 选择 computed 还是 method 的原则是：如果一个派生值依赖于响应式数据、不需要参数、没有副作用，并且可能被多次使用，那就使用 computed
+- 如果需要传参、有副作用，或者特意希望每次渲染都重新执行，那就使用 method
 
 ## 5. 🤔 计算属性的 setter 和 getter 是什么？
 
-计算属性默认只有 getter——你只能读取它的值。但在某些场景下，你可能需要"反向设置"计算属性的值，此时就需要为计算属性提供一个 setter。当你对计算属性赋值时，setter 会被调用，通常在 setter 中我们会去修改该计算属性所依赖的底层源数据。
+计算属性默认只有 getter，表示你只能读取它的值。但在某些场景下，你可能需要“反向设置”计算属性的值，此时就需要为计算属性提供一个 setter。当你对计算属性赋值时，setter 会被调用，通常在 setter 中我们会去修改该计算属性所依赖的底层源数据。
+
+### 5.1. 给计算属性添加 setter
 
 在组合式 API 中，计算属性的 getter 和 setter 通过传入一个包含 get 和 set 函数的对象来定义：
 
@@ -339,6 +405,7 @@
   // 带 getter 和 setter 的计算属性
   const fullName = computed({
     get() {
+      console.count('getter')
       return lastName.value + firstName.value
     },
     set(newValue) {
@@ -350,7 +417,25 @@
 </script>
 ```
 
+最终渲染结果：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-01-19-36-46.png)
+
 在上面的例子中，当用户在输入框中修改 fullName 时（因为 v-model 会对 fullName 进行赋值），setter 会被调用并更新 lastName 和 firstName。这两个源数据的变化又会触发 getter 重新计算，形成一个完整的数据流闭环。
+
+控制台输出：
+
+```
+getter: 1
+getter: 2
+getter: 3
+getter: 4
+```
+
+解释：
+
+- `getter: 1` 组件首次挂载时输出
+- `getter: 2`、`getter: 3`、`getter: 4` 是在输入数字 1、2、3 时分别打印的，每次输入框的内容发生变化时，都会导致 fullName 的 setter 被调用，setter 中修改了 lastName 和 firstName，触发 fullName 的 getter 重新计算，因此每次输入都会打印一次 getter 的日志
 
 在选项式 API 中的写法类似：
 
@@ -376,7 +461,9 @@ export default {
 }
 ```
 
-另一个常见的使用场景是单位转换。假设你有一个以摄氏度存储的温度值，但需要同时支持华氏度的读取和设置：
+### 5.2. 应用场景：华氏度、摄氏度的单位转换（双向绑定）
+
+关于 setter 的另一个常见的使用场景是单位转换。假设你有一个以摄氏度存储的温度值，但需要同时支持华氏度的读取和设置：
 
 ```html
 <template>
@@ -405,6 +492,15 @@ export default {
 </script>
 ```
 
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-01-19-41-35.png)
+
+两个温度输入框通过计算属性的 getter 和 setter 实现了双向绑定，用户修改任意一个输入框都会自动更新另一个输入框的值。
+
+- 如果改动摄氏度 celsius，由于华氏度 fahrenheit 依赖于 celsius 的值，fahrenheit 的 getter 会被触发，计算出新的华氏度值并更新输入框
+- 如果改动华氏度 fahrenheit，由于它有 setter，setter 会被调用，setter 中会更新摄氏度 celsius 的值，进而触发 fahrenheit 的 getter 重新计算，更新华氏度输入框的值
+
+### 5.3. 应用场景：配合 v-model 使用（双向绑定）
+
 配合 v-model 使用是计算属性 setter 最典型的应用。当你需要对一个 store 中的状态使用 v-model 时，可以通过计算属性的 getter/setter 来桥接：
 
 ```html
@@ -431,13 +527,122 @@ export default {
 
 需要注意的是，计算属性的 setter 应该只用于更新源数据，不应该包含复杂的副作用逻辑（如网络请求、DOM 操作等）。如果 setter 中的逻辑很复杂，通常意味着应该将其拆分为一个方法调用或使用侦听器来处理。
 
-## 6. 🤔 计算属性的最佳实践
+### 5.4. 获取计算属性上一次的值（Vue 3.4+）
+
+从 Vue 3.4 开始，计算属性的 getter 可以接收一个 `previous` 参数 => 它就是上一次 getter 返回的值。这个特性在需要“保留上一次有效值”的场景下非常有用。
+
+典型场景：你有一个输入框，希望用户输入的值必须在合理范围内，如果超出范围就保留上一次的有效值，而不是清空或显示非法值。
+
+在只读计算属性中使用：
+
+```html
+<template>
+  <p>当前值：{{ count }}</p>
+  <p>安全值：{{ safeCount }}</p>
+  <button @click="count++">+1</button>
+  <button @click="count--">-1</button>
+</template>
+
+<script setup>
+  import { ref, computed } from 'vue'
+
+  const count = ref(5)
+
+  // safeCount 只允许 1~10 之间的值
+  // 如果 count 超出范围，safeCount 会保留上一次的有效值（即 previous）
+  const safeCount = computed((previous) => {
+    if (count.value >= 1 && count.value <= 10) {
+      return count.value // ✅ 合法：直接返回 count
+    }
+    return previous // ❌ 非法：回退到上一次的有效值
+  })
+</script>
+```
+
+在这个例子中：
+
+- 当 `count` 从 5 变到 6 --> `safeCount` 返回 6（合法，更新）
+- 当 `count` 从 10 变到 11 --> `safeCount` 返回 10（非法，保留上次的 10）
+- 当 `count` 从 1 变到 0 --> `safeCount` 返回 1（非法，保留上次的 1）
+
+在可写计算属性中同样支持 `previous` 参数：
+
+```html
+<template>
+  <p>源数据：{{ count }}</p>
+  <label>输入一个 1~10 的数字：</label>
+  <input v-model="safeCount" type="number" />
+</template>
+
+<script setup>
+  import { ref, computed } from 'vue'
+
+  const count = ref(5)
+
+  const safeCount = computed({
+    get(previous) {
+      if (count.value >= 1 && count.value <= 10) {
+        return count.value
+      }
+      return previous // 超出范围时保留上一次的有效显示值
+    },
+    set(newValue) {
+      // 无论用户输入什么，都先写入源数据
+      // getter 会自动判断合法性并决定是否真的更新
+      count.value = Number(newValue)
+    },
+  })
+</script>
+```
+
+#### 如何评价这一特性？
+
+`previous` 参数是 Vue 3.4 新增的一个「巧妙但非必备」的特性。从 Vue 官方提供的示例来看，它的价值在于：当你需要严格保持上一次有效值（比如配合 `v-model` 做输入校验）时，可以少写一些样板代码。
+
+但它的局限性同样明显：
+
+1. 模糊了 computed 的职责边界。计算属性的 getter 本应是纯函数——拿数据、算结果、返回。引入 `previous` 后，getter 内部还需要判断新值合法性并决定用新还是用旧，这让 getter 不再「纯粹」。
+2. 理解成本偏高。相比直接用方法处理，`previous` 的流转机制需要多绕一个弯。同样是做范围校验，下面这种写法的意图更加一目了然：
+
+```js
+function setSafeCount(newValue) {
+  if (newValue >= 1 && newValue <= 10) {
+    count.value = newValue
+  }
+  // 不合法就什么都不做，保留原值
+}
+```
+
+总之，这是一个「知道就好，不一定要用」的特性，对大多数场景而言，用方法或侦听器来做范围校验，是更具普适性、更容易维护的实践。
+
+## 6. 🤔 计算属性的最佳实践是？
+
+### 6.1. Getter 不应有副作用
 
 Getter 不应有副作用。计算属性的 getter 应该只做计算，不要在里面修改其他状态、发起异步请求或操作 DOM。计算属性的职责是根据已有数据派生新值，而不是触发其他行为。如果需要在数据变化时执行副作用操作（如网络请求、日志记录等），应该使用侦听器（watch）来处理。
 
-避免直接修改计算属性的值。从计算属性返回的值可以看作是一个"临时快照"——每当源状态发生变化时，就会创建一个新的快照。更改快照是没有意义的，因此计算属性的返回值应该被视为只读的，永远不应该被直接修改。如果需要"反向修改"，应该使用带有 setter 的计算属性（见第 5 节），或者直接更新它所依赖的源数据。
+### 6.2. 只读原则
 
-computed 和 watch 各有分工。computed 用于声明式地派生数据，适合"数据变了，需要产生新数据"的场景；watch 用于响应数据变化并执行副作用，适合"数据变了，需要做某件事"的场景。一个简单的判断方法：如果你在 watch 回调中只是在给另一个 ref 赋值，而没有做任何异步或副作用操作，那几乎可以肯定应该用 computed 来替代。
+- 若计算属性没有 setter 那么该计算属性就是只读的，不能被直接修改
+- 若存在 setter，则 setter 应该只用于更新源数据（计算属性依赖的数据），并且不应该包含复杂的副作用逻辑
+
+避免直接修改计算属性的值。从计算属性返回的值可以看作是一个“临时快照”，每当源状态发生变化时，就会创建一个新的快照。更改快照是没有意义的，因此计算属性的返回值应该被视为只读的，永远不应该被直接修改。如果需要“反向修改”，应该使用带有 setter 的计算属性，或者直接更新它所依赖的源数据。
+
+### 6.3. 不要依赖计算属性对依赖变更的监听特性来触发副作用操作
+
+计算属性虽然会监听依赖数据的变更，并在依赖数据变更之后重新计算，但是不应该依赖它的这种行为来触发副作用操作（如网络请求、日志记录等），正确的做法应该是使用侦听器（watch）来处理。
+
+computed 和 watch 各有分工：
+
+- computed 用于声明式地派生数据
+- watch 用于响应数据变化并执行副作用
+
+一个简单的判断方法：如果你在 watch 回调中只是在给另一个 ref 赋值，而没有做任何异步或副作用操作，那几乎可以肯定应该用 computed 来替代。
+
+不过最核心的区分方式还是从语义层面触发来区分：
+
+- 用 computed 来表达“这个值是由其他数据计算得来的”，强调的是数据之间的关系和依赖，适合“数据变了，需要产生新数据”的场景
+- 用 watch 来表达“当这个数据发生变化时，我需要做一些事情”，强调的是事件和行为，适合“数据变了，需要做某件事（可以是副作用操作）”的场景
 
 ## 7. 🔗 引用
 
