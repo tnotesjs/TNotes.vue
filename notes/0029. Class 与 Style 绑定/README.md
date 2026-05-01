@@ -5,8 +5,12 @@
 - [1. 🎯 本节内容](#1--本节内容)
 - [2. 🫧 评价](#2--评价)
 - [3. 🤔 如何使用对象语法和数组语法绑定 HTML Class？](#3--如何使用对象语法和数组语法绑定-html-class)
-- [4. 🤔 如何使用对象语法和数组语法绑定内联样式？](#4--如何使用对象语法和数组语法绑定内联样式)
-- [5. 🤔 Vue 如何处理样式的多值和自动前缀？](#5--vue-如何处理样式的多值和自动前缀)
+  - [3.1. 对象语法](#31-对象语法)
+  - [3.2. 数组语法](#32-数组语法)
+  - [3.3. 自定义组件绑定 class](#33-自定义组件绑定-class)
+- [4. 💻 demos.1 - 实战场景：实现 Tag 组件](#4--demos1---实战场景实现-tag-组件)
+- [5. 🤔 如何使用对象语法和数组语法绑定内联样式？](#5--如何使用对象语法和数组语法绑定内联样式)
+- [6. 🤔 Vue 如何处理样式的多值和自动前缀？](#6--vue-如何处理样式的多值和自动前缀)
 
 <!-- endregion:toc -->
 
@@ -23,6 +27,8 @@
 ## 3. 🤔 如何使用对象语法和数组语法绑定 HTML Class？
 
 Vue 对 class 属性的绑定做了专门的增强，除了支持普通的字符串绑定外，还支持对象语法和数组语法。这两种语法让动态 class 的管理变得更加直观和灵活，是实际 Vue 开发中使用频率极高的特性。
+
+### 3.1. 对象语法
 
 对象语法允许你传入一个对象，对象的键是 class 名称，值是布尔表达式。当值为 true 时，对应的 class 会被添加到元素上；当值为 false 时，class 会被移除：
 
@@ -62,6 +68,12 @@ Vue 对 class 属性的绑定做了专门的增强，除了支持普通的字符
 ```
 
 需要特别注意的是，当 class 名称包含连字符（如 text-danger、is-loading）时，必须用引号将其包裹，因为 JavaScript 对象的键不能直接包含连字符。
+
+最终元素结构：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-02-00-03-09.png)
+
+### 3.2. 数组语法
 
 数组语法允许你传入一个数组，数组中的每个元素都会被添加为 class：
 
@@ -103,11 +115,16 @@ Vue 对 class 属性的绑定做了专门的增强，除了支持普通的字符
       'btn-disabled': isDisabled.value,
     },
   ])
-  // 可能渲染为：<button class="btn btn-primary btn-large btn-round">
 </script>
 ```
 
-在组件上使用 class 绑定时，行为取决于组件的根元素数量。如果组件只有一个根元素，class 会被自动合并到根元素上：
+最终元素结构：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-02-00-08-36.png)
+
+### 3.3. 自定义组件绑定 class
+
+在自定义组件上使用 class 绑定时，行为取决于组件的根元素数量。如果组件只有一个根元素，class 会被自动合并到根元素上：
 
 ```html
 <!-- 子组件 MyButton.vue -->
@@ -117,19 +134,22 @@ Vue 对 class 属性的绑定做了专门的增强，除了支持普通的字符
   </button>
 </template>
 
-<!-- 父组件 -->
+<!-- 父组件 App.vue -->
 <template>
-  <MyButton class="large primary" :class="{ active: isActive }">
-    点击我
-  </MyButton>
-  <!-- 渲染为：<button class="btn large primary active"> -->
+  <MyButton class="large primary" :class="{ active: true }"> 点击我 </MyButton>
 </template>
+
+<script setup>
+  import MyButton from './MyButton.vue'
+</script>
 ```
 
-如果组件有多个根元素，需要通过 $attrs.class 手动指定哪个元素接收外部传入的 class：
+最终元素结构：`<button class="btn large primary active">点击我</button>`
+
+如果组件有多个根元素，需要通过 `$attrs.class` 手动指定哪个元素接收外部传入的 class。
 
 ```html
-<!-- 多根元素组件 -->
+<!-- 子组件 MyLayout.vue -->
 <template>
   <header>标题</header>
   <main :class="$attrs.class">内容区域</main>
@@ -141,43 +161,47 @@ Vue 对 class 属性的绑定做了专门的增强，除了支持普通的字符
     inheritAttrs: false, // 阻止默认的属性继承行为
   }
 </script>
-```
 
-一个实际的组件库场景——实现一个支持多种变体和状态的 Tag 组件：
-
-```html
+<!-- 父组件 App.vue -->
 <template>
-  <span :class="tagClasses">
-    <slot />
-    <button v-if="closable" @click="$emit('close')" class="tag-close">x</button>
-  </span>
+  <MyLayout class="page-shell highlighted" :class="{ active: true }" />
 </template>
 
 <script setup>
-  import { computed } from 'vue'
-
-  const props = defineProps({
-    type: { type: String, default: 'default' },
-    size: { type: String, default: 'medium' },
-    closable: { type: Boolean, default: false },
-    round: { type: Boolean, default: false },
-    plain: { type: Boolean, default: false },
-  })
-
-  const tagClasses = computed(() => [
-    'tag',
-    `tag-${props.type}`,
-    `tag-${props.size}`,
-    {
-      'tag-round': props.round,
-      'tag-plain': props.plain,
-      'tag-closable': props.closable,
-    },
-  ])
+  import MyLayout from './MyLayout.vue'
 </script>
 ```
 
-## 4. 🤔 如何使用对象语法和数组语法绑定内联样式？
+最终元素结构：
+
+```html
+<header>标题</header>
+<main class="page-shell highlighted active">内容区域</main>
+<footer>底部</footer>
+```
+
+## 4. 💻 demos.1 - 实战场景：实现 Tag 组件
+
+该 demos.1 是一个模拟实际的组件库中的 Tag 组件的实现，需要做一个支持多种变体和状态的 Tag 组件。
+
+你可以重点观察两件事：
+
+- `tagClasses` 如何同时组合静态 class、模板字符串 class 和对象语法 class
+- 切换不同 props 后，最终渲染到 `<span>` 上的 class 会如何变化
+
+::: code-group
+
+<<< ./demos/1/Tag.vue
+
+<<< ./demos/1/App.vue
+
+:::
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-02-00-34-01.png)
+
+测试流程说明：在 Vue Playground 中创建 `Tag.vue` 和 `App.vue` 两个文件后，直接把上面的代码分别粘进去即可测试。切换下拉框和复选框时，你会看到 `tag tag-primary tag-medium tag-round` 这类 class 组合不断变化，这正是数组语法和对象语法配合使用的典型场景。
+
+## 5. 🤔 如何使用对象语法和数组语法绑定内联样式？
 
 Vue 对 style 属性的绑定也做了增强处理，支持对象语法和数组语法。与原生的内联样式字符串相比，Vue 的增强语法更加灵活，支持使用 JavaScript 变量和表达式来动态控制样式值。
 
@@ -316,7 +340,7 @@ Vue 对 style 属性的绑定也做了增强处理，支持对象语法和数组
 </script>
 ```
 
-## 5. 🤔 Vue 如何处理样式的多值和自动前缀？
+## 6. 🤔 Vue 如何处理样式的多值和自动前缀？
 
 Vue 在处理内联样式绑定时，内置了两个非常实用的特性：自动添加浏览器厂商前缀和支持多值语法。这些特性让开发者不需要手动处理浏览器兼容性问题，可以直接使用标准的 CSS 属性名。
 
