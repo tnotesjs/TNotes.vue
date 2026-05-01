@@ -129,7 +129,8 @@ const obj = reactive({ count: 0 })
 
 watch(obj, (newValue, oldValue) => {
   // 在嵌套的属性变更时触发
-  // 注意：newValue 和 oldValue 是同一个对象
+  // 注意：newValue 和 oldValue 是同一个对象引用
+  // 因为监听的是同一个 reactive 对象，Vue 不会为深度监听创建旧值副本
 })
 
 obj.count++ // 触发回调
@@ -259,13 +260,10 @@ watchEffect 是 Vue 3 引入的 API，它的特点是自动追踪回调函数中
     { immediate: true },
   )
 
-  // watchEffect 的写法：自动追踪 todoId.value
+  // watchEffect 的写法：自动追踪 todoId.value，无需手动指定
   // 会立即执行一次，不需要 immediate: true
-  watchEffect(async () => {
-    const response = await fetch(
-      `https://jsonplaceholder.typicode.com/todos/${todoId.value}`,
-    )
-    data.value = await response.json()
+  watchEffect(() => {
+    console.log('当前 todoId：', todoId.value)
   })
 </script>
 ```
@@ -279,7 +277,9 @@ watch 和 watchEffect 的主要区别：
 | 新/旧值  | 可获取 `newValue` 和 `oldValue`  | 没有新/旧值参数                |
 | 适用场景 | 需要旧值、精确控制数据源         | 依赖简单、需要自动追踪         |
 
-watchEffect 的注意事项：它仅会在同步执行期间追踪依赖。在使用异步回调时，只有在第一个 `await` 正常工作前访问到的属性才会被追踪：
+::: warning watchEffect 与异步回调的注意事项
+
+watchEffect 仅会在**同步执行期间**追踪依赖。如果使用 async 回调，只有在第一个 `await` 之前同步访问到的属性才会被追踪，`await` 之后的代码无法被追踪：
 
 ```js
 watchEffect(async () => {
@@ -288,11 +288,15 @@ watchEffect(async () => {
 
   const response = await fetch(`/api/todos/${id}`)
 
-  // ❌ await 之后：不会被追踪
+  // ❌ await 之后：不会再被追踪
   const result = await response.json()
   data.value = result
 })
 ```
+
+因此当回调中有异步操作时，使用 watch 并明确指定数据源是更稳妥的选择。
+
+:::
 
 ## 7. 🤔 侦听器回调的触发时机有哪些？
 
