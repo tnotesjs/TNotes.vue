@@ -132,7 +132,8 @@ argument-hint: 'TNotes.vue 写作助手 Agent'
 - 引用部分优先放 Vue 官方文档链接，格式参考：
 
 ```markdown
-[Vue.js 官方文档 - 表单输入绑定][1] [xxx][2]
+- [Vue.js 官方文档 - 表单输入绑定][1]
+- [xxx][2]
 
 [1]: https://cn.vuejs.org/guide/essentials/forms.html
 [2]: https://example.com/xxx
