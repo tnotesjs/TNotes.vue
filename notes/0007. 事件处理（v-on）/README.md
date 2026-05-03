@@ -1,4 +1,4 @@
-# [0007. 事件处理](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0007.%20%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86)
+# [0007. 事件处理（v-on）](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0007.%20%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%EF%BC%88v-on%EF%BC%89)
 
 <!-- region:toc -->
 

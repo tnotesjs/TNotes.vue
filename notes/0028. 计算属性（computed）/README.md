@@ -1,4 +1,4 @@
-# [0028. 计算属性](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0028.%20%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7)
+# [0028. 计算属性（computed）](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0028.%20%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7%EF%BC%88computed%EF%BC%89)
 
 <!-- region:toc -->
 

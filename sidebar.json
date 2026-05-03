@@ -66,32 +66,32 @@
         "link": "/notes/0027. 响应式基础/README"
       },
       {
-        "text": "✅ 0028. 计算属性",
-        "link": "/notes/0028. 计算属性/README"
+        "text": "✅ 0028. 计算属性（computed）",
+        "link": "/notes/0028. 计算属性（computed）/README"
       },
       {
         "text": "✅ 0029. Class 与 Style 绑定",
         "link": "/notes/0029. Class 与 Style 绑定/README"
       },
       {
-        "text": "✅ 0030. 条件渲染",
-        "link": "/notes/0030. 条件渲染/README"
+        "text": "✅ 0030. 条件渲染（v-if 和 v-show）",
+        "link": "/notes/0030. 条件渲染（v-if 和 v-show）/README"
       },
       {
-        "text": "✅ 0074. 列表渲染",
-        "link": "/notes/0074. 列表渲染/README"
+        "text": "✅ 0074. 列表渲染（v-for）",
+        "link": "/notes/0074. 列表渲染（v-for）/README"
       },
       {
-        "text": "✅ 0007. 事件处理",
-        "link": "/notes/0007. 事件处理/README"
+        "text": "✅ 0007. 事件处理（v-on）",
+        "link": "/notes/0007. 事件处理（v-on）/README"
+      },
+      {
+        "text": "⏰ 0005. 表单输入绑定（v-model）",
+        "link": "/notes/0005. 表单输入绑定（v-model）/README"
       },
       {
         "text": "⏰ 0082. 侦听器",
         "link": "/notes/0082. 侦听器/README"
-      },
-      {
-        "text": "⏰ 0005. 表单输入绑定",
-        "link": "/notes/0005. 表单输入绑定/README"
       },
       {
         "text": "⏰ 0032. 组件基础",

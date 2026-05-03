@@ -1,4 +1,4 @@
-# [0030. 条件渲染](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0030.%20%E6%9D%A1%E4%BB%B6%E6%B8%B2%E6%9F%93)
+# [0030. 条件渲染（v-if 和 v-show）](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0030.%20%E6%9D%A1%E4%BB%B6%E6%B8%B2%E6%9F%93%EF%BC%88v-if%20%E5%92%8C%20v-show%EF%BC%89)
 
 <!-- region:toc -->
 

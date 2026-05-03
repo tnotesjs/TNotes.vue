@@ -1,4 +1,4 @@
-# [0074. 列表渲染](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0074.%20%E5%88%97%E8%A1%A8%E6%B8%B2%E6%9F%93)
+# [0074. 列表渲染（v-for）](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0074.%20%E5%88%97%E8%A1%A8%E6%B8%B2%E6%9F%93%EF%BC%88v-for%EF%BC%89)
 
 <!-- region:toc -->
 
