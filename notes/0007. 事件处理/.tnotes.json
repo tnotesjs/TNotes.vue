@@ -2,10 +2,10 @@
   "bilibili": [],
   "tnotes": [],
   "yuque": [],
-  "done": false,
-  "enableDiscussions": false,
-  "description": "",
+  "done": true,
+  "enableDiscussions": true,
+  "description": "介绍 v-on 指令（简写 @）的相关用法。",
   "id": "cf6b7c23-1b6a-4cb2-91c8-c3e88a7a7480",
   "created_at": 1758172048008,
-  "updated_at": 1758172048008
+  "updated_at": 1777799495332
 }
