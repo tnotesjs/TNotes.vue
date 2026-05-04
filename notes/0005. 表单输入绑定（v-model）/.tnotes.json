@@ -2,10 +2,10 @@
   "bilibili": [],
   "tnotes": [],
   "yuque": [],
-  "done": false,
-  "enableDiscussions": false,
-  "description": "",
+  "done": true,
+  "enableDiscussions": true,
+  "description": "表单中的 v-model 输入双向绑定的基本使用说明。",
   "id": "ccdbb2d5-1a02-4440-b7a8-bd7a0af81c14",
   "created_at": 1758172048007,
-  "updated_at": 1758172048007
+  "updated_at": 1777890764705
 }
