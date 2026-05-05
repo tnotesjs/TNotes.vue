@@ -90,10 +90,6 @@
         "link": "/notes/0005. 表单输入绑定（v-model）/README"
       },
       {
-        "text": "⏰ 0082. 侦听器（watch）",
-        "link": "/notes/0082. 侦听器（watch）/README"
-      },
-      {
         "text": "⏰ 0032. 组件基础",
         "link": "/notes/0032. 组件基础/README"
       },
@@ -510,6 +506,10 @@
       {
         "text": "⏰ 0073. vue 风格指南",
         "link": "/notes/0073. vue 风格指南/README"
+      },
+      {
+        "text": "⏰ 0082. 侦听器（watch）",
+        "link": "/notes/0082. 侦听器（watch）/README"
       }
     ]
   }

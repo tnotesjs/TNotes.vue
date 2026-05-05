@@ -205,3 +205,4 @@
 
 - [ ] [0015. vue github 仓库](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0015.%20vue%20github%20%E4%BB%93%E5%BA%93/README.md)
 - [ ] [0073. vue 风格指南](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0073.%20vue%20%E9%A3%8E%E6%A0%BC%E6%8C%87%E5%8D%97/README.md)
+- [ ] [0082. 侦听器（watch）](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0082.%20%E4%BE%A6%E5%90%AC%E5%99%A8%EF%BC%88watch%EF%BC%89/README.md)
