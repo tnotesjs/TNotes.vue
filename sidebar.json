@@ -94,6 +94,10 @@
         "link": "/notes/0082. 侦听器（watch）/README"
       },
       {
+        "text": "⏰ 0075. 模板引用",
+        "link": "/notes/0075. 模板引用/README"
+      },
+      {
         "text": "⏰ 0032. 组件基础",
         "link": "/notes/0032. 组件基础/README"
       },
@@ -110,10 +114,6 @@
       {
         "text": "⏰ 0079. 深入组件",
         "link": "/notes/0079. 深入组件/README"
-      },
-      {
-        "text": "⏰ 0075. new",
-        "link": "/notes/0075. new/README"
       }
     ]
   },
