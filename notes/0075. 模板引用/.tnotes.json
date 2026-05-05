@@ -2,10 +2,10 @@
   "bilibili": [],
   "tnotes": [],
   "yuque": [],
-  "done": false,
-  "enableDiscussions": false,
-  "description": "",
+  "done": true,
+  "enableDiscussions": true,
+  "description": "主要介绍 useTemplateRef、defineExpose、ref 这 3 个 API 的用法及一些注意事项。",
   "id": "ce9ff2ea-0fbd-4927-9e61-8577a63b04ef",
   "created_at": 1777124496000,
-  "updated_at": 1777124496000
+  "updated_at": 1777995861070
 }

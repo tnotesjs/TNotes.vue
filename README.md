@@ -63,7 +63,7 @@
 - [x] [0007. 事件处理（v-on）](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0007.%20%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%EF%BC%88v-on%EF%BC%89/README.md)
 - [x] [0005. 表单输入绑定（v-model）](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0005.%20%E8%A1%A8%E5%8D%95%E8%BE%93%E5%85%A5%E7%BB%91%E5%AE%9A%EF%BC%88v-model%EF%BC%89/README.md)
 - [x] [0082. 侦听器（watch）](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0082.%20%E4%BE%A6%E5%90%AC%E5%99%A8%EF%BC%88watch%EF%BC%89/README.md)
-- [ ] [0075. 模板引用](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0075.%20%E6%A8%A1%E6%9D%BF%E5%BC%95%E7%94%A8/README.md)
+- [x] [0075. 模板引用](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0075.%20%E6%A8%A1%E6%9D%BF%E5%BC%95%E7%94%A8/README.md)
 - [ ] [0032. 组件基础](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0032.%20%E7%BB%84%E4%BB%B6%E5%9F%BA%E7%A1%80/README.md)
 - [ ] [0024. Vue 实例与生命周期](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0024.%20Vue%20%E5%AE%9E%E4%BE%8B%E4%B8%8E%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/README.md)
 
