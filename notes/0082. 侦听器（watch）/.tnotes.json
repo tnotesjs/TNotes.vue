@@ -2,10 +2,10 @@
   "bilibili": [],
   "tnotes": [],
   "yuque": [],
-  "done": false,
-  "enableDiscussions": false,
-  "description": "",
+  "done": true,
+  "enableDiscussions": true,
+  "description": "watch 和 watchEffect 的使用说明。",
   "id": "454558b8-8aec-4ac2-8084-32cbe6ec369c",
   "created_at": 1777610028501,
-  "updated_at": 1777610028501
+  "updated_at": 1777968286760
 }
