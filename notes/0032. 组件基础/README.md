@@ -19,6 +19,8 @@
   - [5.3. 小结](#53-小结)
 - [6. 🤔 单文件组件（SFC）的结构是怎样的？](#6--单文件组件sfc的结构是怎样的)
 - [7. 🤔 父组件如何通过 props 向子组件传递数据？](#7--父组件如何通过-props-向子组件传递数据)
+  - [7.1. `props` 的基本使用](#71-props-的基本使用)
+  - [7.2. 选项式 API vs 组合式 API](#72-选项式-api-vs-组合式-api)
 - [8. 🤔 子组件如何通过自定义事件通知父组件？](#8--子组件如何通过自定义事件通知父组件)
 - [9. 🤔 插槽在组件中解决的是什么问题？](#9--插槽在组件中解决的是什么问题)
 - [10. 🤔 动态组件是做什么的？什么时候要配合 `KeepAlive`？](#10--动态组件是做什么的什么时候要配合-keepalive)
@@ -324,6 +326,14 @@ Vue 3 支持多根节点的 `<template>`，例如：
 
 ## 7. 🤔 父组件如何通过 props 向子组件传递数据？
 
+::: tip
+
+组件之间的通信方式有很多种，除了 `props` 和自定义事件之外，还有 `provide/inject`、`v-model`、Vuex、Pinia、EventBus 等等。这里我们先从最基础、最常见的 `props` 和自定义事件讲起，会用专门的笔记来介绍其他通信方式。
+
+:::
+
+### 7.1. `props` 的基本使用
+
 `props` 用来做「父传子」。父组件把数据放在组件标签上，子组件显式声明后接收它。
 
 这是组件通信里最基础、最常见的一种方式。
@@ -366,23 +376,63 @@ Vue 3 支持多根节点的 `<template>`，例如：
 
 :::
 
-这里有几个关键点：
+最终渲染结果：
 
-- `defineProps()` 是 `<script setup>` 专用的编译宏，不需要手动导入。
-- 它会返回一个 props 对象，你可以在脚本里通过 `props.xxx` 访问。
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-07-07-35-27.png)
+
+这里有几个关键点需要知晓：
+
+- `defineProps()` 是 `<script setup>` 专用的编译宏，不需要手动导入。它会返回一个 props 对象，你可以在脚本里通过 `props.xxx` 访问。
 - 在父组件里，静态值可以直接写，动态值通常通过 `v-bind` 传递，也就是 `:title="post.title"` 这种形式。
-- 一个组件可以声明多个 props。基础阶段你先把它理解成「组件对外开放的数据输入口」就够了。
+- 一个组件可以声明多个 props。基础阶段你先把它理解成「组件对外开放的数据输入口」就够了，通过这个输入口，父组件就能把数据传递给子组件了。
 
-如果你没有使用 `<script setup>`，那就通过 `props` 选项声明，并在 `setup(props)` 里读取：
+### 7.2. 选项式 API vs 组合式 API
 
-```js
-export default {
-  props: ['title'],
-  setup(props) {
-    console.log(props.title)
+除了使用 `<script setup>` 中的组合式 API 的方式之外，还可以像早期 Vue2 那种选项式 API 的形式，通过 `props` 选项来声明 `props`，并在 `setup(props)` 里读取：
+
+```html
+<!-- BlogPost.vue -->
+<template>
+  <article class="post">
+    <h3>{{ props.title }}</h3>
+  </article>
+</template>
+
+<!-- 写法 1：选项式 API -->
+<script>
+  export default {
+    props: ['title'],
+    setup(props) {
+      console.log(props.title)
+      return {
+        props,
+      }
+    },
+  }
+</script>
+
+<!-- 写法 2：组合式 API -->
+<!-- 
+<script setup>
+const props = defineProps({
+  title: {
+    type: String,
+    required: true,
   },
-}
+})
+</script>
+ -->
 ```
+
+写法 1 和写法 2 最终效果是一样的，都是在组件里声明了一个 `title` 的 prop，并且父组件通过 `:title="post.title"` 把数据传递给它。
+
+在现代 Vue3 项目中，写法 2 更常见一些，因为它更简洁，也更符合现在的主流风格。你可以到 Vue.js 官方 GitHub 仓库下看看一些官方维护的核心库（比如 Vue Router、Pinia 等）的源码，它们的 `xxx.vue` 文件基本上都是使用 `<script setup>` 这种组合式 API 的写法来实现的。
+
+::: details 展开查看：Vue 官方文档对选项式 API 和组合式 API 的选择建议
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-07-07-50-25.png)
+
+:::
 
 ## 8. 🤔 子组件如何通过自定义事件通知父组件？
 
@@ -643,9 +693,11 @@ export default {
 - [Vue.js 官方文档 - 单文件组件][3]
 - [Vue.js 官方文档 - 风格指南][4]
 - [StackBlitz][5]
+- [Vue.js 官方 GitHub 仓库][6]
 
 [1]: https://cn.vuejs.org/guide/essentials/component-basics.html
 [2]: https://cn.vuejs.org/guide/components/registration.html
 [3]: https://cn.vuejs.org/guide/scaling-up/sfc.html
 [4]: https://cn.vuejs.org/style-guide/rules-strongly-recommended.html
 [5]: https://stackblitz.com/edit/vitejs-vite-s5ndmort
+[6]: https://github.com/vuejs
