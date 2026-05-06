@@ -1,0 +1,24 @@
+<!-- demos/1/1.html -->
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>组件定义测试</title>
+    <!-- 引入 Vue -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <!-- 1. 在 HTML 里用原生 <template> 元素写模板 -->
+    <template id="counter-tpl">
+      <button @click="count++" style="margin: 8px; padding: 8px 16px">
+        点击了 {{ count }} 次
+      </button>
+    </template>
+    <div id="app">
+      <counter-button></counter-button>
+      <counter-button></counter-button>
+    </div>
+
+    <script src="./2.js"></script>
+  </body>
+</html>
