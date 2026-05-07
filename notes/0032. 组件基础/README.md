@@ -25,6 +25,12 @@
 - [9. 🤔 子组件如何通过自定义事件通知父组件？](#9--子组件如何通过自定义事件通知父组件)
 - [10. 🤔 插槽在组件中解决的是什么问题？](#10--插槽在组件中解决的是什么问题)
 - [11. 🤔 动态组件是做什么的？什么时候要配合 `KeepAlive`？](#11--动态组件是做什么的什么时候要配合-keepalive)
+  - [11.1. 动态组件](#111-动态组件)
+  - [11.2. `KeepAlive`](#112-keepalive)
+  - [11.3. 动态组件 vs 条件渲染](#113-动态组件-vs-条件渲染)
+    - [条件渲染](#条件渲染)
+    - [动态组件](#动态组件)
+    - [小结](#小结)
 - [12. 🤔 直接在 DOM 中写模板时，有哪些解析限制？](#12--直接在-dom-中写模板时有哪些解析限制)
   - [12.1. 大小写不敏感，所以组件名、prop 名、事件名都要写成 kebab-case](#121-大小写不敏感所以组件名prop-名事件名都要写成-kebab-case)
   - [12.2. 组件标签不能自闭合，必须显式写结束标签](#122-组件标签不能自闭合必须显式写结束标签)
@@ -531,43 +537,70 @@ const emit = defineEmits(['enlarge-text'])
 
 ```html [App.vue]
 <template>
-  <AlertBox> 网络请求失败，请稍后再试。 </AlertBox>
+  <FancyButton>
+    <!-- slot content - 插槽内容 -->
+    Click me!
+  </FancyButton>
 </template>
 
 <script setup>
-  import AlertBox from './AlertBox.vue'
+  import FancyButton from './FancyButton.vue'
 </script>
 ```
 
-```html [AlertBox.vue]
+```html [FancyButton.vue]
 <template>
-  <div class="alert-box">
-    <strong>提示：</strong>
-    <slot />
-  </div>
+  <button class="fancy-btn">
+    <slot></slot>
+    <!-- slot outlet - 插槽出口 -->
+  </button>
 </template>
 
 <script setup></script>
 
 <style scoped>
-  .alert-box {
-    padding: 12px;
-    border: 1px solid #f59e0b;
+  .fancy-btn {
+    padding: 8px 16px;
+    border: 2px solid #4f46e5;
     border-radius: 8px;
-    background: #fffbeb;
+    background: #eef2ff;
+    color: #4f46e5;
+    font-weight: bold;
+    cursor: pointer;
   }
 </style>
 ```
 
 :::
 
+最终渲染结果：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-07-18-49-40.png)
+
 你可以先把插槽理解成「组件内部留出来的一块可插入内容的区域」。
+
+`<slot>` 元素是一个插槽出口（slot outlet），标示了父元素提供的插槽内容（slot content）将在哪里被渲染。
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-07-18-47-55.png)
+
+最终渲染出来的 DOM 结构：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-07-18-51-50.png)
+
+通过使用插槽，`<FancyButton>` 仅负责渲染外层的 `<button>` (以及相应的样式)，而其内部的内容由父组件提供。
 
 ## 11. 🤔 动态组件是做什么的？什么时候要配合 `KeepAlive`？
 
-动态组件解决的是「同一个位置，要在多个组件之间切换显示」的问题。
+### 11.1. 动态组件
 
-最常见的场景就是 Tab、步骤面板、设置面板切换这类界面。
+动态组件解决的是「同一个位置，要在多个组件之间切换显示」的问题。动态组件需要通过 Vue 提供的的 `<component>` 元素和特殊的 `is` 属性实现。你可以认为 `<component :is="...">` 就是一个动态组件。它相当于是一个占位组件，会根据 `:is` 的值来决定最终渲染哪个组件。
+
+介绍到此，不难发现「动态组件」和「条件渲染」非常类似，它们都是根据某个状态来决定显示哪个组件。两者的核心区别在于：
+
+- 条件渲染是在模板里写逻辑
+- 动态组件是用数据驱动模板
+
+动态组件最常见的使用场景就是 Tab、步骤面板、设置面板切换这类界面。
 
 ::: code-group
 
@@ -629,12 +662,107 @@ const emit = defineEmits(['enlarge-text'])
 
 :::
 
-这里的关键点是：
+`<component :is="...">` 是 Vue 提供的动态组件入口，`:is` 的值既可以是组件名，也可以是导入后的组件对象。
 
-- `<component :is="...">` 是 Vue 提供的动态组件入口。
-- `:is` 的值既可以是组件名，也可以是导入后的组件对象。
+### 11.2. `KeepAlive`
+
+`KeepAlive` 是 Vue 提供的一个内置组件，用来缓存动态组件的状态。在这个实例中，`<KeepAlive>` 包裹了动态组件 `<component :is="tabs[activeTab]" />`。
+
 - 如果不加 `KeepAlive`，切走的组件会被卸载，回切时重新创建。
 - 如果加上 `KeepAlive`，切走的组件会被缓存，像输入框里的本地状态就能保留下来。
+
+::: tip
+
+`KeepAlive` 缓存的是组件实例及其本地状态（如 ref、输入框内容等），但不会阻止子组件自身的副作用执行（如 `onMounted` 只在首次挂载时触发，再次切回时触发的是 `onActivated` 而非 `onMounted`）。
+
+:::
+
+### 11.3. 动态组件 vs 条件渲染
+
+上面的示例，如果你要使用条件渲染的写法来实现，好像也是可以实现切换需求的，它本质不就是根据不同的状态，在页面上渲染不同的内容嘛！
+
+#### 条件渲染
+
+下面是条件渲染的写法：
+
+```html
+<template>
+  <div>
+    <button @click="activeTab = 'profile'">资料面板</button>
+    <button @click="activeTab = 'settings'">设置面板</button>
+  </div>
+
+  <ProfilePanel v-if="activeTab === 'profile'" />
+  <SettingsPanel v-else-if="activeTab === 'settings'" />
+  <!-- 如果还有更多 tab，继续 v-else-if ... -->
+</template>
+```
+
+两个 Tab 的时候确实没毛病，能跑。但一旦 tab 变多，差距就出来了。
+
+```html
+<!-- 5 个 tab 就得写 5 个分支 -->
+<ProfilePanel v-if="activeTab === 'profile'" />
+<SettingsPanel v-else-if="activeTab === 'settings'" />
+<SecurityPanel v-else-if="activeTab === 'security'" />
+<NotifyPanel v-else-if="activeTab === 'notify'" />
+<AboutPanel v-else-if="activeTab === 'about'" />
+```
+
+每新增一个 tab，你要：
+
+1. 写一个新组件文件
+2. 回来改模板，加一行 `v-else-if`
+
+模板和 tab 列表绑死了。
+
+#### 动态组件
+
+动态组件：模板不变，只改数据。
+
+```html
+<!-- 不管多少个 tab，模板永远只有一行 -->
+<component :is="tabs[activeTab]" />
+```
+
+```js
+const tabs = {
+  profile: ProfilePanel,
+  settings: SettingsPanel,
+  security: SecurityPanel,
+  notify: NotifyPanel,
+  about: AboutPanel,
+}
+```
+
+每新增一个 tab，你只需要：
+
+1. 写一个新组件文件
+2. 在数据里加一行
+
+模板的改动量很小，通常只需要添加一个导航入口即可。
+
+#### 小结
+
+|  | 条件渲染 `v-if` | 动态组件 `<component :is>` |
+| --- | --- | --- |
+| 2~3 个 tab | 够用，很直观 | 也行 |
+| 10 个 tab | 模板膨胀，一长串 `v-else-if` | 模板不变，还是那一行 |
+| tab 列表从后端/配置来 | 不支持（SFC 的模板里无法 v-if 一个未知数量的列表） | 天然支持，遍历数据对象就行 |
+| 配合 `KeepAlive` | 可以，但要包多个组件，语义不够清晰 | 直接包 `<component>` 即可 |
+| 新增 tab 的改动范围 | 模板 + 数据（两处） | 数据（一处） |
+
+条件渲染是在模板里写逻辑，动态组件是用数据驱动模板。数据的管理比模板的管理要灵活地多。
+
+两三个 tab 用 `v-if` 没问题；但凡 tab 数量可能增长、或者 tab 列表本身是动态的，动态组件就是更干净的选择。
+
+::: tip
+
+表格中提到“tab 列表从后端/配置来”，条件渲染不支持这个场景。原因很简单：使用 v-if 时，你必须在模板里逐个写死每个组件标签，模板语法本身没有提供“根据一个数组自动生成 N 个 v-if 分支”的写法。
+
+当然，理论上也可以通过手写 render 函数来实现，但成本远高于直接用动态组件。
+
+:::
 
 ## 12. 🤔 直接在 DOM 中写模板时，有哪些解析限制？
 
