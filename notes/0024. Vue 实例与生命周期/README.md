@@ -5,6 +5,8 @@
 - [1. 🎯 本节内容](#1--本节内容)
 - [2. 🫧 评价](#2--评价)
 - [3. 🤔 如何创建第一个 Vue 应用？](#3--如何创建第一个-vue-应用)
+  - [3.1. createApp](#31-createapp)
+  - [3.2. Vue2、Vue3 创建应用的差异对比](#32-vue2vue3-创建应用的差异对比)
 - [4. 🤔 Vue 的模板语法与数据绑定是如何工作的？](#4--vue-的模板语法与数据绑定是如何工作的)
 - [5. 🤔 Vue 实例的选项对象有哪些？](#5--vue-实例的选项对象有哪些)
 - [6. 🤔 Vue 的生命周期钩子函数是什么？](#6--vue-的生命周期钩子函数是什么)
@@ -24,9 +26,11 @@
 
 ## 3. 🤔 如何创建第一个 Vue 应用？
 
-创建一个 Vue 应用是学习 Vue.js 的第一步。在 Vue 3 中，应用的创建方式与 Vue 2 有所不同，Vue 3 使用 createApp 函数来创建应用实例，取代了 Vue 2 中直接 new Vue() 的方式。这种变化不仅让 API 更加清晰，也为同一页面中运行多个 Vue 应用提供了更好的支持。
+创建一个 Vue 应用是学习 Vue.js 的第一步，也是一个 Vue 应用实例的生命周期起点。在 Vue 3 中，应用的创建方式与 Vue 2 有所不同，Vue 3 使用 `createApp` 函数来创建应用实例，取代了 Vue 2 中直接 `new Vue()` 的方式。这种变化不仅让 API 更加清晰，也为同一页面中运行多个 Vue 应用提供了更好的支持。
 
-一个 Vue 应用从创建应用实例开始。createApp 函数接收一个根组件作为参数，这个根组件是整个组件树的起点。随后调用 mount 方法将应用挂载到一个 DOM 元素上：
+### 3.1. createApp
+
+一个 Vue 应用从创建应用实例开始。`createApp` 函数接收一个根组件作为参数，这个根组件是整个组件树的起点。随后调用 `mount` 方法将应用挂载到一个 DOM 元素上：
 
 ```js
 import { createApp } from 'vue'
@@ -44,9 +48,11 @@ const app = createApp({
 app.mount('#app')
 ```
 
-在实际项目中，根组件通常是一个单文件组件（.vue 文件）。完整的应用创建流程如下：
+在实际项目中，根组件通常是一个 SFC（Single File Component），即：单文件组件（`.vue` 文件）。完整的应用创建流程如下：
 
-```js
+::: code-group
+
+```js [main.js]
 // main.js —— 应用入口文件
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -62,7 +68,7 @@ app.config.errorHandler = (err) => {
 app.mount('#app')
 ```
 
-```html
+```html [App.vue]
 <!-- App.vue —— 根组件 -->
 <template>
   <div>
@@ -78,9 +84,7 @@ app.mount('#app')
 </script>
 ```
 
-对应的 HTML 文件中需要提供一个挂载点：
-
-```html
+```html [index.html]
 <!-- index.html -->
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -89,13 +93,16 @@ app.mount('#app')
     <title>我的 Vue 应用</title>
   </head>
   <body>
+    <!-- 对应的 HTML 文件中需要提供一个挂载点： -->
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
 ```
 
-createApp 返回的应用实例对象提供了一系列方法，用于在挂载之前对应用进行全局配置。这些配置操作必须在调用 mount 之前完成，因为 mount 方法会触发应用的渲染流程：
+:::
+
+createApp 返回的应用实例对象提供了一系列方法，用于在挂载之前对应用进行全局配置。这些配置操作必须在调用 `mount` 之前完成，因为 `mount` 方法会触发应用的渲染流程：
 
 ```js
 import { createApp } from 'vue'
@@ -127,7 +134,12 @@ app.provide('appName', '我的应用')
 app.mount('#app')
 ```
 
-Vue 3 与 Vue 2 在创建应用时有几个重要区别。首先，Vue 2 使用 `new Vue()` 构造函数，而 Vue 3 使用 `createApp()` 工厂函数。其次，Vue 2 的全局 API（如 `Vue.component()`、`Vue.directive()`）是挂载在 Vue 构造函数上的，这意味着所有通过 `new Vue()` 创建的实例都会共享这些全局配置，在测试或微前端场景中容易产生污染。Vue 3 的全局 API 都挂载在应用实例上，不同应用之间完全隔离：
+### 3.2. Vue2、Vue3 创建应用的差异对比
+
+Vue 3 与 Vue 2 在创建应用时有几个重要区别。
+
+- 表面上看，是 API 差异：Vue 2 使用 `new Vue()` 构造函数，而 Vue 3 使用 `createApp()` 工厂函数。
+- 更本质的差异是全局配置的影响范围：Vue 2 的全局 API（如 `Vue.component()`、`Vue.directive()`）是挂载在 Vue 构造函数上的，这意味着所有通过 `new Vue()` 创建的实例都会共享这些全局配置，在测试或微前端场景中容易产生污染。Vue 3 的全局 API 都挂载在应用实例上，不同应用之间完全隔离。
 
 ```js
 // Vue 3 支持同一页面运行多个独立的应用
@@ -140,9 +152,9 @@ app2.component('SharedComponent', Component2) // 不会影响 app1
 app2.mount('#app2')
 ```
 
-mount 方法的参数可以是一个 CSS 选择器字符串，也可以是一个实际的 DOM 元素对象。挂载时，Vue 会将根组件的模板渲染结果替换掉挂载点元素的 innerHTML。需要注意的是，一个应用实例只能调用一次 mount，重复调用会被忽略。
+`mount` 方法的参数可以是一个 CSS 选择器字符串，也可以是一个实际的 DOM 元素对象。挂载时，Vue 会将根组件的模板渲染结果替换掉挂载点元素的 `innerHTML`。需要注意的是，一个应用实例只能调用一次 `mount`，重复调用会被忽略。
 
-如果你想卸载一个已挂载的应用，可以调用 unmount 方法。这在单页面应用的路由切换或动态加载场景中可能会用到：
+如果你想卸载一个已挂载的应用，可以调用 `unmount` 方法。这在单页面应用的路由切换或动态加载场景中可能会用到：
 
 ```js
 const app = createApp(App)
