@@ -46,6 +46,7 @@
 ## 1. 🎯 本节内容
 
 - 组件定义与组件树
+- 组件实例独立
 - 全局注册与局部注册
 - 单文件组件（SFC）结构
 - Props 父传子
@@ -57,9 +58,9 @@
 
 ## 2. 🫧 评价
 
-`props`、`emits`、插槽、局部注册这些内容是组件开发的基础，必须掌握。
+组件复用时实例彼此独立、`props`、`emits`、插槽、局部注册这些内容是组件开发的基础，必须掌握。
 
-动态组件、`KeepAlive`、DOM 内模板注意事项等内容相对边缘，在少数特定场景中会用到，可以先做简单了解。
+全局注册的适用场景、动态组件、`KeepAlive`、DOM 内模板注意事项等内容相对边缘，在少数特定场景中会用到，可以先做简单了解。
 
 ## 3. 🤔 什么是组件？为什么 Vue 应用通常会形成组件树？什么是根组件？
 
@@ -73,11 +74,11 @@
 
 所以一个稍微复杂一点的 Vue 应用，通常都会形成这样的结构：
 
-- 根组件（Root Component）在最上层。
-- 根组件下面拆成页面级、布局级组件。
-- 页面级组件下面继续拆成更细的业务组件和基础组件。
+- 根组件（Root Component）在最上层 => 这是一个 Vue 应用的起点
+- 根组件下面往往挂着：布局级组件 + 页面级组件 => 用于控制应用的整体布局
+- 页面级组件下面继续拆成具体的：业务组件 + 基础组件 => 用于处理具体业务细节逻辑和具体的交互展示效果
 
-这就是我们常说的「组件树」。
+这就是我们常说的「组件树」，每个组件各司其职，从层次上来看，你会发现组件树的结构和我们平时写 HTML 的结构很像，只不过标签名从原生元素变成了我们自己定义的组件名。
 
 「根组件（Root Component）」 是组件树的最顶层组件，也是 Vue 应用的入口组件。它通常是我们在 `createApp()` 里传入的那个组件，例如：
 
@@ -135,6 +136,12 @@ Vue 组件的「定义」和「注册」其实是两件事。
 
 每使用一次组件，就会创建一个新的组件实例，所以这 3 个 `ButtonCounter` 会各自维护自己的 `count`，互不影响。你可以第一个按钮点 1 次，第二个按钮点 2 次，第三个按钮点 3 次，它们的计数结果分别是 1、2、3。
 
+::: tip
+
+组件可以被重用任意多次，但每次使用拿到的都是新的组件实例，因此本地状态默认彼此独立。
+
+:::
+
 ### 4.2. 不使用构建工具时，也可以直接用 JS 对象定义组件
 
 如果你没有使用构建步骤，Vue 组件也可以直接写成一个普通的 JS 对象：
@@ -159,7 +166,23 @@ export const CounterButton = {
 
 另外，一个 `.js` 文件里也不一定只能导出一个组件，你既可以默认导出，也可以具名导出多个组件。
 
+例如，你可以在同一个文件里这样写：
+
+```js
+export const WelcomeMessage = {
+  template: `<h2>你好，Vue 组件</h2>`,
+}
+
+export const AlertBox = {
+  template: `<div>这是一条提示信息</div>`,
+}
+```
+
+使用时再按需导入即可，例如：`import { WelcomeMessage, AlertBox } from './components.js'`。
+
 ### 4.3. 全局注册和局部注册的区别是什么？
+
+#### 全局注册
 
 全局注册是在应用入口统一注册：
 
@@ -167,24 +190,52 @@ export const CounterButton = {
 import { createApp } from 'vue'
 import App from './App.vue'
 import BaseButton from './components/BaseButton.vue'
+import BaseCard from './components/BaseCard.vue'
 
 const app = createApp(App)
 
-app.component('BaseButton', BaseButton)
+app.component('BaseButton', BaseButton).component('BaseCard', BaseCard)
 
 app.mount('#app')
 ```
 
-注册完成后，`BaseButton` 就可以在当前应用里的任意组件模板中直接使用，不需要每次都手动导入。
+注册完成后，`BaseButton` 和 `BaseCard` 就可以在当前应用里的任意组件模板中直接使用，不需要每次都手动导入。这不只包括父组件，也包括任意子组件、孙组件；换句话说，全局注册的组件彼此内部也能直接使用。
 
 局部注册则更贴近我们现在的日常写法：哪个组件要用，就在哪个组件里导入它。
-
-#### 全局注册
 
 - 全局注册的优点是省事，适合按钮、图标、布局容器这类高频基础组件。
 - 全局注册的缺点是依赖关系不够直观，而且未使用的全局组件也更难被构建工具移除。
 
 #### 局部注册
+
+如果使用的是 `<script setup>`，导入后就可以直接在模板中使用：
+
+```html
+<template>
+  <ComponentA />
+</template>
+
+<script setup>
+  import ComponentA from './ComponentA.vue'
+</script>
+```
+
+如果没有使用 `<script setup>`，则需要通过 `components` 选项显式注册：
+
+```js
+import ComponentA from './ComponentA.vue'
+
+export default {
+  components: {
+    ComponentA,
+  },
+  setup() {
+    // ...
+  },
+}
+```
+
+需要注意：这种注册只在当前组件内生效，不会自动让后代组件也直接拿到 `ComponentA`。
 
 - 局部注册的优点是依赖关系清晰，更利于维护和按需组织代码。
 - 局部注册的缺点是需要在每个使用组件的地方都导入它，稍微麻烦一些。

@@ -2,10 +2,10 @@
   "bilibili": [],
   "tnotes": [],
   "yuque": [],
-  "done": false,
-  "enableDiscussions": false,
-  "description": "",
+  "done": true,
+  "enableDiscussions": true,
+  "description": "组件允许我们将 UI 划分为独立的、可重用的部分，我们开发的 Vue 应用，就是由一个个组件构成的。",
   "id": "53d26939-0fbe-43c8-8939-fddf0e8ee262",
   "created_at": 1772287513408,
-  "updated_at": 1772290605555
+  "updated_at": 1778285678340
 }
