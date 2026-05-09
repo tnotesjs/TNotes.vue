@@ -4,27 +4,42 @@
 
 - [1. 🎯 本节内容](#1--本节内容)
 - [2. 🫧 评价](#2--评价)
-- [3. 🤔 如何创建第一个 Vue 应用？](#3--如何创建第一个-vue-应用)
+- [3. 🤔 如何创建一个 Vue 应用？](#3--如何创建一个-vue-应用)
   - [3.1. createApp](#31-createapp)
   - [3.2. Vue2、Vue3 创建应用的差异对比](#32-vue2vue3-创建应用的差异对比)
-- [4. 🤔 Vue 的模板语法与数据绑定是如何工作的？](#4--vue-的模板语法与数据绑定是如何工作的)
-- [5. 🤔 Vue 实例的选项对象有哪些？](#5--vue-实例的选项对象有哪些)
-- [6. 🤔 Vue 的生命周期钩子函数是什么？](#6--vue-的生命周期钩子函数是什么)
+- [4. 🤔 Vue 的生命周期钩子函数是什么？](#4--vue-的生命周期钩子函数是什么)
+  - [4.1. Vue 实例的生命周期图表](#41-vue-实例的生命周期图表)
+  - [4.2. 生命周期的四个阶段](#42-生命周期的四个阶段)
+    - [创建阶段](#创建阶段)
+    - [挂载阶段](#挂载阶段)
+    - [更新阶段](#更新阶段)
+    - [卸载阶段](#卸载阶段)
+  - [4.3. 特殊场景下的生命周期钩子](#43-特殊场景下的生命周期钩子)
+- [5. 💻 demos.1 - 生命周期钩子：Vue 3 的组合式 API](#5--demos1---生命周期钩子vue-3-的组合式-api)
+  - [5.1. 示例](#51-示例)
+  - [5.2. 注意事项](#52-注意事项)
+- [6. 🔗 引用](#6--引用)
 
 <!-- endregion:toc -->
 
 ## 1. 🎯 本节内容
 
-- 创建第一个 Vue 应用
-- 模板语法与数据绑定
-- Vue 实例的选项对象（data、methods、computed、watch）
-- 生命周期图示与钩子函数详解（beforeCreate 到 destroyed）
+- 应用创建流程
+- 应用挂载与卸载
+- 生命周期阶段
+- 选项式钩子
+- 组合式钩子
+- 钩子注册约束
 
 ## 2. 🫧 评价
 
-- todo
+这篇笔记介绍的 Vue 生命周期钩子主要以 composition api 风格为主，因为它更符合现代 Vue3 项目的主流写法，选项式 API 的钩子仅作为补充。但是，无论是组合式还是选项式，核心的生命周期概念和触发时机都是一样的，掌握任意一种风格的基本用法，另一种自然是触类旁通的。
 
-## 3. 🤔 如何创建第一个 Vue 应用？
+`createApp`、应用挂载与卸载、`mounted` / `unmounted` 以及副作用清理是高频基础，必须掌握。
+
+`activated`、`deactivated`、`errorCaptured` 和更细的时序差异相对进阶，先理解触发时机与同步注册边界即可。
+
+## 3. 🤔 如何创建一个 Vue 应用？
 
 创建一个 Vue 应用是学习 Vue.js 的第一步，也是一个 Vue 应用实例的生命周期起点。在 Vue 3 中，应用的创建方式与 Vue 2 有所不同，Vue 3 使用 `createApp` 函数来创建应用实例，取代了 Vue 2 中直接 `new Vue()` 的方式。这种变化不仅让 API 更加清晰，也为同一页面中运行多个 Vue 应用提供了更好的支持。
 
@@ -164,340 +179,38 @@ app.mount('#app')
 app.unmount()
 ```
 
-## 4. 🤔 Vue 的模板语法与数据绑定是如何工作的？
-
-Vue 的模板语法是一套声明式的 HTML 扩展语法，它允许开发者以直观的方式将组件的数据绑定到 DOM 结构上。Vue 的模板在底层会被编译为高度优化的 JavaScript 渲染函数，但开发者通常不需要关心编译细节，只需要使用简洁的模板语法来描述 UI 的结构和行为。
-
-最基本的数据绑定方式是文本插值，使用双大括号（Mustache）语法：
-
-```html
-<template>
-  <div>
-    <p>{{ message }}</p>
-    <p>{{ count + 1 }}</p>
-    <p>{{ ok ? '是' : '否' }}</p>
-    <p>{{ message.split('').reverse().join('') }}</p>
-  </div>
-</template>
-
-<script setup>
-  import { ref } from 'vue'
-
-  const message = ref('Hello Vue')
-  const count = ref(10)
-  const ok = ref(true)
-</script>
-```
-
-双大括号中的内容会被替换为对应数据的值，并且当数据发生变化时，页面上的内容也会自动更新。你可以在双大括号中使用任意的 JavaScript 表达式，包括算术运算、三元运算、方法调用等。但需要注意的是，这里只能使用单个表达式，不能使用语句（如 if、for）或变量声明。
-
-属性绑定使用 v-bind 指令（或简写为 `:`），用于将数据动态绑定到 HTML 元素的属性上：
-
-```html
-<template>
-  <div>
-    <!-- 动态绑定 id -->
-    <div :id="dynamicId"></div>
-
-    <!-- 动态绑定 class -->
-    <div :class="{ active: isActive, 'text-danger': hasError }"></div>
-
-    <!-- 动态绑定 style -->
-    <div :style="{ color: textColor, fontSize: fontSize + 'px' }"></div>
-
-    <!-- 动态绑定 href -->
-    <a :href="url">链接</a>
-
-    <!-- 动态绑定 disabled -->
-    <button :disabled="isLoading">提交</button>
-
-    <!-- 绑定多个属性 -->
-    <div v-bind="objectOfAttrs"></div>
-  </div>
-</template>
-
-<script setup>
-  import { ref, reactive } from 'vue'
-
-  const dynamicId = ref('container')
-  const isActive = ref(true)
-  const hasError = ref(false)
-  const textColor = ref('#333')
-  const fontSize = ref(16)
-  const url = ref('https://vuejs.org')
-  const isLoading = ref(false)
-  const objectOfAttrs = reactive({
-    id: 'wrapper',
-    class: 'container',
-  })
-</script>
-```
-
-事件绑定使用 v-on 指令（或简写为 `@`），用于监听 DOM 事件：
-
-```html
-<template>
-  <div>
-    <!-- 基本事件绑定 -->
-    <button @click="handleClick">点击我</button>
-
-    <!-- 内联事件处理 -->
-    <button @click="count++">计数：{{ count }}</button>
-
-    <!-- 传递参数 -->
-    <button @click="greet('Vue')">打招呼</button>
-
-    <!-- 访问原生事件对象 -->
-    <button @click="handleEvent($event)">事件对象</button>
-
-    <!-- 事件修饰符 -->
-    <form @submit.prevent="onSubmit">
-      <button type="submit">提交</button>
-    </form>
-
-    <!-- 按键修饰符 -->
-    <input @keyup.enter="onEnter" />
-  </div>
-</template>
-
-<script setup>
-  import { ref } from 'vue'
-
-  const count = ref(0)
-
-  function handleClick() {
-    console.log('按钮被点击了')
-  }
-
-  function greet(name) {
-    console.log(`你好，${name}！`)
-  }
-
-  function handleEvent(event) {
-    console.log('事件类型：', event.type)
-    console.log('目标元素：', event.target)
-  }
-
-  function onSubmit() {
-    console.log('表单提交')
-  }
-
-  function onEnter() {
-    console.log('按下了回车键')
-  }
-</script>
-```
-
-双向数据绑定使用 v-model 指令，它是 v-bind 和 v-on 的语法糖，专用于表单元素：
-
-```html
-<template>
-  <div>
-    <!-- 文本输入框 -->
-    <input v-model="text" placeholder="输入文字" />
-    <p>你输入了：{{ text }}</p>
-
-    <!-- 复选框 -->
-    <input type="checkbox" v-model="checked" />
-    <p>选中状态：{{ checked }}</p>
-
-    <!-- 单选按钮 -->
-    <input type="radio" v-model="picked" value="a" /> A
-    <input type="radio" v-model="picked" value="b" /> B
-    <p>选择了：{{ picked }}</p>
-
-    <!-- 下拉选择 -->
-    <select v-model="selected">
-      <option value="">请选择</option>
-      <option value="vue">Vue</option>
-      <option value="react">React</option>
-    </select>
-    <p>选择了：{{ selected }}</p>
-
-    <!-- 多行文本 -->
-    <textarea v-model="content"></textarea>
-  </div>
-</template>
-
-<script setup>
-  import { ref } from 'vue'
-
-  const text = ref('')
-  const checked = ref(false)
-  const picked = ref('a')
-  const selected = ref('')
-  const content = ref('')
-</script>
-```
-
-v-model 的工作原理实际上是对不同表单元素使用了不同的属性和事件组合。对于文本类型的 input 和 textarea，v-model 绑定的是 value 属性和 input 事件；对于 checkbox 和 radio，绑定的是 checked 属性和 change 事件；对于 select，绑定的是 value 属性和 change 事件。
-
-v-model 还支持一些修饰符来调整其行为：
-
-```html
-<template>
-  <!-- .lazy 修饰符：从 input 事件改为 change 事件触发更新 -->
-  <input v-model.lazy="msg" />
-
-  <!-- .number 修饰符：自动将输入值转为数字 -->
-  <input v-model.number="age" type="number" />
-
-  <!-- .trim 修饰符：自动去除输入值首尾空格 -->
-  <input v-model.trim="name" />
-</template>
-```
-
-Vue 的模板语法在底层会被 Vue 的模板编译器编译为渲染函数。编译器会对模板进行静态分析，识别出哪些部分是动态的、哪些部分是静态的，然后生成优化后的渲染代码。静态的部分会被提升到渲染函数外部，避免在每次重新渲染时重复创建。动态的部分会带上 Patch Flags 标记，告诉运行时的 diff 算法只需要比较这些标记过的节点，从而大幅提升渲染性能。
-
-## 5. 🤔 Vue 实例的选项对象有哪些？
-
-在 Vue 中创建组件时，需要通过选项对象来定义组件的各种行为。在 Vue 2 和 Vue 3 的选项式 API 中，选项对象是组件定义的核心。Vue 3 同时引入了组合式 API，提供了一种新的组织方式，但选项式 API 仍然被完全支持。了解各个选项的用途和用法，是掌握 Vue 组件开发的基础。
-
-data 选项用于声明组件的响应式状态数据。在组件中，data 必须是一个函数，返回一个对象。这样设计是为了确保每个组件实例都有自己独立的数据副本，避免多个实例之间共享数据导致的相互干扰：
-
-```js
-export default {
-  data() {
-    return {
-      message: '你好',
-      count: 0,
-      user: {
-        name: '张三',
-        age: 25,
-      },
-      items: ['苹果', '香蕉', '橙子'],
-    }
-  },
-}
-```
-
-data 返回的对象中的属性会被 Vue 的响应式系统处理，当这些属性的值发生变化时，依赖它们的模板或计算属性会自动重新求值和渲染。
-
-methods 选项用于定义组件中的方法。这些方法可以在模板中通过事件绑定调用，也可以在其他方法或生命周期钩子中使用。methods 中的方法会自动绑定 this 到当前组件实例，因此你可以直接通过 this 访问 data 中的数据：
-
-```js
-export default {
-  data() {
-    return {
-      count: 0,
-    }
-  },
-  methods: {
-    increment() {
-      this.count++
-    },
-    decrement() {
-      if (this.count > 0) {
-        this.count--
-      }
-    },
-    reset() {
-      this.count = 0
-    },
-    async fetchData() {
-      try {
-        const response = await fetch('/api/data')
-        const data = await response.json()
-        this.items = data
-      } catch (error) {
-        console.error('获取数据失败：', error)
-      }
-    },
-  },
-}
-```
-
-需要注意的是，不要使用箭头函数来定义 methods 中的方法，因为箭头函数不会绑定自己的 this，会导致无法正确访问组件实例。
-
-computed 选项用于定义计算属性。计算属性是基于已有的响应式数据派生出新的值，它会自动缓存计算结果——只有当依赖的数据发生变化时才会重新计算，否则直接返回缓存的值：
-
-```js
-export default {
-  data() {
-    return {
-      firstName: '三',
-      lastName: '张',
-      items: [
-        { name: '苹果', price: 5, quantity: 3 },
-        { name: '香蕉', price: 3, quantity: 5 },
-      ],
-    }
-  },
-  computed: {
-    // 只读计算属性
-    fullName() {
-      return this.lastName + this.firstName
-    },
-    // 带 getter 和 setter 的计算属性
-    fullNameWithSetter: {
-      get() {
-        return this.lastName + this.firstName
-      },
-      set(newValue) {
-        const names = newValue.split('')
-        this.lastName = names[0]
-        this.firstName = names.slice(1).join('')
-      },
-    },
-    // 计算总价
-    totalPrice() {
-      return this.items.reduce((sum, item) => {
-        return sum + item.price * item.quantity
-      }, 0)
-    },
-  },
-}
-```
-
-watch 选项用于侦听响应式数据的变化并执行副作用操作。watch 适合处理数据变化时需要执行异步操作或开销较大的逻辑：
-
-```js
-export default {
-  data() {
-    return {
-      searchQuery: '',
-      user: {
-        name: '张三',
-        address: {
-          city: '北京',
-        },
-      },
-    }
-  },
-  watch: {
-    // 基本用法
-    searchQuery(newVal, oldVal) {
-      console.log(`搜索词从 "${oldVal}" 变为 "${newVal}"`)
-      this.debouncedSearch(newVal)
-    },
-    // 深度侦听
-    user: {
-      handler(newVal) {
-        console.log('用户信息变化了：', newVal)
-      },
-      deep: true,
-    },
-    // 立即执行
-    'user.address.city': {
-      handler(newVal) {
-        console.log('城市变为：', newVal)
-        this.fetchCityData(newVal)
-      },
-      immediate: true,
-    },
-  },
-}
-```
-
-除了上述四个核心选项外，还有其他重要的选项，包括 props（接收父组件传递的数据）、emits（声明组件触发的事件）、components（注册局部组件）、directives（注册局部指令）、provide/inject（跨层级数据传递）、mixins（混入复用逻辑）等。在 Vue 3 的组合式 API 中，这些选项可以通过 setup 函数或 `<script setup>` 语法糖以函数的形式来表达，但底层实现原理是一致的。
-
-## 6. 🤔 Vue 的生命周期钩子函数是什么？
+## 4. 🤔 Vue 的生命周期钩子函数是什么？
 
 Vue 组件的生命周期是指一个组件从创建到销毁的完整过程。在这个过程中，Vue 会在特定的时间点调用一系列预定义的函数，这些函数就被称为生命周期钩子（Lifecycle Hooks）。理解生命周期钩子的触发时机和使用场景，对于正确管理组件的状态、执行副作用操作以及优化性能至关重要。
 
-Vue 组件的生命周期可以分为四个主要阶段：创建阶段、挂载阶段、更新阶段和卸载阶段。
+### 4.1. Vue 实例的生命周期图表
 
-创建阶段包含 beforeCreate 和 created 两个钩子。beforeCreate 在组件实例初始化之后、数据观测和事件配置之前被调用，此时 data、computed、methods 等选项还没有被处理，无法访问。created 在组件实例创建完成后被调用，此时数据观测、计算属性、方法、侦听器等都已经设置好，可以访问和操作响应式数据，但组件尚未挂载到 DOM 上，无法访问 $el：
+下面是官方提供的 Vue 实例的生命周期图表：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-09-20-38-31.png)
+
+你现在并不需要完全理解图中的所有内容，但以后它将是一个有用的参考。
+
+### 4.2. 生命周期的四个阶段
+
+Vue 组件的生命周期可以分为四个主要阶段：
+
+1. 创建阶段
+2. 挂载阶段
+3. 更新阶段
+4. 卸载阶段
+
+如果你第一次接触生命周期，建议先记住最常用的三个钩子：`mounted`、`updated`、`unmounted`，以及组合式 API 中对应的 `onMounted`、`onUpdated`、`onUnmounted`。
+
+::: tip
+
+这里的划分标准是笔记中为了方便介绍来分的，并非官方标准。官方文档只说了具体有哪些生命周期钩子，并没有明确划分成几个阶段。你也可以根据自己的理解和记忆习惯来划分不同的阶段，重要的是理解每个钩子的触发时机和适用场景。
+
+:::
+
+#### 创建阶段
+
+创建阶段包含 `beforeCreate` 和 `created` 两个钩子。`beforeCreate` 在组件实例初始化之后、数据观测和事件配置之前被调用，此时 `data`、`computed`、`methods` 等选项还没有被处理，无法访问。`created` 在组件实例创建完成后被调用，此时数据观测、计算属性、方法、侦听器等都已经设置好，可以访问和操作响应式数据，但组件尚未挂载到 DOM 上，无法访问 `$el`：
 
 ```js
 export default {
@@ -519,7 +232,9 @@ export default {
 }
 ```
 
-挂载阶段包含 beforeMount 和 mounted 两个钩子。beforeMount 在组件被挂载到 DOM 之前调用，模板已经编译完成但还没有渲染到页面上。mounted 在组件被挂载到 DOM 之后调用，此时可以访问到真实的 DOM 元素：
+#### 挂载阶段
+
+挂载阶段包含 `beforeMount` 和 `mounted` 两个钩子。`beforeMount` 在组件被挂载到 DOM 之前调用，模板已经编译完成但还没有渲染到页面上。`mounted` 在组件被挂载到 DOM 之后调用，此时可以访问到真实的 DOM 元素：
 
 ```js
 export default {
@@ -542,7 +257,9 @@ export default {
 }
 ```
 
-更新阶段包含 beforeUpdate 和 updated 两个钩子。当组件的响应式数据发生变化并导致重新渲染时，这两个钩子会被触发。beforeUpdate 在 DOM 更新之前调用，此时数据已经是最新的，但 DOM 还是旧的。updated 在 DOM 更新之后调用：
+#### 更新阶段
+
+更新阶段包含 `beforeUpdate` 和 `updated` 两个钩子。当组件的响应式数据发生变化并导致重新渲染时，这两个钩子会被触发。`beforeUpdate` 在 DOM 更新之前调用，此时数据已经是最新的，但 DOM 还是旧的。`updated` 在 DOM 更新之后调用：
 
 ```js
 export default {
@@ -562,7 +279,9 @@ export default {
 }
 ```
 
-卸载阶段包含 beforeUnmount（Vue 2 中为 beforeDestroy）和 unmounted（Vue 2 中为 destroyed）两个钩子。beforeUnmount 在组件卸载之前调用，此时组件实例仍然完全可用。unmounted 在组件卸载之后调用：
+#### 卸载阶段
+
+卸载阶段包含 `beforeUnmount`（Vue 2 中为 `beforeDestroy`）和 `unmounted`（Vue 2 中为 `destroyed`）两个钩子。`beforeUnmount` 在组件卸载之前调用，此时组件实例仍然完全可用。`unmounted` 在组件卸载之后调用：
 
 ```js
 export default {
@@ -582,52 +301,7 @@ export default {
 }
 ```
 
-在 Vue 3 的组合式 API 中，生命周期钩子以函数的形式使用，需要从 vue 中导入。注意组合式 API 中没有对应 beforeCreate 和 created 的钩子，因为 setup 函数本身就运行在这两个钩子之间：
-
-```html
-<script setup>
-  import {
-    ref,
-    onBeforeMount,
-    onMounted,
-    onBeforeUpdate,
-    onUpdated,
-    onBeforeUnmount,
-    onUnmounted,
-  } from 'vue'
-
-  const count = ref(0)
-
-  // setup 本身相当于 beforeCreate + created
-  console.log('setup：组件实例正在创建')
-
-  onBeforeMount(() => {
-    console.log('onBeforeMount：即将挂载')
-  })
-
-  onMounted(() => {
-    console.log('onMounted：已挂载')
-    // 初始化操作
-  })
-
-  onBeforeUpdate(() => {
-    console.log('onBeforeUpdate：即将更新')
-  })
-
-  onUpdated(() => {
-    console.log('onUpdated：已更新')
-  })
-
-  onBeforeUnmount(() => {
-    console.log('onBeforeUnmount：即将卸载')
-    // 清理操作
-  })
-
-  onUnmounted(() => {
-    console.log('onUnmounted：已卸载')
-  })
-</script>
-```
+### 4.3. 特殊场景下的生命周期钩子
 
 除了上述核心生命周期钩子外，Vue 还提供了一些特殊场景的钩子：
 
@@ -663,4 +337,145 @@ errorCaptured 钩子用于捕获来自后代组件的错误：
 </script>
 ```
 
-在实际开发中，各生命周期钩子的典型使用场景如下：created/setup 中适合进行 API 数据请求、初始化数据；mounted/onMounted 中适合进行 DOM 操作、初始化第三方库、添加事件监听；beforeUnmount/onBeforeUnmount 中适合进行清理工作——移除事件监听、取消定时器、断开 WebSocket 连接等。updated/onUpdated 在实际开发中使用较少，通常可以用 watch 或 watchEffect 来代替。
+在实际开发中，各生命周期钩子的典型使用场景如下：`created/setup` 中适合进行 API 数据请求、初始化数据；`mounted/onMounted` 中适合进行 DOM 操作、初始化第三方库、添加事件监听；`beforeUnmount/onBeforeUnmount` 中适合进行清理工作——移除事件监听、取消定时器、断开 WebSocket 连接等。`updated/onUpdated` 在实际开发中使用较少，通常可以用 `watch` 或 `watchEffect` 来代替。
+
+## 5. 💻 demos.1 - 生命周期钩子：Vue 3 的组合式 API
+
+在 Vue 3 的组合式 API 中，生命周期钩子以函数的形式使用，需要从 vue 中导入。
+
+组合式 API 并没有提供对应 `beforeCreate` 和 `created` 的注册函数，因为 `setup()` 会在所有选项式 API 生命周期钩子之前执行，很多原本会放在 `beforeCreate` / `created` 阶段的初始化工作，通常都直接在 `setup()` 里完成。
+
+### 5.1. 示例
+
+::: code-group
+
+<<< ./demos/1/App.vue
+
+<<< ./demos/1/TestLifeCycle.vue
+
+:::
+
+最终渲染结果：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-09-21-03-08.png)
+
+测试步骤说明：
+
+1. 刷新页面，查看页面首次加载时 `TestLifeCycle.vue` 组件「挂载阶段」日志
+2. 点击「+1」按钮 3 次，查看数据更新时 `TestLifeCycle.vue` 组件「更新阶段」日志
+3. 点击「切换组件显示/隐藏」按钮，查看 `TestLifeCycle.vue` 组件「卸载阶段」日志
+4. 再次点击「切换组件显示/隐藏」按钮，查看组件重新挂载后的「挂载阶段」日志
+5. 点击「+1」按钮 3 次，查看组件重新挂载后的「更新阶段」日志
+
+最终各个步骤输出的日志：
+
+::: code-group
+
+```[1]
+[setup          ] | countDOMText: null       | count:  0 | 组件实例正在创建
+[onBeforeMount  ] | countDOMText: null       | count:  0 | 即将挂载
+[onMounted      ] | countDOMText: count: 0   | count:  0 | 已挂载
+```
+
+```[2]
+[onBeforeUpdate ] | countDOMText: count: 0   | count:  1 | 即将更新
+[onUpdated      ] | countDOMText: count: 1   | count:  1 | 已更新
+[onBeforeUpdate ] | countDOMText: count: 1   | count:  2 | 即将更新
+[onUpdated      ] | countDOMText: count: 2   | count:  2 | 已更新
+[onBeforeUpdate ] | countDOMText: count: 2   | count:  3 | 即将更新
+[onUpdated      ] | countDOMText: count: 3   | count:  3 | 已更新
+```
+
+```[3]
+[onBeforeUnmount] | countDOMText: count: 3   | count:  3 | 即将卸载
+[onUnmounted    ] | countDOMText: null       | count:  3 | 已卸载
+```
+
+```[4]
+[setup          ] | countDOMText: null       | count:  0 | 组件实例正在创建
+[onBeforeMount  ] | countDOMText: null       | count:  0 | 即将挂载
+[onMounted      ] | countDOMText: count: 0   | count:  0 | 已挂载
+```
+
+```[5]
+[onBeforeUpdate ] | countDOMText: count: 0   | count:  1 | 即将更新
+[onUpdated      ] | countDOMText: count: 1   | count:  1 | 已更新
+[onBeforeUpdate ] | countDOMText: count: 1   | count:  2 | 即将更新
+[onUpdated      ] | countDOMText: count: 2   | count:  2 | 已更新
+[onBeforeUpdate ] | countDOMText: count: 2   | count:  3 | 即将更新
+[onUpdated      ] | countDOMText: count: 3   | count:  3 | 已更新
+```
+
+:::
+
+下面是对各个步骤输出内容的解读：
+
+1. 页面首次加载时
+   - `setup` 最先执行，输出「组件实例正在创建」，此时 `countDOMText` 是 `null`，因为 DOM 还没有被挂载。
+   - 随后 `onBeforeMount` 输出「即将挂载」，此时 `countDOMText` 仍然是 `null`。
+   - 最后 `onMounted` 输出「已挂载」，此时 `countDOMText` 显示为 `count: 0`，说明 DOM 已经被正确渲染。
+2. 点击「+1」按钮 3 次
+   - 每次都会先触发 `onBeforeUpdate` 输出「即将更新」，此时 `countDOMText` 显示为更新前的值，虽然 `count` 已经是最新的了，但 DOM 还没有更新。
+   - 随后触发 `onUpdated` 输出「已更新」，此时 `countDOMText` 显示为更新后的值，说明 DOM 已经完成更新。
+3. 点击「切换组件显示/隐藏」按钮
+   - 触发 `onBeforeUnmount` 输出「即将卸载」，此时 `countDOMText` 仍然显示为 `count: 3`，说明组件实例还没有被销毁。
+   - 随后触发 `onUnmounted` 输出「已卸载」，此时 `countDOMText` 变为 `null`，说明组件实例已经被销毁，相关的 DOM 也被移除了，但 `count` 的值仍然是 3，因为它是组件实例的响应式数据，虽然实例被销毁了，但这个变量还在内存里，直到垃圾回收机制回收它。
+4. 再次点击「切换组件显示/隐藏」按钮
+   - 组件重新挂载，触发 `setup`、`onBeforeMount`、`onMounted`，输出与首次加载时相同，说明组件实例被重新创建并挂载。
+   - 需要注意的是，重新挂载后 `count` 的值又回到了初始值 0，因为这是一个全新的组件实例。
+5. 点击「+1」按钮 3 次
+   - 触发 `onBeforeUpdate` 和 `onUpdated`，输出与之前相同，此时 `count` 是新实例的响应式数据，和之前的实例完全独立，因此会重新从 0 开始计数。
+
+### 5.2. 注意事项
+
+组合式 API 的生命周期钩子必须在组件初始化阶段同步注册。Vue 在执行 `setup()` 时，会把“当前正在初始化的组件实例”作为活跃上下文，`onMounted()` 这类调用会把回调注册到这个上下文上；一旦你把注册动作放进异步回调里，这个上下文就丢失了。
+
+下面这种写法就是错误示例：
+
+```html
+<script setup>
+  import { onMounted } from 'vue'
+
+  setTimeout(() => {
+    onMounted(() => {
+      console.log('这段注册不会按预期工作')
+    })
+  }, 100)
+</script>
+```
+
+不过，这并不意味着 `onMounted()` 只能直接写在 `setup()` 或 `<script setup>` 的顶层。只要调用栈是同步的，且最终起源自 `setup()`，就可以把这段逻辑抽到外部函数里，这也是很多组合式函数（composable）能正常工作的原因。
+
+::: code-group
+
+```js [useLogger.js]
+import { onMounted } from 'vue'
+
+export function useLogger(name) {
+  onMounted(() => {
+    console.log(`${name} 已挂载`)
+  })
+}
+```
+
+```html [MyComponent.vue]
+<script setup>
+  import { useLogger } from './useLogger'
+
+  useLogger('MyComponent')
+</script>
+```
+
+:::
+
+只要 `useLogger()` 是在 `setup()` 的同步调用链里执行的，里面的 `onMounted()` 就能被正常注册。
+
+## 6. 🔗 引用
+
+- [Vue 官方文档 - 生命周期钩子][3]
+- [Vue 官方文档 - 组合式 API：生命周期钩子][1]
+- [Vue 官方文档 - 选项式 API：生命周期钩子][2]
+
+[1]: https://cn.vuejs.org/api/composition-api-lifecycle
+[2]: https://cn.vuejs.org/api/options-lifecycle
+[3]: https://cn.vuejs.org/guide/essentials/lifecycle.html
