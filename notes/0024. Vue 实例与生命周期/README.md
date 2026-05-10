@@ -5,7 +5,7 @@
 - [1. 🎯 本节内容](#1--本节内容)
 - [2. 🫧 评价](#2--评价)
 - [3. 🤔 如何创建一个 Vue 应用？](#3--如何创建一个-vue-应用)
-  - [3.1. createApp](#31-createapp)
+  - [3.1. createApp（Vue 3）](#31-createappvue-3)
   - [3.2. Vue2、Vue3 创建应用的差异对比](#32-vue2vue3-创建应用的差异对比)
 - [4. 🤔 Vue 的生命周期钩子函数是什么？](#4--vue-的生命周期钩子函数是什么)
   - [4.1. Vue 实例的生命周期图表](#41-vue-实例的生命周期图表)
@@ -15,6 +15,9 @@
     - [更新阶段](#更新阶段)
     - [卸载阶段](#卸载阶段)
   - [4.3. 特殊场景下的生命周期钩子](#43-特殊场景下的生命周期钩子)
+    - [`activated` 和 `deactivated` 钩子](#activated-和-deactivated-钩子)
+    - [`errorCaptured` 钩子](#errorcaptured-钩子)
+  - [4.4. 小结](#44-小结)
 - [5. 💻 demos.1 - 生命周期钩子：Vue 3 的组合式 API](#5--demos1---生命周期钩子vue-3-的组合式-api)
 - [6. 🤔 在 Vue 3 的组合式 API 中，钩子函数的注册时机是什么时候？](#6--在-vue-3-的组合式-api-中钩子函数的注册时机是什么时候)
 - [7. 🤔 生命周期钩子都有哪些？](#7--生命周期钩子都有哪些)
@@ -36,7 +39,7 @@
 
 最为常用的几个生命周期钩子是 `mounted`、`updated`、`unmounted`，它们分别对应组件挂载完成、更新完成和卸载完成的时机。其他钩子如 `beforeCreate`、`created`、`beforeMount` 等相对较少使用。
 
-没事儿多看看 Vue 官方提供的生命周期图表，本节内容的核心内容都是围绕这个图表展开的。
+没事儿可以多看看 Vue 官方提供的生命周期图表，本节内容的核心内容都是围绕这个图表展开的。
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-09-20-38-31.png)
 
@@ -44,7 +47,7 @@
 
 创建一个 Vue 应用是学习 Vue.js 的第一步，也是一个 Vue 应用实例的生命周期起点。在 Vue 3 中，应用的创建方式与 Vue 2 有所不同，Vue 3 使用 `createApp` 函数来创建应用实例，取代了 Vue 2 中直接 `new Vue()` 的方式。这种变化不仅让 API 更加清晰，也为同一页面中运行多个 Vue 应用提供了更好的支持。
 
-### 3.1. createApp
+### 3.1. createApp（Vue 3）
 
 一个 Vue 应用从创建应用实例开始。`createApp` 函数接收一个根组件作为参数，这个根组件是整个组件树的起点。随后调用 `mount` 方法将应用挂载到一个 DOM 元素上：
 
@@ -306,7 +309,9 @@ export default {
 
 除了上述核心生命周期钩子外，Vue 还提供了一些特殊场景的钩子：
 
-activated 和 deactivated 钩子与 keep-alive 组件配合使用。当一个被 keep-alive 缓存的组件被激活时触发 activated，被停用时触发 deactivated：
+#### `activated` 和 `deactivated` 钩子
+
+`activated` 和 `deactivated` 钩子与 `keep-alive` 组件配合使用。当一个被 `keep-alive` 缓存的组件被激活时触发 `activated`，被停用时触发 `deactivated`：
 
 ```html
 <script setup>
@@ -323,7 +328,9 @@ activated 和 deactivated 钩子与 keep-alive 组件配合使用。当一个被
 </script>
 ```
 
-errorCaptured 钩子用于捕获来自后代组件的错误：
+#### `errorCaptured` 钩子
+
+`errorCaptured` 钩子用于捕获来自后代组件的错误：
 
 ```html
 <script setup>
@@ -338,13 +345,26 @@ errorCaptured 钩子用于捕获来自后代组件的错误：
 </script>
 ```
 
-在实际开发中，各生命周期钩子的典型使用场景如下：`created/setup` 中适合进行 API 数据请求、初始化数据；`mounted/onMounted` 中适合进行 DOM 操作、初始化第三方库、添加事件监听；`beforeUnmount/onBeforeUnmount` 中适合进行清理工作——移除事件监听、取消定时器、断开 WebSocket 连接等。`updated/onUpdated` 在实际开发中使用较少，通常可以用 `watch` 或 `watchEffect` 来代替。
+### 4.4. 小结
+
+在实际开发中，各生命周期钩子的典型使用场景如下：
+
+| 钩子 | 适用场景 |
+| --- | --- |
+| `created/setup` | 适合进行 API 数据请求、初始化数据 |
+| `mounted/onMounted` | 适合进行 DOM 操作、初始化第三方库、添加事件监听 |
+| `beforeUnmount/onBeforeUnmount` | 适合进行清理工作，比如移除事件监听、取消定时器、断开 WebSocket 连接等 |
+| `updated/onUpdated` | 在实际开发中使用较少，通常可以用 `watch` 或 `watchEffect` 来代替 |
 
 ## 5. 💻 demos.1 - 生命周期钩子：Vue 3 的组合式 API
 
-在 Vue 3 的组合式 API 中，生命周期钩子以函数的形式使用，需要从 vue 中导入。
+::: tip
 
 组合式 API 并没有提供对应 `beforeCreate` 和 `created` 的注册函数，因为 `setup()` 会在所有选项式 API 生命周期钩子之前执行，很多原本会放在 `beforeCreate` / `created` 阶段的初始化工作，通常都直接在 `setup()` 里完成。
+
+:::
+
+在 Vue 3 的组合式 API 中，生命周期钩子以函数的形式使用，需要从 vue 中导入。
 
 ::: code-group
 

@@ -65,7 +65,7 @@
 - [x] [0082. 侦听器（watch）](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0082.%20%E4%BE%A6%E5%90%AC%E5%99%A8%EF%BC%88watch%EF%BC%89/README.md)
 - [x] [0075. 模板引用](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0075.%20%E6%A8%A1%E6%9D%BF%E5%BC%95%E7%94%A8/README.md)
 - [x] [0032. 组件基础](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0032.%20%E7%BB%84%E4%BB%B6%E5%9F%BA%E7%A1%80/README.md)
-- [ ] [0024. Vue 实例与生命周期](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0024.%20Vue%20%E5%AE%9E%E4%BE%8B%E4%B8%8E%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/README.md)
+- [x] [0024. Vue 实例与生命周期](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0024.%20Vue%20%E5%AE%9E%E4%BE%8B%E4%B8%8E%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/README.md)
 
 ## 5. 深入组件
 
