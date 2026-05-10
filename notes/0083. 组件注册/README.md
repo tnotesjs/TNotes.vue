@@ -68,6 +68,7 @@ app.mount('#app')
 ::: code-group
 
 ```html [App.vue]
+<!-- App.vue -->
 <template>
   <UserCard />
 </template>
@@ -78,6 +79,7 @@ app.mount('#app')
 ```
 
 ```html [UserCard.vue]
+<!-- components/UserCard.vue -->
 <template>
   <article class="card">用户信息卡片</article>
 </template>
@@ -94,7 +96,7 @@ app.mount('#app')
 | 打包优化 | 不利于 tree-shaking | 更友好             |
 | 典型场景 | 基础组件、插件      | 业务组件、页面组件 |
 
-官方更推荐你优先使用局部注册。因为一旦全局注册过多，项目里很多组件「看起来能直接用」，但你很难快速判断它是从哪里来的，长期维护成本会升高。
+官方更推荐我们优先使用局部注册。因为一旦全局注册过多，项目里很多组件「看起来能直接用」，但你很难快速判断它是从哪里来的，长期维护成本会升高。
 
 ## 5. 🤔 在 `<script setup>` 和普通组件中，局部注册分别怎么写？
 
@@ -128,11 +130,9 @@ export default {
 
 这里有一个很容易忽略的点：局部注册只在「当前组件」里生效。
 
-也就是说，如果你在 `App.vue` 里局部注册了 `UserCard`，那 `UserCard` 并不会自动出现在 `App.vue` 的子组件、孙组件中。后代组件如果也想使用它，仍然要自己导入，或者改成全局注册。
-
 ## 6. 🤔 组件名应该如何命名和使用？
 
-官方更推荐你使用 PascalCase 来命名组件，比如 `UserCard`、`BaseButton`、`AppHeader`。这样做有几个好处：
+官方更推荐我们使用 PascalCase 来命名组件，比如 `UserCard`、`BaseButton`、`AppHeader`。这样做有几个好处：
 
 1. 它本身是合法的 JavaScript 标识符，导入和注册都更自然。
 2. 在模板里一眼就能看出这是 Vue 组件，而不是原生 HTML 标签。
@@ -141,7 +141,10 @@ export default {
 在模板里，PascalCase 注册名既可以写成 PascalCase，也可以写成 kebab-case：
 
 ```html
-<UserCard /> <user-card />
+<!-- PascalCase -->
+<UserCard />
+<!-- 或者 kebab-case -->
+<user-card />
 ```
 
 这两种写法在单文件组件模板里都能正常工作。
@@ -149,7 +152,7 @@ export default {
 不过在日常项目里，比较常见的约定是：
 
 1. JavaScript 导入和组件文件名使用 PascalCase。
-2. 单文件组件模板里通常也使用 PascalCase。
+2. 单文件组件模板里通常使用 PascalCase 或者 kebab-case，整个项目保持一致的风格即可。
 3. 如果是 DOM 内模板，则优先使用 kebab-case，避免浏览器解析大小写时带来问题。
 
 换句话说，命名这件事最重要的不是「能不能用」，而是整个项目是否保持一致。只要团队约定稳定，组件名就不会成为阅读障碍。
