@@ -69,7 +69,16 @@
 
 ## 5. 深入组件
 
-- [ ] [0079. 深入组件](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0079.%20%E6%B7%B1%E5%85%A5%E7%BB%84%E4%BB%B6/README.md)
+- [x] [0079. 深入组件](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0079.%20%E6%B7%B1%E5%85%A5%E7%BB%84%E4%BB%B6/README.md)
+- [ ] [0083. 组件注册](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0083.%20%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C/README.md)
+- [ ] [0001. 组件属性（Props）](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0001.%20%E7%BB%84%E4%BB%B6%E5%B1%9E%E6%80%A7%EF%BC%88Props%EF%BC%89/README.md)
+- [ ] [0002. 组件事件（Emits）](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0002.%20%E7%BB%84%E4%BB%B6%E4%BA%8B%E4%BB%B6%EF%BC%88Emits%EF%BC%89/README.md)
+- [ ] [0084. 透传 Attributes](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0084.%20%E9%80%8F%E4%BC%A0%20Attributes/README.md)
+- [ ] [0034. 插槽（Slots）](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0034.%20%E6%8F%92%E6%A7%BD%EF%BC%88Slots%EF%BC%89/README.md)
+- [ ] [0085. 依赖注入](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0085.%20%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/README.md)
+- [ ] [0035. 动态组件与异步组件](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0035.%20%E5%8A%A8%E6%80%81%E7%BB%84%E4%BB%B6%E4%B8%8E%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6/README.md)
+- [ ] [0086. 异步组件](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0086.%20%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6/README.md)
+- [ ] [0033. 组件通信](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0033.%20%E7%BB%84%E4%BB%B6%E9%80%9A%E4%BF%A1/README.md)
 
 ## 6. 逻辑复用
 
@@ -106,9 +115,6 @@
 ## 14. 组件化开发
 
 - [ ] [0031. 组件化开发](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0031.%20%E7%BB%84%E4%BB%B6%E5%8C%96%E5%BC%80%E5%8F%91/README.md)
-- [ ] [0033. 组件通信](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0033.%20%E7%BB%84%E4%BB%B6%E9%80%9A%E4%BF%A1/README.md)
-- [ ] [0034. 插槽（Slots）](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0034.%20%E6%8F%92%E6%A7%BD%EF%BC%88Slots%EF%BC%89/README.md)
-- [ ] [0035. 动态组件与异步组件](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0035.%20%E5%8A%A8%E6%80%81%E7%BB%84%E4%BB%B6%E4%B8%8E%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6/README.md)
 
 ## 15. Vue 生态系统（路由与状态管理）
 
@@ -174,8 +180,6 @@
 
 ## 25. 组件
 
-- [ ] [0001. 属性](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0001.%20%E5%B1%9E%E6%80%A7/README.md)
-- [ ] [0002. 事件](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0002.%20%E4%BA%8B%E4%BB%B6/README.md)
 - [ ] [0003. toRef](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0003.%20toRef/README.md)
 - [ ] [0004. 插槽](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0004.%20%E6%8F%92%E6%A7%BD/README.md)
 - [ ] [0011. 特殊元素 component](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0011.%20%E7%89%B9%E6%AE%8A%E5%85%83%E7%B4%A0%20component/README.md)

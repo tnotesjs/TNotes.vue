@@ -112,8 +112,44 @@
     "collapsed": true,
     "items": [
       {
-        "text": "⏰ 0079. 深入组件",
+        "text": "✅ 0079. 深入组件",
         "link": "/notes/0079. 深入组件/README"
+      },
+      {
+        "text": "⏰ 0083. 组件注册",
+        "link": "/notes/0083. 组件注册/README"
+      },
+      {
+        "text": "⏰ 0001. 组件属性（Props）",
+        "link": "/notes/0001. 组件属性（Props）/README"
+      },
+      {
+        "text": "⏰ 0002. 组件事件（Emits）",
+        "link": "/notes/0002. 组件事件（Emits）/README"
+      },
+      {
+        "text": "⏰ 0084. 透传 Attributes",
+        "link": "/notes/0084. 透传 Attributes/README"
+      },
+      {
+        "text": "⏰ 0034. 插槽（Slots）",
+        "link": "/notes/0034. 插槽（Slots）/README"
+      },
+      {
+        "text": "⏰ 0085. 依赖注入",
+        "link": "/notes/0085. 依赖注入/README"
+      },
+      {
+        "text": "⏰ 0035. 动态组件与异步组件",
+        "link": "/notes/0035. 动态组件与异步组件/README"
+      },
+      {
+        "text": "⏰ 0086. 异步组件",
+        "link": "/notes/0086. 异步组件/README"
+      },
+      {
+        "text": "⏰ 0033. 组件通信",
+        "link": "/notes/0033. 组件通信/README"
       }
     ]
   },
@@ -204,18 +240,6 @@
       {
         "text": "⏰ 0031. 组件化开发",
         "link": "/notes/0031. 组件化开发/README"
-      },
-      {
-        "text": "⏰ 0033. 组件通信",
-        "link": "/notes/0033. 组件通信/README"
-      },
-      {
-        "text": "⏰ 0034. 插槽（Slots）",
-        "link": "/notes/0034. 插槽（Slots）/README"
-      },
-      {
-        "text": "⏰ 0035. 动态组件与异步组件",
-        "link": "/notes/0035. 动态组件与异步组件/README"
       }
     ]
   },
@@ -411,14 +435,6 @@
     "text": "25. 组件",
     "collapsed": true,
     "items": [
-      {
-        "text": "⏰ 0001. 属性",
-        "link": "/notes/0001. 属性/README"
-      },
-      {
-        "text": "⏰ 0002. 事件",
-        "link": "/notes/0002. 事件/README"
-      },
       {
         "text": "⏰ 0003. toRef",
         "link": "/notes/0003. toRef/README"

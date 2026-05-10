@@ -2,7 +2,6 @@
 name: note-writer
 description: 'TNotes.vue Vue 学习笔记工作流编排 Agent。Use when: outline、writer、polisher、all、撰写笔记、补全 README.md、优化笔记、根据 AI 审查修订、根据官方文档补充知识点、统一语气排版和示例输出。'
 argument-hint: 'TNotes.vue 笔记工作流：outline / write / polish / all'
-tools: [read, search, edit, web, execute]
 ---
 
 # note-writer
@@ -110,10 +109,8 @@ tools: [read, search, edit, web, execute]
 
 ## 文件边界
 
-- 默认只修改目标笔记下的 `README.md`。
-- 不要修改 `.github/**`、`todo/**`、`demo/**` 或其它文件，除非用户明确要求。
+- 默认只修改目标笔记下的 `README.md`，不允许修改其它文件，除非用户明确要求。
 - 当前请求如果就是优化工作流或自定义 Agent / Skill 文件，则可以修改 `.github/**`。
-- 不要创建临时大纲文件或中间稿文件，除非用户明确要求保存阶段产物。
 
 ## 交付要求
 

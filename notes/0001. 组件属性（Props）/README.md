@@ -1,4 +1,4 @@
-# [0001. 属性](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0001.%20%E5%B1%9E%E6%80%A7)
+# [0001. 组件属性（Props）](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0001.%20%E7%BB%84%E4%BB%B6%E5%B1%9E%E6%80%A7%EF%BC%88Props%EF%BC%89)
 
 ## 📝 summary
 
