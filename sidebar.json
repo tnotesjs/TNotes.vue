@@ -128,6 +128,10 @@
         "link": "/notes/0002. 组件事件（Emits）/README"
       },
       {
+        "text": "⏰ 0087. 组件 v-model",
+        "link": "/notes/0087. 组件 v-model/README"
+      },
+      {
         "text": "⏰ 0084. 透传 Attributes",
         "link": "/notes/0084. 透传 Attributes/README"
       },
@@ -140,12 +144,12 @@
         "link": "/notes/0085. 依赖注入/README"
       },
       {
-        "text": "⏰ 0035. 动态组件与异步组件",
-        "link": "/notes/0035. 动态组件与异步组件/README"
-      },
-      {
         "text": "⏰ 0086. 异步组件",
         "link": "/notes/0086. 异步组件/README"
+      },
+      {
+        "text": "⏰ 0035. 动态组件与异步组件",
+        "link": "/notes/0035. 动态组件与异步组件/README"
       },
       {
         "text": "⏰ 0033. 组件通信",

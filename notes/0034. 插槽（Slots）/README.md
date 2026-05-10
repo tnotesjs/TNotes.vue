@@ -4,170 +4,118 @@
 
 - [1. 🎯 本节内容](#1--本节内容)
 - [2. 🫧 评价](#2--评价)
-- [3. 🤔 插槽的基本用法是什么？](#3--插槽的基本用法是什么)
-- [4. 🤔 什么是具名插槽？v-slot 指令如何使用？](#4--什么是具名插槽v-slot-指令如何使用)
-- [5. 🤔 什么是作用域插槽？如何在父组件中获取子组件的数据？](#5--什么是作用域插槽如何在父组件中获取子组件的数据)
-- [6. 🤔 什么是动态插槽名？](#6--什么是动态插槽名)
+- [3. 🤔 插槽到底是什么？它解决了什么问题？](#3--插槽到底是什么它解决了什么问题)
+- [4. 🤔 插槽内容属于谁的作用域？没有传内容时怎么办？](#4--插槽内容属于谁的作用域没有传内容时怎么办)
+- [5. 🤔 什么是具名插槽？](#5--什么是具名插槽)
+- [6. 🤔 条件插槽和动态插槽名是什么？](#6--条件插槽和动态插槽名是什么)
+- [7. 🤔 什么是作用域插槽？](#7--什么是作用域插槽)
+- [8. 🤔 具名作用域插槽常见在什么场景下使用？](#8--具名作用域插槽常见在什么场景下使用)
+- [9. 🔗 引用](#9--引用)
 
 <!-- endregion:toc -->
 
 ## 1. 🎯 本节内容
 
-- 插槽的基本使用
-- 具名插槽（v-slot 指令）
-- 作用域插槽（传递数据给父组件）
-- 动态插槽名
+- 默认插槽
+- 默认内容
+- 具名插槽
+- 条件插槽
+- 动态插槽
+- 作用域插槽
 
 ## 2. 🫧 评价
 
-- todo
+插槽是组件封装里非常关键的一层能力，它决定了「子组件控制外壳，父组件控制内部内容」这件事怎么成立。默认插槽和具名插槽属于高频基础，作用域插槽虽然使用频率没前两者高，但一旦要做高级列表、表格、无渲染组件，就很难绕开它。
 
-## 3. 🤔 插槽的基本用法是什么？
+## 3. 🤔 插槽到底是什么？它解决了什么问题？
 
-插槽（Slot）是 Vue 中实现内容分发的机制。它允许父组件向子组件的模板中插入自定义的 HTML 内容，使子组件变得更加灵活和可复用。如果说 props 让父组件向子组件传递数据，那么插槽就是让父组件向子组件传递模板片段。
+Props 适合传数据，但不适合直接传一段模板结构。插槽就是为了解决「父组件想把一段模板内容交给子组件去渲染」这个问题。
 
-最基本的使用方式是在子组件模板中放置一个 `<slot>` 元素作为内容的占位符：
+最简单的例子就是一个按钮外壳组件：
 
-```html
-<!-- BaseButton.vue -->
+::: code-group
+
+```html [FancyButton.vue]
 <template>
-  <button class="base-button">
+  <button class="fancy-btn">
     <slot></slot>
   </button>
 </template>
-
-<style scoped>
-  .base-button {
-    padding: 8px 16px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-    cursor: pointer;
-  }
-</style>
 ```
 
-```html
-<!-- 父组件使用 -->
+```html [App.vue]
 <template>
-  <BaseButton>提交表单</BaseButton>
-  <BaseButton>
-    <span style="color: red;">删除</span>
-  </BaseButton>
-  <BaseButton>
-    <img src="/icon-save.svg" alt="保存" />
-    保存文件
-  </BaseButton>
+  <FancyButton> Click me! </FancyButton>
+</template>
+
+<script setup>
+  import FancyButton from './FancyButton.vue'
+</script>
+```
+
+:::
+
+这里：
+
+1. `<FancyButton> ... </FancyButton>` 之间的内容叫插槽内容。
+2. 子组件里的 `<slot></slot>` 叫插槽出口。
+
+你可以把它理解成：子组件负责提供外壳和布局，父组件负责提供要塞进去的内容。
+
+插槽内容不只是文本，也可以是任意合法模板，比如元素、组件、指令组合等。
+
+## 4. 🤔 插槽内容属于谁的作用域？没有传内容时怎么办？
+
+插槽内容虽然最终是在子组件内部渲染，但它的定义位置仍然在父组件模板里，所以它访问的是父组件作用域，而不是子组件作用域。
+
+```html
+<template>
+  <FancyButton>{{ message }}</FancyButton>
 </template>
 ```
 
-父组件在子组件标签之间写的内容，会替换子组件模板中 `<slot>` 的位置。插槽内容不仅可以是文本，也可以是任意合法的模板内容——包括 HTML 元素、其他组件等。
+这里的 `message` 来自父组件，而不是 `FancyButton` 自己的数据。
 
-当父组件没有提供任何插槽内容时，`<slot>` 标签内的默认内容会被渲染。这被称为后备内容（fallback content）：
+这条规则很重要，因为它解释了为什么插槽不是「子组件把变量暴露给父组件」，而是「父组件把模板交给子组件来摆放」。
+
+另外，插槽还可以有默认内容，也就是当父组件没有传任何内容时，子组件自己提供一个兜底显示：
 
 ```html
-<!-- SubmitButton.vue -->
 <template>
-  <button class="submit-btn">
-    <slot>提交</slot>
-    <!-- "提交" 是后备内容 -->
+  <button type="submit">
+    <slot>Submit</slot>
   </button>
 </template>
 ```
 
-```html
-<!-- 父组件 -->
-<template>
-  <!-- 没有提供内容，显示后备内容 "提交" -->
-  <SubmitButton />
+这时：
 
-  <!-- 提供了内容，显示 "确认并提交" -->
-  <SubmitButton>确认并提交</SubmitButton>
-</template>
+```html
+<SubmitButton />
 ```
 
-插槽内容在父组件的作用域中编译。这意味着插槽内容可以访问父组件的数据，但不能访问子组件的数据：
+会渲染默认内容；而：
 
 ```html
-<!-- 父组件 -->
-<template>
-  <ChildComponent>
-    <!-- 可以访问父组件的 message -->
-    <p>{{ message }}</p>
-
-    <!-- 不能访问子组件的 childData -->
-    <!-- <p>{{ childData }}</p>  这会报错 -->
-  </ChildComponent>
-</template>
-
-<script setup>
-  import { ref } from 'vue'
-  const message = ref('来自父组件的数据')
-</script>
+<SubmitButton>保存</SubmitButton>
 ```
 
-一个实用的卡片组件示例：
+则会用父组件显式传入的内容覆盖默认内容。
+
+## 5. 🤔 什么是具名插槽？
+
+如果一个组件里只有一个内容区域，默认插槽就够用了；但如果一个组件有多个区域，比如头部、主体、底部，那你就需要给这些插槽出口命名。
 
 ```html
-<!-- Card.vue -->
 <template>
-  <div class="card">
-    <div class="card-header" v-if="title">
-      <h3>{{ title }}</h3>
-    </div>
-    <div class="card-body">
-      <slot>暂无内容</slot>
-    </div>
-  </div>
-</template>
-
-<script setup>
-  defineProps({
-    title: String,
-  })
-</script>
-```
-
-```html
-<!-- 使用卡片组件 -->
-<template>
-  <Card title="用户信息">
-    <p>姓名：{{ user.name }}</p>
-    <p>邮箱：{{ user.email }}</p>
-    <img :src="user.avatar" />
-  </Card>
-
-  <Card title="操作面板">
-    <button @click="save">保存</button>
-    <button @click="cancel">取消</button>
-  </Card>
-
-  <!-- 使用后备内容 -->
-  <Card title="待办事项" />
-</template>
-```
-
-## 4. 🤔 什么是具名插槽？v-slot 指令如何使用？
-
-当一个组件需要在多个不同位置接收不同的内容时，仅靠一个默认插槽是不够的。具名插槽（Named Slots）允许在一个组件中定义多个插槽出口，每个出口有自己的名字，父组件可以将不同的内容分发到不同的插槽位置。
-
-在子组件中使用 name 属性为 `<slot>` 命名。没有 name 的 `<slot>` 隐含地有一个名字 "default"：
-
-```html
-<!-- PageLayout.vue -->
-<template>
-  <div class="page-layout">
+  <div class="layout">
     <header>
       <slot name="header"></slot>
     </header>
 
     <main>
       <slot></slot>
-      <!-- 默认插槽，等同于 <slot name="default"> -->
     </main>
-
-    <aside>
-      <slot name="sidebar">默认侧边栏内容</slot>
-    </aside>
 
     <footer>
       <slot name="footer"></slot>
@@ -176,440 +124,142 @@
 </template>
 ```
 
-在父组件中，使用 `<template v-slot:name>` 来向对应的具名插槽提供内容。v-slot 有一个缩写语法 `#name`：
+父组件使用时，通过 `v-slot`，或者它的缩写 `#`，把不同内容送到不同位置：
 
 ```html
-<template>
-  <PageLayout>
-    <!-- 完整语法 -->
-    <template v-slot:header>
-      <nav>
-        <a href="/">首页</a>
-        <a href="/about">关于</a>
-        <a href="/contact">联系我们</a>
-      </nav>
-    </template>
+<BaseLayout>
+  <template #header>
+    <h1>页面标题</h1>
+  </template>
 
-    <!-- 缩写语法 -->
-    <template #sidebar>
-      <ul>
-        <li>分类 1</li>
-        <li>分类 2</li>
-        <li>分类 3</li>
-      </ul>
-    </template>
+  <p>正文内容</p>
 
-    <template #footer>
-      <p>© 2024 我的网站</p>
-    </template>
-
-    <!-- 默认插槽内容：不需要 template 包裹 -->
-    <article>
-      <h1>文章标题</h1>
-      <p>文章正文内容...</p>
-    </article>
-  </PageLayout>
-</template>
+  <template #footer>
+    <p>底部说明</p>
+  </template>
+</BaseLayout>
 ```
 
-默认插槽的内容可以不用 template 标签包裹——所有没有被 `<template v-slot:xxx>` 包裹的内容都会被视为默认插槽的内容。但如果你想显式地将内容放在默认插槽中，也可以使用 `<template #default>`：
+这里还有两个默认规则：
+
+1. 没有 `name` 的 `<slot>` 默认叫 `default`。
+2. 顶层那些没有包在 `<template #xxx>` 里的节点，会被视为默认插槽内容。
+
+所以具名插槽的本质就是：让父组件把多段模板内容，按名字分配到子组件不同的渲染位置。
+
+## 6. 🤔 条件插槽和动态插槽名是什么？
+
+有时你只想在某个插槽真的被传入内容时，才渲染外层包装结构。这时可以利用 `$slots` 做条件判断：
 
 ```html
 <template>
-  <PageLayout>
-    <template #header>头部</template>
-
-    <template #default>
-      <p>这是显式的默认插槽内容</p>
-    </template>
-
-    <template #footer>底部</template>
-  </PageLayout>
-</template>
-```
-
-具名插槽在组件库开发中非常常见。以一个对话框组件为例：
-
-```html
-<!-- Dialog.vue -->
-<template>
-  <Teleport to="body">
-    <div class="dialog-overlay" v-if="visible" @click.self="close">
-      <div class="dialog">
-        <div class="dialog-header">
-          <slot name="header">
-            <h3>{{ title }}</h3>
-          </slot>
-          <button class="close-btn" @click="close">×</button>
-        </div>
-
-        <div class="dialog-body">
-          <slot></slot>
-        </div>
-
-        <div class="dialog-footer">
-          <slot name="footer">
-            <button @click="close">关闭</button>
-          </slot>
-        </div>
-      </div>
+  <div class="card">
+    <div v-if="$slots.header" class="card-header">
+      <slot name="header" />
     </div>
-  </Teleport>
-</template>
 
-<script setup>
-  defineProps({
-    title: { type: String, default: '提示' },
-    visible: { type: Boolean, required: true },
-  })
-
-  const emit = defineEmits(['close'])
-
-  function close() {
-    emit('close')
-  }
-</script>
-```
-
-```html
-<!-- 使用对话框 -->
-<template>
-  <dialog :visible="showDialog" @close="showDialog = false">
-    <template #header>
-      <div style="display: flex; align-items: center;">
-        <img src="/warning.svg" />
-        <h3>确认删除</h3>
-      </div>
-    </template>
-
-    <p>你确定要删除这条记录吗？此操作不可恢复。</p>
-
-    <template #footer>
-      <button @click="showDialog = false">取消</button>
-      <button @click="confirmDelete" class="danger">确认删除</button>
-    </template>
-  </dialog>
-</template>
-```
-
-## 5. 🤔 什么是作用域插槽？如何在父组件中获取子组件的数据？
-
-作用域插槽（Scoped Slots）是 Vue 插槽中最强大的特性。普通插槽的内容只能访问父组件的数据，无法访问子组件的状态。而作用域插槽允许子组件在渲染插槽时向父组件传递数据，使父组件能够根据子组件的数据来定制渲染内容。
-
-子组件通过在 `<slot>` 元素上绑定属性（slot props）来向插槽内容传递数据：
-
-```html
-<!-- ItemList.vue -->
-<template>
-  <ul>
-    <li v-for="(item, index) in items" :key="item.id">
-      <!-- 将 item 和 index 作为 slot props 传递 -->
-      <slot :item="item" :index="index">
-        <!-- 后备内容 -->
-        {{ item.name }}
-      </slot>
-    </li>
-  </ul>
-</template>
-
-<script setup>
-  defineProps({
-    items: {
-      type: Array,
-      required: true,
-    },
-  })
-</script>
-```
-
-父组件在 `<template v-slot>` 上接收这些数据：
-
-```html
-<template>
-  <!-- 使用默认渲染 -->
-  <ItemList :items="products" />
-
-  <!-- 自定义渲染方式 -->
-  <ItemList :items="products">
-    <template #default="{ item, index }">
-      <div class="product-item">
-        <span class="index">{{ index + 1 }}.</span>
-        <strong>{{ item.name }}</strong>
-        <span class="price">¥{{ item.price }}</span>
-        <button @click="addToCart(item)">加入购物车</button>
-      </div>
-    </template>
-  </ItemList>
-
-  <!-- 另一种渲染方式 -->
-  <ItemList :items="products">
-    <template #default="slotProps">
-      <img :src="slotProps.item.image" />
-      <p>{{ slotProps.item.description }}</p>
-    </template>
-  </ItemList>
-</template>
-```
-
-作用域插槽最经典的应用场景是实现一个通用的数据表格组件，让使用者能自定义每列的渲染方式：
-
-```html
-<!-- DataTable.vue -->
-<template>
-  <table>
-    <thead>
-      <tr>
-        <th v-for="col in columns" :key="col.key">{{ col.title }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="row in data" :key="row.id">
-        <td v-for="col in columns" :key="col.key">
-          <!-- 为每列提供具名的作用域插槽 -->
-          <slot :name="col.key" :row="row" :value="row[col.key]">
-            {{ row[col.key] }}
-          </slot>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</template>
-
-<script setup>
-  defineProps({
-    columns: { type: Array, required: true },
-    data: { type: Array, required: true },
-  })
-</script>
-```
-
-```html
-<!-- 使用 DataTable -->
-<template>
-  <DataTable :columns="columns" :data="users">
-    <!-- 自定义 name 列的渲染 -->
-    <template #name="{ row }">
-      <div class="user-name">
-        <img :src="row.avatar" class="avatar" />
-        <span>{{ row.name }}</span>
-      </div>
-    </template>
-
-    <!-- 自定义 status 列的渲染 -->
-    <template #status="{ value }">
-      <span :class="['badge', `badge-${value}`]">
-        {{ value === 'active' ? '活跃' : '禁用' }}
-      </span>
-    </template>
-
-    <!-- 添加操作列 -->
-    <template #actions="{ row }">
-      <button @click="editUser(row)">编辑</button>
-      <button @click="deleteUser(row.id)">删除</button>
-    </template>
-  </DataTable>
-</template>
-
-<script setup>
-  const columns = [
-    { key: 'name', title: '姓名' },
-    { key: 'email', title: '邮箱' },
-    { key: 'status', title: '状态' },
-    { key: 'actions', title: '操作' },
-  ]
-
-  const users = [
-    {
-      id: 1,
-      name: '张三',
-      email: 'zhangsan@mail.com',
-      status: 'active',
-      avatar: '/a1.jpg',
-    },
-    {
-      id: 2,
-      name: '李四',
-      email: 'lisi@mail.com',
-      status: 'inactive',
-      avatar: '/a2.jpg',
-    },
-  ]
-</script>
-```
-
-另一个常见模式是"无渲染组件"（Renderless Component）。这种组件只提供逻辑和状态，完全不管渲染——所有的渲染都交给父组件通过作用域插槽来决定：
-
-```html
-<!-- MouseTracker.vue：无渲染组件 -->
-<template>
-  <slot :x="x" :y="y" :isInside="isInside"></slot>
-</template>
-
-<script setup>
-  import { ref, onMounted, onUnmounted } from 'vue'
-
-  const x = ref(0)
-  const y = ref(0)
-  const isInside = ref(false)
-
-  function handleMouseMove(e) {
-    x.value = e.clientX
-    y.value = e.clientY
-  }
-
-  onMounted(() => {
-    window.addEventListener('mousemove', handleMouseMove)
-  })
-
-  onUnmounted(() => {
-    window.removeEventListener('mousemove', handleMouseMove)
-  })
-</script>
-```
-
-```html
-<!-- 使用方：完全自定义渲染 -->
-<template>
-  <MouseTracker v-slot="{ x, y }">
-    <div class="cursor-display">鼠标位置：({{ x }}, {{ y }})</div>
-  </MouseTracker>
-</template>
-```
-
-在 Vue 3 中，这种模式已经可以被组合式函数（Composables）替代，但在某些需要控制渲染结构的场景中，作用域插槽仍然不可替代。
-
-## 6. 🤔 什么是动态插槽名？
-
-动态插槽名允许在运行时动态地决定内容要插入哪个插槽。它使用 v-slot 指令的动态参数语法 `v-slot:[dynamicName]`，其中 dynamicName 是一个变量或表达式。
-
-```html
-<!-- TabPanel.vue -->
-<template>
-  <div class="tab-panel">
-    <div class="tabs">
-      <button
-        v-for="tab in tabs"
-        :key="tab.id"
-        :class="{ active: activeTab === tab.id }"
-        @click="activeTab = tab.id"
-      >
-        {{ tab.label }}
-      </button>
+    <div v-if="$slots.default" class="card-content">
+      <slot />
     </div>
-    <div class="panel-content">
-      <slot :name="activeTab"></slot>
+
+    <div v-if="$slots.footer" class="card-footer">
+      <slot name="footer" />
     </div>
   </div>
 </template>
-
-<script setup>
-  import { ref } from 'vue'
-
-  const props = defineProps({
-    tabs: {
-      type: Array,
-      required: true,
-    },
-  })
-
-  const activeTab = ref(props.tabs[0]?.id)
-</script>
 ```
 
+这就叫条件插槽。它特别适合卡片、弹窗、面板这类可选区域很多的组件。
+
+如果插槽名不是固定死的，也可以使用动态插槽名：
+
 ```html
-<!-- 使用 -->
+<BaseLayout>
+  <template #[currentSlotName]> 动态内容 </template>
+</BaseLayout>
+```
+
+这个语法本质上还是动态指令参数，所以同样受到动态参数的语法限制。
+
+## 7. 🤔 什么是作用域插槽？
+
+前面说过，普通插槽内容默认只能访问父组件作用域。但有些场景下，父组件既想控制模板结构，又想拿到子组件内部准备好的数据，这时就轮到作用域插槽出场了。
+
+子组件可以在 `<slot>` 出口上主动传值：
+
+```html
 <template>
-  <TabPanel :tabs="tabs">
-    <template #home>
-      <h2>首页</h2>
-      <p>欢迎来到首页</p>
-    </template>
-
-    <template #profile>
-      <h2>个人信息</h2>
-      <p>用户名：张三</p>
-    </template>
-
-    <template #settings>
-      <h2>设置</h2>
-      <p>系统设置页面</p>
-    </template>
-  </TabPanel>
+  <slot :text="greetingMessage" :count="1"></slot>
 </template>
 
 <script setup>
-  const tabs = [
-    { id: 'home', label: '首页' },
-    { id: 'profile', label: '个人信息' },
-    { id: 'settings', label: '设置' },
-  ]
+  const greetingMessage = 'hello'
 </script>
 ```
 
-动态插槽名的另一个典型场景是表单布局组件。当需要根据配置动态渲染不同的表单字段时：
+父组件接收时，可以通过 `v-slot` 拿到这些插槽 props：
 
 ```html
-<!-- DynamicForm.vue -->
-<template>
-  <form @submit.prevent="handleSubmit">
-    <div v-for="field in fields" :key="field.name" class="form-row">
-      <label>{{ field.label }}</label>
-      <slot :name="field.name" :field="field" :model="model">
-        <input
-          v-model="model[field.name]"
-          :type="field.type || 'text'"
-          :placeholder="field.placeholder"
-        />
-      </slot>
-    </div>
-    <button type="submit">提交</button>
-  </form>
-</template>
-
-<script setup>
-  import { reactive } from 'vue'
-
-  const props = defineProps({
-    fields: { type: Array, required: true },
-  })
-
-  const model = reactive({})
-  props.fields.forEach((f) => {
-    model[f.name] = f.default || ''
-  })
-
-  function handleSubmit() {
-    console.log('表单数据：', { ...model })
-  }
-</script>
+<MyComponent v-slot="slotProps">
+  {{ slotProps.text }} {{ slotProps.count }}
+</MyComponent>
 ```
+
+也可以直接解构：
 
 ```html
-<!-- 使用动态插槽名来自定义特定字段的渲染 -->
-<template>
-  <DynamicForm :fields="formFields">
-    <!-- 动态插槽名：只自定义 role 字段的渲染 -->
-    <template #[customField]="{ model }">
-      <select v-model="model.role">
-        <option value="admin">管理员</option>
-        <option value="editor">编辑</option>
-        <option value="viewer">查看者</option>
-      </select>
-    </template>
-  </DynamicForm>
-</template>
-
-<script setup>
-  import { ref } from 'vue'
-
-  const customField = ref('role')
-
-  const formFields = [
-    { name: 'username', label: '用户名', placeholder: '请输入用户名' },
-    { name: 'email', label: '邮箱', type: 'email' },
-    { name: 'role', label: '角色' },
-  ]
-</script>
+<MyComponent v-slot="{ text, count }"> {{ text }} {{ count }} </MyComponent>
 ```
 
-动态插槽名在使用时有几个注意事项：动态插槽名的值应该是字符串类型。如果值为 null 或 undefined，插槽将不会被渲染。动态插槽名不能包含空格或特殊字符，因为它们需要作为有效的属性名使用。在实际开发中，动态插槽名多见于需要根据数据配置动态渲染 UI 的通用组件中，比如表格的列自定义、表单的字段自定义、布局系统的区域自定义等。
+如果一个组件同时还用了具名插槽，那么默认插槽最好也写成显式的 `<template #default="...">`。这样作用域边界最清楚，也能避免默认插槽 props 和其他具名插槽混在一起产生歧义。
+
+```html
+<MyComponent>
+  <template #default="{ message }">
+    <p>{{ message }}</p>
+  </template>
+
+  <template #footer>
+    <p>footer</p>
+  </template>
+</MyComponent>
+```
+
+它之所以叫「作用域插槽」，是因为父组件提供的这段模板在渲染时，额外获得了来自子组件的一组局部变量。
+
+你可以把它类比成：父组件把一段函数传给子组件，子组件执行这段函数时，再把自己的数据作为参数传进去。
+
+## 8. 🤔 具名作用域插槽常见在什么场景下使用？
+
+具名插槽和作用域插槽可以组合使用。也就是说，不同插槽不但有不同名字，还能各自向父组件暴露一组数据。
+
+```html
+<MyPanel>
+  <template #header="{ title }">
+    <h2>{{ title }}</h2>
+  </template>
+
+  <template #default="{ items }">
+    <ul>
+      <li v-for="item in items" :key="item.id">{{ item.name }}</li>
+    </ul>
+  </template>
+</MyPanel>
+```
+
+这种模式特别适合：
+
+1. 表格列渲染
+2. 列表项自定义渲染
+3. 分页组件的页码区域
+4. 无渲染组件
+
+所谓无渲染组件，就是组件自己几乎不负责界面输出，只封装逻辑，再通过作用域插槽把结果交给父组件决定怎么渲染。
+
+不过在现代 Vue 3 项目里，很多「纯逻辑复用」的场景也可以直接用组合式函数来做，所以作用域插槽更适合那种「逻辑和部分结构都要一起封装，但最终展示方式仍想交给使用者」的场景。
+
+## 9. 🔗 引用
+
+- [Vue.js 官方文档 - 插槽][1]
+
+[1]: https://cn.vuejs.org/guide/components/slots.html
