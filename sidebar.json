@@ -164,6 +164,18 @@
       {
         "text": "⏰ 0080. 逻辑复用",
         "link": "/notes/0080. 逻辑复用/README"
+      },
+      {
+        "text": "⏰ 0088. 组合式函数",
+        "link": "/notes/0088. 组合式函数/README"
+      },
+      {
+        "text": "⏰ 0090. 自定义指令",
+        "link": "/notes/0090. 自定义指令/README"
+      },
+      {
+        "text": "⏰ 0089. 插件",
+        "link": "/notes/0089. 插件/README"
       }
     ]
   },
@@ -174,6 +186,26 @@
       {
         "text": "⏰ 0081. 内置组件",
         "link": "/notes/0081. 内置组件/README"
+      },
+      {
+        "text": "⏰ 0095. Transition",
+        "link": "/notes/0095. Transition/README"
+      },
+      {
+        "text": "⏰ 0094. TransitionGroup",
+        "link": "/notes/0094. TransitionGroup/README"
+      },
+      {
+        "text": "⏰ 0093. KeepAlive",
+        "link": "/notes/0093. KeepAlive/README"
+      },
+      {
+        "text": "⏰ 0092. Teleport",
+        "link": "/notes/0092. Teleport/README"
+      },
+      {
+        "text": "⏰ 0091. Suspense",
+        "link": "/notes/0091. Suspense/README"
       }
     ]
   },
@@ -182,8 +214,32 @@
     "collapsed": true,
     "items": [
       {
-        "text": "⏰ 0066. 规模化应用",
-        "link": "/notes/0066. 规模化应用/README"
+        "text": "⏰ 0066. 应用规模化",
+        "link": "/notes/0066. 应用规模化/README"
+      },
+      {
+        "text": "⏰ 0096. 单文件组件",
+        "link": "/notes/0096. 单文件组件/README"
+      },
+      {
+        "text": "⏰ 0097. 工具链",
+        "link": "/notes/0097. 工具链/README"
+      },
+      {
+        "text": "⏰ 0098. 路由",
+        "link": "/notes/0098. 路由/README"
+      },
+      {
+        "text": "⏰ 0099. 状态管理",
+        "link": "/notes/0099. 状态管理/README"
+      },
+      {
+        "text": "⏰ 0100. 测试",
+        "link": "/notes/0100. 测试/README"
+      },
+      {
+        "text": "⏰ 0101. 服务端渲染（SSR）",
+        "link": "/notes/0101. 服务端渲染（SSR）/README"
       }
     ]
   },
@@ -194,6 +250,22 @@
       {
         "text": "⏰ 0067. 最佳实践",
         "link": "/notes/0067. 最佳实践/README"
+      },
+      {
+        "text": "⏰ 0102. 生产部署",
+        "link": "/notes/0102. 生产部署/README"
+      },
+      {
+        "text": "⏰ 0103. 性能优化",
+        "link": "/notes/0103. 性能优化/README"
+      },
+      {
+        "text": "⏰ 0104. 无障碍访问",
+        "link": "/notes/0104. 无障碍访问/README"
+      },
+      {
+        "text": "⏰ 0105. 安全",
+        "link": "/notes/0105. 安全/README"
       }
     ]
   },
@@ -204,6 +276,14 @@
       {
         "text": "⏰ 0068. 搭配 TypeScript",
         "link": "/notes/0068. 搭配 TypeScript/README"
+      },
+      {
+        "text": "⏰ 0106. TS 与组合式 API",
+        "link": "/notes/0106. TS 与组合式 API/README"
+      },
+      {
+        "text": "⏰ 0107. TS 与选项式 API",
+        "link": "/notes/0107. TS 与选项式 API/README"
       }
     ]
   },
@@ -214,6 +294,34 @@
       {
         "text": "⏰ 0069. 进阶主题",
         "link": "/notes/0069. 进阶主题/README"
+      },
+      {
+        "text": "⏰ 0108. 使用 Vue 的多种方式",
+        "link": "/notes/0108. 使用 Vue 的多种方式/README"
+      },
+      {
+        "text": "⏰ 0109. 组合式 API 常见问答",
+        "link": "/notes/0109. 组合式 API 常见问答/README"
+      },
+      {
+        "text": "⏰ 0110. 深入响应式系统",
+        "link": "/notes/0110. 深入响应式系统/README"
+      },
+      {
+        "text": "⏰ 0111. 渲染机制",
+        "link": "/notes/0111. 渲染机制/README"
+      },
+      {
+        "text": "⏰ 0112. 渲染函数 & JSX",
+        "link": "/notes/0112. 渲染函数 & JSX/README"
+      },
+      {
+        "text": "⏰ 0113. Vue 与 Web Components",
+        "link": "/notes/0113. Vue 与 Web Components/README"
+      },
+      {
+        "text": "⏰ 0114. 动画技巧",
+        "link": "/notes/0114. 动画技巧/README"
       }
     ]
   },

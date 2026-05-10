@@ -84,26 +84,53 @@
 ## 6. 逻辑复用
 
 - [ ] [0080. 逻辑复用](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0080.%20%E9%80%BB%E8%BE%91%E5%A4%8D%E7%94%A8/README.md)
+- [ ] [0088. 组合式函数](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0088.%20%E7%BB%84%E5%90%88%E5%BC%8F%E5%87%BD%E6%95%B0/README.md)
+- [ ] [0090. 自定义指令](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0090.%20%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E4%BB%A4/README.md)
+- [ ] [0089. 插件](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0089.%20%E6%8F%92%E4%BB%B6/README.md)
 
 ## 7. 内置组件
 
 - [ ] [0081. 内置组件](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0081.%20%E5%86%85%E7%BD%AE%E7%BB%84%E4%BB%B6/README.md)
+- [ ] [0095. Transition](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0095.%20Transition/README.md)
+- [ ] [0094. TransitionGroup](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0094.%20TransitionGroup/README.md)
+- [ ] [0093. KeepAlive](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0093.%20KeepAlive/README.md)
+- [ ] [0092. Teleport](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0092.%20Teleport/README.md)
+- [ ] [0091. Suspense](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0091.%20Suspense/README.md)
 
 ## 8. 应用规模化
 
-- [ ] [0066. 规模化应用](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0066.%20%E8%A7%84%E6%A8%A1%E5%8C%96%E5%BA%94%E7%94%A8/README.md)
+- [ ] [0066. 应用规模化](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0066.%20%E5%BA%94%E7%94%A8%E8%A7%84%E6%A8%A1%E5%8C%96/README.md)
+- [ ] [0096. 单文件组件](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0096.%20%E5%8D%95%E6%96%87%E4%BB%B6%E7%BB%84%E4%BB%B6/README.md)
+- [ ] [0097. 工具链](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0097.%20%E5%B7%A5%E5%85%B7%E9%93%BE/README.md)
+- [ ] [0098. 路由](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0098.%20%E8%B7%AF%E7%94%B1/README.md)
+- [ ] [0099. 状态管理](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0099.%20%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/README.md)
+- [ ] [0100. 测试](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0100.%20%E6%B5%8B%E8%AF%95/README.md)
+- [ ] [0101. 服务端渲染（SSR）](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0101.%20%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%B8%B2%E6%9F%93%EF%BC%88SSR%EF%BC%89/README.md)
 
 ## 9. 最佳实践
 
 - [ ] [0067. 最佳实践](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0067.%20%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/README.md)
+- [ ] [0102. 生产部署](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0102.%20%E7%94%9F%E4%BA%A7%E9%83%A8%E7%BD%B2/README.md)
+- [ ] [0103. 性能优化](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0103.%20%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/README.md)
+- [ ] [0104. 无障碍访问](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0104.%20%E6%97%A0%E9%9A%9C%E7%A2%8D%E8%AE%BF%E9%97%AE/README.md)
+- [ ] [0105. 安全](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0105.%20%E5%AE%89%E5%85%A8/README.md)
 
 ## 10. 搭配 TypeScript
 
 - [ ] [0068. 搭配 TypeScript](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0068.%20%E6%90%AD%E9%85%8D%20TypeScript/README.md)
+- [ ] [0106. TS 与组合式 API](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0106.%20TS%20%E4%B8%8E%E7%BB%84%E5%90%88%E5%BC%8F%20API/README.md)
+- [ ] [0107. TS 与选项式 API](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0107.%20TS%20%E4%B8%8E%E9%80%89%E9%A1%B9%E5%BC%8F%20API/README.md)
 
 ## 11. 进阶主题
 
 - [ ] [0069. 进阶主题](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0069.%20%E8%BF%9B%E9%98%B6%E4%B8%BB%E9%A2%98/README.md)
+- [ ] [0108. 使用 Vue 的多种方式](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0108.%20%E4%BD%BF%E7%94%A8%20Vue%20%E7%9A%84%E5%A4%9A%E7%A7%8D%E6%96%B9%E5%BC%8F/README.md)
+- [ ] [0109. 组合式 API 常见问答](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0109.%20%E7%BB%84%E5%90%88%E5%BC%8F%20API%20%E5%B8%B8%E8%A7%81%E9%97%AE%E7%AD%94/README.md)
+- [ ] [0110. 深入响应式系统](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0110.%20%E6%B7%B1%E5%85%A5%E5%93%8D%E5%BA%94%E5%BC%8F%E7%B3%BB%E7%BB%9F/README.md)
+- [ ] [0111. 渲染机制](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0111.%20%E6%B8%B2%E6%9F%93%E6%9C%BA%E5%88%B6/README.md)
+- [ ] [0112. 渲染函数 & JSX](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0112.%20%E6%B8%B2%E6%9F%93%E5%87%BD%E6%95%B0%20%26%20JSX/README.md)
+- [ ] [0113. Vue 与 Web Components](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0113.%20Vue%20%E4%B8%8E%20Web%20Components/README.md)
+- [ ] [0114. 动画技巧](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0114.%20%E5%8A%A8%E7%94%BB%E6%8A%80%E5%B7%A7/README.md)
 
 ## 12. Vue.js 基础入门
 
