@@ -76,7 +76,6 @@ app.mount('#app')
 ::: code-group
 
 ```html [App.vue]
-<!-- App.vue -->
 <template>
   <UserCard />
 </template>
@@ -87,7 +86,6 @@ app.mount('#app')
 ```
 
 ```html [UserCard.vue]
-<!-- components/UserCard.vue -->
 <template>
   <article class="card">用户信息卡片</article>
 </template>

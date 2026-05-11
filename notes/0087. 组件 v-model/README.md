@@ -5,7 +5,7 @@
 - [1. 🎯 本节内容](#1--本节内容)
 - [2. 🫧 评价](#2--评价)
 - [3. 🤔 组件上的 `v-model` 到底是什么？](#3--组件上的-v-model-到底是什么)
-- [4. 🤔 `defineModel()` 和旧写法到底是什么关系？](#4--definemodel-和旧写法到底是什么关系)
+- [4. 🤔 `defineModel()` 是什么？](#4--definemodel-是什么)
 - [5. 🤔 如何使用带参数的 `v-model`？](#5--如何使用带参数的-v-model)
 - [6. 🤔 一个组件里可以同时存在多个 `v-model` 吗？](#6--一个组件里可以同时存在多个-v-model-吗)
 - [7. 🤔 `v-model` 修饰符在组件上应该怎么处理？](#7--v-model-修饰符在组件上应该怎么处理)
@@ -25,7 +25,7 @@
 
 ## 2. 🫧 评价
 
-组件上的 `v-model` 本质上还是 prop + 事件这一套，只不过 Vue 帮你把常见模式封装成了统一语法，所以它是高频能力，但不算新概念。你真正要掌握的是它的展开规则、参数写法、多模型绑定和修饰符处理，这样无论是用 `defineModel()` 还是手写旧写法，都不会被语法糖带偏。
+组件上的 `v-model` 本质上还是 prop + 事件这一套，只不过 Vue 帮你把常见模式封装成了统一语法。你真正要掌握的是它的展开规则、参数写法、多模型绑定和修饰符处理，这样无论是用 `defineModel()` 还是手写旧写法，都不会被语法糖带偏。
 
 ## 3. 🤔 组件上的 `v-model` 到底是什么？
 
@@ -61,59 +61,59 @@
 
 :::
 
-这里的 `model` 是一个 ref：
+这里的 `model` 是一个 ref，它的值会和父组件 `v-model` 绑定的值同步，当你在子组件里改 `model.value`，父组件绑定的数据也会更新。
 
-1. 它的值会和父组件 `v-model` 绑定的值同步。
-2. 你在子组件里改 `model.value`，父组件绑定的数据也会更新。
+组件级的 `v-model` 和表单输入绑定中的 `v-model` 类似，都是把 `v-bind`「接收值」和 `v-on`「通知更新」这两个动作捏成了一个更顺手的 API。
 
-所以组件级 `v-model` 并不是某种全新的双向响应式黑魔法，它只是把「接收值」和「通知更新」这两个动作捏成了一个更顺手的 API。
-
-## 4. 🤔 `defineModel()` 和旧写法到底是什么关系？
+## 4. 🤔 `defineModel()` 是什么？
 
 `defineModel()` 是一个编译宏，本质上是语法糖。默认情况下，它会帮你生成两部分内容：
 
 1. 一个名为 `modelValue` 的 prop。
 2. 一个名为 `update:modelValue` 的事件。
 
-也就是说，下面这段：
-
 ```html
+<!-- 写法 1：语法糖 -->
+<template>
+  <input v-model="model" />
+</template>
+
 <script setup>
   const model = defineModel()
 </script>
-```
 
-底层可以理解成：
-
-```html
-<script setup>
-  const props = defineProps(['modelValue'])
-  const emit = defineEmits(['update:modelValue'])
-</script>
-
+<!-- 写法 2：底层写法 -->
 <template>
   <input
     :value="props.modelValue"
     @input="emit('update:modelValue', $event.target.value)"
   />
 </template>
+
+<script setup>
+  const props = defineProps(['modelValue'])
+  const emit = defineEmits(['update:modelValue'])
+</script>
 ```
 
-对应地，父组件这句：
+写法 1 和写法 2 是等价的。`defineModel()` 的作用就是帮你把写法 2 里「定义 prop、定义事件、写绑定逻辑」这三步都自动生成出来。
+
+对应地，父组件中使用 `v-model`：
 
 ```html
+<!-- 语法糖 -->
 <Child v-model="title" />
-```
 
-可以理解成：
-
-```html
+<!-- 对应的底层写法 -->
 <Child :modelValue="title" @update:modelValue="(value) => (title = value)" />
 ```
 
-这里我故意写成官方文档展示的展开结果，用来帮你建立底层模型；你平时自己写代码时当然还是直接写 `v-model` 就行。
+开发建议：
 
-所以你以后排查组件 `v-model` 异常时，不要只盯着语法糖看，直接退回到 `prop + emit` 这个底层模型，思路会清楚很多。
+- 如果你使用的版本是 Vue 3.4+，优先使用 `defineModel()`，它可以让组件 `v-model` 的实现更简洁。
+- 如果你维护的项目还在 Vue 3.3 或更早版本，直接使用对应的底层写法也完全没问题。
+
+在排查组件 `v-model` 异常时，不要只盯着语法糖看，直接退回到 `prop + emit` 这个底层模型，思路会清楚很多。
 
 ## 5. 🤔 如何使用带参数的 `v-model`？
 
