@@ -14,7 +14,13 @@
   - [8.2. 默认值问题](#82-默认值问题)
   - [8.3. 数据边界问题](#83-数据边界问题)
 - [9. 🤔 这篇笔记对应的官方文档有什么特点？](#9--这篇笔记对应的官方文档有什么特点)
-- [10. 🔗 引用](#10--引用)
+- [10. 💻 demos.1 - `defineModel()` 基本用法](#10--demos1---definemodel-基本用法)
+- [11. 💻 demos.2 - `defineModel()` 的底层机制（prop + emit）](#11--demos2---definemodel-的底层机制prop--emit)
+- [12. 💻 demos.3 - 带参数的 `v-model`](#12--demos3---带参数的-v-model)
+- [13. 💻 demos.4 - 多个 `v-model` 绑定](#13--demos4---多个-v-model-绑定)
+- [14. 💻 demos.5 - `v-model` 修饰符与 get/set](#14--demos5---v-model-修饰符与-getset)
+- [15. 💻 demos.6 - `defineModel()` 默认值导致的父子不同步问题](#15--demos6---definemodel-默认值导致的父子不同步问题)
+- [16. 🔗 引用](#16--引用)
 
 <!-- endregion:toc -->
 
@@ -278,7 +284,269 @@ const title = defineModel('title', {
 
 :::
 
-## 10. 🔗 引用
+## 10. 💻 demos.1 - `defineModel()` 基本用法
+
+::: code-group
+
+```html [App.vue]
+<template>
+  <!--
+    父组件用 v-model 绑定一个 ref 到子组件
+    子组件内部修改 model 值时，父组件的 count 会同步更新
+  -->
+  <Counter v-model="count" />
+  <p>父组件 count: {{ count }}</p>
+</template>
+
+<script setup>
+  import { ref } from 'vue'
+  import Counter from './Counter.vue'
+
+  const count = ref(0)
+</script>
+```
+
+```html [Counter.vue]
+<template>
+  <div>
+    <p>子组件 model: {{ model }}</p>
+    <button @click="model++">子组件 +1</button>
+  </div>
+</template>
+
+<script setup>
+  // defineModel() 返回一个 ref，其 .value 与父组件 v-model 绑定的值同步
+  // 修改 model.value 会自动触发父组件的值更新
+  const model = defineModel()
+</script>
+```
+
+:::
+
+## 11. 💻 demos.2 - `defineModel()` 的底层机制（prop + emit）
+
+::: code-group
+
+```html [App.vue]
+<template>
+  <!--
+    这两个组件效果完全一致：
+    v-model="msg" 编译后就是 :modelValue="msg" + @update:modelValue="..."
+  -->
+  <h3>语法糖写法</h3>
+  <SugarInput v-model="msg" />
+
+  <h3>底层写法</h3>
+  <RawInput :modelValue="msg" @update:modelValue="msg = $event" />
+
+  <p>msg: {{ msg }}</p>
+</template>
+
+<script setup>
+  import { ref } from 'vue'
+  import SugarInput from './SugarInput.vue'
+  import RawInput from './RawInput.vue'
+
+  const ref ref = ref('hello')
+</script>
+```
+
+```html [SugarInput.vue]
+<template>
+  <input v-model="model" />
+</template>
+
+<script setup>
+  // 语法糖：defineModel() 编译器会自动展开为 modelValue prop + update:modelValue 事件
+  const model = defineModel()
+</script>
+```
+
+```html [RawInput.vue]
+<template>
+  <!--
+    手动实现与 defineModel() 等价的逻辑：
+    1. 通过 props 接收 modelValue
+    2. 通过 emit 触发 update:modelValue
+  -->
+  <input
+    :value="props.modelValue"
+    @input="emit('update:modelValue', $event.target.value)"
+  />
+</template>
+
+<script setup>
+  const props = defineProps(['modelValue'])
+  const emit = defineEmits(['update:modelValue'])
+</script>
+```
+
+:::
+
+## 12. 💻 demos.3 - 带参数的 `v-model`
+
+::: code-group
+
+```html [App.vue]
+<template>
+  <!--
+    v-model:title="bookTitle" 表示绑定的 prop 名是 title（而非默认的 modelValue）
+    底层等价于 :title="bookTitle" + @update:title="..."
+  -->
+  <BookEditor v-model:title="bookTitle" />
+  <p>bookTitle: {{ bookTitle }}</p>
+</template>
+
+<script setup>
+  import { ref } from 'vue'
+  import BookEditor from './BookEditor.vue'
+
+  const bookTitle = ref('Vue.js 设计与实现')
+</script>
+```
+
+```html [BookEditor.vue]
+<template>
+  <input v-model="title" />
+</template>
+
+<script setup>
+  // 传入字符串参数 'title'，底层会生成 title prop + update:title 事件
+  const title = defineModel('title')
+</script>
+```
+
+:::
+
+## 13. 💻 demos.4 - 多个 `v-model` 绑定
+
+::: code-group
+
+```html [App.vue]
+<template>
+  <!--
+    单个组件上同时使用多个 v-model，每个绑定不同字段
+    注意：模板中用 kebab-case (first-name)，JS 中用 camelCase (firstName)
+  -->
+  <UserName v-model:first-name="first" v-model:last-name="last" />
+  <p>全名: {{ first }} {{ last }}</p>
+</template>
+
+<script setup>
+  import { ref } from 'vue'
+  import UserName from './UserName.vue'
+
+  const first = ref('张')
+  const last = ref('三')
+</script>
+```
+
+```html [UserName.vue]
+<template>
+  <input v-model="firstName" placeholder="姓" />
+  <input v-model="lastName" placeholder="名" />
+</template>
+
+<script setup>
+  // 多次调用 defineModel()，每次传不同参数，各自独立维护双向绑定
+  const firstName = defineModel('firstName')
+  const lastName = defineModel('lastName')
+</script>
+```
+
+:::
+
+## 14. 💻 demos.5 - `v-model` 修饰符与 get/set
+
+::: code-group
+
+```html [App.vue]
+<template>
+  <!--
+    自定义修饰符 capitalize：将输入的首字母自动大写
+    .capitalize 是自定义修饰符，不是 Vue 内置的
+  -->
+  <MyInput v-model.capitalize="text" />
+  <p>text: {{ text }}</p>
+</template>
+
+<script setup>
+  import { ref } from 'vue'
+  import MyInput from './MyInput.vue'
+
+  const ref = ref('')
+</script>
+```
+
+```html [MyInput.vue]
+<template>
+  <input v-model="model" />
+</template>
+
+<script setup>
+  // defineModel() 解构返回 [model, modifiers]
+  // modifiers 是一个对象，如 { capitalize: true }
+  const [model, modifiers] = defineModel({
+    // set 在 model.value 被赋值时触发，返回处理后的值
+    // 通过 set 拦截写入，实现修饰符的自定义逻辑
+    set(value) {
+      if (modifiers.capitalize && value) {
+        return value.charAt(0).toUpperCase() + value.slice(1)
+      }
+      return value
+    },
+  })
+</script>
+```
+
+:::
+
+## 15. 💻 demos.6 - `defineModel()` 默认值导致的父子不同步问题
+
+::: code-group
+
+```html [App.vue]
+<template>
+  <!--
+    警告场景：
+    子组件 defineModel({ default: 1 }) 设置了默认值
+    但父组件的 ref 没有给初始值（undefined）
+    结果：子组件 model 显示 1，父组件 myRef 仍为 undefined
+    点击按钮观察父子值差异
+  -->
+  <Child v-model="myRef" />
+  <p>父组件 myRef: {{ myRef }} (类型: {{ typeof myRef }})</p>
+  <p>注意：子组件显示的是默认值 1，但父组件仍为 undefined</p>
+  <p>点击子组件按钮后父子才会同步</p>
+</template>
+
+<script setup>
+  import { ref } from 'vue'
+  import Child from './Child.vue'
+
+  const myRef = ref() // 未提供初始值，初始为 undefined
+</script>
+```
+
+```html [Child.vue]
+<template>
+  <div>
+    <p>子组件 model: {{ model }}</p>
+    <button @click="model++">子组件 +1</button>
+  </div>
+</template>
+
+<script setup>
+  // 配置了 default: 1，当父组件未传值时，子组件会使用默认值 1
+  // 但父组件那边仍是 undefined，造成父子初始值不同步
+  // 建议：要么父组件显式给初始值，要么谨慎使用 default
+  const model = defineModel({ default: 1 })
+</script>
+```
+
+:::
+
+## 16. 🔗 引用
 
 - [Vue.js 官方文档 - 组件 v-model][1]
 
