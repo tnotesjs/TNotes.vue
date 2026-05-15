@@ -10,6 +10,13 @@
   - [3.3. 示例：多根节点](#33-示例多根节点)
   - [3.4. 小结](#34-小结)
 - [4. 🤔 `class`、`style` 和 `v-on` 监听器会怎么透传？](#4--classstyle-和-v-on-监听器会怎么透传)
+  - [4.1. `class` 和 `style` 的透传](#41-class-和-style-的透传)
+  - [4.2. `v-on` 监听器的透传](#42-v-on-监听器的透传)
+    - [示例](#示例)
+    - [执行顺序：为什么先输出 `2`，后输出 `1`？](#执行顺序为什么先输出-2后输出-1)
+    - [Vue 2 与 Vue 3 的区别](#vue-2-与-vue-3-的区别)
+    - [如何控制只触发一个监听器？](#如何控制只触发一个监听器)
+  - [4.3. 深度透传机制](#43-深度透传机制)
 - [5. 🤔 为什么有时要禁用自动继承？](#5--为什么有时要禁用自动继承)
 - [6. 🤔 多根节点组件为什么不会自动透传？](#6--多根节点组件为什么不会自动透传)
 - [7. 🤔 `$attrs` 和 `useAttrs()` 有哪些注意事项？](#7--attrs-和-useattrs-有哪些注意事项)
@@ -117,7 +124,11 @@
 
 ## 4. 🤔 `class`、`style` 和 `v-on` 监听器会怎么透传？
 
-`class` 和 `style` 不只是「原样替换」，而是会和子组件根元素自身已有的值合并。
+### 4.1. `class` 和 `style` 的透传
+
+`class` 和 `style` 不只是「原样替换」，而是会和子组件根元素自身已有的值「智能合并」。
+
+比如，子组件 `<MyButton>` 的实现是：
 
 ```html
 <template>
@@ -131,7 +142,13 @@
 <MyButton class="large" style="font-size: 18px" />
 ```
 
+最终渲染得到的真实 DOM 如下：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-15-22-15-40.png)
+
 最终根元素会同时拥有两边的样式信息，而不是父组件把子组件原有值覆盖掉。
+
+### 4.2. `v-on` 监听器的透传
 
 事件监听器的透传逻辑也类似：
 
@@ -140,6 +157,89 @@
 ```
 
 如果 `MyButton` 的根元素是一个原生 `<button>`，那这个 `click` 监听器会直接挂到这个按钮上。用户点击按钮时，父组件的 `handleClick` 就会执行。
+
+#### 示例
+
+::: code-group
+
+```html [App.vue]
+<template>
+  <MyButton @click="handleClick" />
+</template>
+
+<script setup>
+  import MyButton from './MyButton.vue'
+
+  const handleClick = () => {
+    console.log('1')
+  }
+</script>
+```
+
+```html [MyButton.vue]
+<template>
+  <button @click="handleClick">Click Me</button>
+</template>
+
+<script setup>
+  const handleClick = () => {
+    console.log('2')
+  }
+</script>
+```
+
+:::
+
+点击按钮之后，会输出：
+
+```
+2
+1
+```
+
+会发现子组件 `MyButton` 内部的 `handleClick` 先被调用，输出 `2`，然后父组件传递过来的 `handleClick` 才被调用，输出 `1`。
+
+#### 执行顺序：为什么先输出 `2`，后输出 `1`？
+
+事件监听器的执行顺序取决于它们被绑定到 DOM 元素上的先后顺序：
+
+1. 子组件模板编译时，会先处理子组件自身模板中声明的 `@click="handleClick"`，将子组件的 `handleClick` 绑定到根 `<button>` 上。
+2. 随后，Vue 处理父组件传递给子组件的透传 attribute（包括 `@click`），将父组件的 `handleClick` 也绑定到同一个 `<button>` 上。
+
+因此，当按钮被点击时，DOM 元素上绑定的两个 `click` 监听器会按照绑定顺序依次调用：
+
+- 先执行子组件自己的 `handleClick` -> 输出 `2`
+- 再执行父组件透传的 `handleClick` -> 输出 `1`
+
+这个过程与事件冒泡无关（两个监听器都在同一元素上，不存在冒泡），完全是绑定顺序决定的。
+
+#### Vue 2 与 Vue 3 的区别
+
+- Vue 2：父组件的 `@click` 默认不会自动透传到子组件的根元素，需要加上 `.native` 修饰符（`@click.native`）才能绑定到根元素。同时，如果子组件自己也绑定了 `@click`，两者都会触发，但顺序可能受内部实现影响。
+- Vue 3：移除了 `.native` 修饰符，所有事件默认都是原生事件，完全依赖透传机制。这使得行为更一致、更可预测。
+
+#### 如何控制只触发一个监听器？
+
+如果你希望父组件的透传事件不干扰子组件内部逻辑，有两种常见做法：
+
+- 做法 1：听「父组件」的 => 子组件不自己绑定同名事件，而是通过 `$emit` 向父组件通信。
+- 做法 2：听「子组件」的 => 在子组件中阻止冒泡或停止传播（注意：停止传播只会影响后续监听器，对于同一元素上的多个监听器，`stopImmediatePropagation` 可以阻止后续监听器执行）。
+
+```html
+<!-- 子组件 -->
+<template>
+  <button @click="handleClick">Click Me</button>
+</template>
+<script setup>
+  const handleClick = (event) => {
+    event.stopImmediatePropagation() // 阻止同一元素上的其他监听器
+    console.log('2')
+    // 这种做法只会在控制台输出 2，不会触发父组件的 handleClick
+  }
+</script>
+```
+
+### 4.3. 深度透传机制
 
 如果根节点本身渲染的是另一个组件，而不是原生元素，那么这些透传 attribute 还会继续往下传：
 
