@@ -15,6 +15,9 @@
   - [8.3. 数据边界问题](#83-数据边界问题)
 - [9. 🤔 这篇笔记对应的官方文档有什么特点？](#9--这篇笔记对应的官方文档有什么特点)
 - [10. 💻 demos.1 - `defineModel()` 基本用法](#10--demos1---definemodel-基本用法)
+  - [10.1. 使用 v-model + defineModel() 的写法实现](#101-使用-v-model--definemodel-的写法实现)
+  - [10.2. 使用原生 props + emits 的写法实现](#102-使用原生-props--emits-的写法实现)
+  - [10.3. 小结](#103-小结)
 - [11. 💻 demos.2 - `defineModel()` 的底层机制（prop + emit）](#11--demos2---definemodel-的底层机制prop--emit)
 - [12. 💻 demos.3 - 带参数的 `v-model`](#12--demos3---带参数的-v-model)
 - [13. 💻 demos.4 - 多个 `v-model` 绑定](#13--demos4---多个-v-model-绑定)
@@ -286,9 +289,11 @@ const title = defineModel('title', {
 
 ## 10. 💻 demos.1 - `defineModel()` 基本用法
 
+### 10.1. 使用 v-model + defineModel() 的写法实现
+
 ::: code-group
 
-```html [App.vue]
+```html [App.vue（1）]
 <template>
   <!--
     父组件用 v-model 绑定一个 ref 到子组件
@@ -306,7 +311,7 @@ const title = defineModel('title', {
 </script>
 ```
 
-```html [Counter.vue]
+```html [Counter.vue（2）]
 <template>
   <div>
     <p>子组件 model: {{ model }}</p>
@@ -322,6 +327,72 @@ const title = defineModel('title', {
 ```
 
 :::
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-15-19-20-05.png)
+
+点击 + 1 按钮之后，子组件的 model 从 0 变成 1，父组件的 count 也从 0 变成 1，说明它们之间实现了双向绑定。
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-15-19-20-21.png)
+
+### 10.2. 使用原生 props + emits 的写法实现
+
+::: code-group
+
+```html [App.vue（3）]
+<template>
+  <Counter :modelValue="count" @update:modelValue="count = $event" />
+  <p>父组件 count: {{ count }}</p>
+</template>
+
+<script setup>
+  import { ref } from 'vue'
+  import Counter from './Counter.vue'
+
+  const count = ref(0)
+</script>
+```
+
+```html [Counter.vue（4）]
+<template>
+  <div>
+    <p>子组件 model: {{ modelValue }}</p>
+    <button @click="$emit('update:modelValue', modelValue + 1)">
+      子组件 +1
+    </button>
+  </div>
+</template>
+
+<script setup>
+  defineProps({
+    modelValue: {
+      type: Number,
+      required: true,
+    },
+  })
+
+  defineEmits(['update:modelValue'])
+</script>
+```
+
+:::
+
+### 10.3. 小结
+
+上述示例中，两种写法（1 + 2 = 3 + 4）完全是等效的，并且，1 + 4 和 3 + 2 的组合也是等效的。
+
+$$
+1 + 2 = 3 + 4 = 1 + 4 = 3 + 2
+$$
+
+通过对比上面两种写法，我们可以看到 `defineModel()` 的作用就是帮你把「定义 prop、定义事件、写绑定逻辑」这三步都自动生成出来，让组件 `v-model` 的实现更简洁。
+
+| 语法糖 | 等效的原始写法 |
+| --- | --- |
+| `const model = defineModel()` | `defineProps` 接收 `modelValue` + `defineEmits` 注册 `update:modelValue` |
+| `model.value = newVal` | `emit('update:modelValue', newVal)` |
+| 父组件 `<Child v-model="count" />` | 父组件 `<Child :modelValue="count" @update:modelValue="count = $event" />` |
+
+`v-model="count"` 本质上就是 `:modelValue="count"` + `@update:modelValue="count = $event"` 的语法糖。而 `defineModel()` 只是把 props 声明 + emits 声明 + 读写桥接这些模板代码进一步封装了，运行时行为完全一致。
 
 ## 11. 💻 demos.2 - `defineModel()` 的底层机制（prop + emit）
 
