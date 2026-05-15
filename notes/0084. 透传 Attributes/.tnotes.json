@@ -2,9 +2,9 @@
   "bilibili": [],
   "tnotes": [],
   "yuque": [],
-  "done": false,
-  "enableDiscussions": false,
-  "description": "",
+  "done": true,
+  "enableDiscussions": true,
+  "description": "透传 Attributes 是 Vue 的一种兜底机制：父组件传递的 Attributes 若未被子组件通过 props 或 emits 消费，就会自动应用到子组件的根元素上。",
   "id": "16a5e14b-0c13-4d74-abbb-2bcde8fb492d",
   "created_at": 1778391687228,
   "updated_at": 1778391687228
