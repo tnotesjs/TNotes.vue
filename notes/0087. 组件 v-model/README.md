@@ -418,7 +418,7 @@ $$
   import SugarInput from './SugarInput.vue'
   import RawInput from './RawInput.vue'
 
-  const ref ref = ref('hello')
+  const msg = ref('hello')
 </script>
 ```
 
@@ -454,6 +454,12 @@ $$
 
 :::
 
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-15-20-12-49.png)
+
+更新输入框中的内容，实现双向绑定的效果：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-15-20-13-11.png)
+
 ## 12. 💻 demos.3 - 带参数的 `v-model`
 
 ::: code-group
@@ -488,6 +494,12 @@ $$
 ```
 
 :::
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-15-20-15-42.png)
+
+更新输入框中的内容，实现双向绑定的效果：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-15-20-15-35.png)
 
 ## 13. 💻 demos.4 - 多个 `v-model` 绑定
 
@@ -527,6 +539,12 @@ $$
 
 :::
 
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-15-20-17-14.png)
+
+更新输入框中的内容，实现双向绑定的效果：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-15-20-17-21.png)
+
 ## 14. 💻 demos.5 - `v-model` 修饰符与 get/set
 
 ::: code-group
@@ -535,7 +553,7 @@ $$
 <template>
   <!--
     自定义修饰符 capitalize：将输入的首字母自动大写
-    .capitalize 是自定义修饰符，不是 Vue 内置的
+    注意：这里的 .capitalize 是自定义修饰符，不是 Vue 内置的
   -->
   <MyInput v-model.capitalize="text" />
   <p>text: {{ text }}</p>
@@ -545,7 +563,7 @@ $$
   import { ref } from 'vue'
   import MyInput from './MyInput.vue'
 
-  const ref = ref('')
+  const text = ref('')
 </script>
 ```
 
@@ -571,6 +589,12 @@ $$
 ```
 
 :::
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-15-20-18-58.png)
+
+更新输入框中的内容，实现双向绑定的效果：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-15-20-19-07.png)
 
 ## 15. 💻 demos.6 - `defineModel()` 默认值导致的父子不同步问题
 
@@ -616,6 +640,14 @@ $$
 ```
 
 :::
+
+初始状态不一致：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-15-20-21-08.png)
+
+点击子组件的 +1 按钮后，父组件和子组件的值才会同步：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-15-20-21-41.png)
 
 ## 16. 🔗 引用
 
