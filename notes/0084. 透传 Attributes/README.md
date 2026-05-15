@@ -5,6 +5,10 @@
 - [1. 🎯 本节内容](#1--本节内容)
 - [2. 🫧 评价](#2--评价)
 - [3. 🤔 什么是透传 Attributes？什么时候会自动继承？](#3--什么是透传-attributes什么时候会自动继承)
+  - [3.1. 透传 Attributes](#31-透传-attributes)
+  - [3.2. 示例：单根节点](#32-示例单根节点)
+  - [3.3. 示例：多根节点](#33-示例多根节点)
+  - [3.4. 小结](#34-小结)
 - [4. 🤔 `class`、`style` 和 `v-on` 监听器会怎么透传？](#4--classstyle-和-v-on-监听器会怎么透传)
 - [5. 🤔 为什么有时要禁用自动继承？](#5--为什么有时要禁用自动继承)
 - [6. 🤔 多根节点组件为什么不会自动透传？](#6--多根节点组件为什么不会自动透传)
@@ -28,17 +32,21 @@
 
 ## 3. 🤔 什么是透传 Attributes？什么时候会自动继承？
 
-所谓「透传 Attributes」，指的是父组件传给一个组件，但这个组件没有把它声明为 `props` 或 `emits` 的那部分 attribute 和 `v-on` 监听器。
+### 3.1. 透传 Attributes
 
-最常见的就是：
+父组件在调用子组件的时候可以传递一些东西 xxx，这个 xxx 可能是子组件中定义的 `props` 也可能是 `emits`，理想情况下，父组件传递过来的 xxx 都是子组件事先定义好的，子组件可以接住父组件传过来的 xxx 内容。但是，有时候父组件传递过来的 xxx 在子组件中没有对应的 `props` 或 `emits` 来接住，这时 Vue 就会把这些「剩余的」xxx 直接透传到子组件的根元素上，这就是所谓的「透传 Attributes」。
 
-1. `class`
-2. `style`
-3. `id`
-4. `data-*`
-5. `@click` 这种监听器
+由此可见，透传本质上是 Vue 的一种特殊行为，目的为了处理当父组件传递过来的 attributes 在子组件中没有定义对应的 `props` 或 `emits` 时的场景。
 
-比如这个组件：
+::: tip 来看看 Vue 官方的解释
+
+“透传 attribute”（Fallthrough Attributes）指的是传递给一个组件，却没有被该组件声明为 `props` 或 `emits` 的 attribute 或者 v-on 事件监听器。最常见的例子就是 class、style 和 id。
+
+:::
+
+### 3.2. 示例：单根节点
+
+比如这里有一个子组件 `<MyButton>`：
 
 ```html
 <template>
@@ -52,13 +60,60 @@
 <MyButton class="large" id="submit-btn" />
 ```
 
-由于 `MyButton` 并没有把 `class` 和 `id` 声明成 `props`，Vue 就会把它们自动加到根元素 `<button>` 上。最终效果相当于：
+由于 `MyButton` 并没有把 `class` 和 `id` 声明成 `props`，Vue 就会把它们自动加到根元素 `<button>` 上。
+
+最终的 DOM 结构将会是：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-15-21-07-03.png)
+
+### 3.3. 示例：多根节点
+
+比如这里有一个子组件 `<MyButton>`，它有两个根节点：
 
 ```html
-<button class="large" id="submit-btn">Click Me</button>
+<template>
+  <button>Click Me</button>
+  <button>Click Me</button>
+</template>
 ```
 
-所以你可以先记住一个最核心的规则：当组件只有一个根元素时，未被声明消费掉的 attribute 会自动透传到这个根元素上。
+父组件这样使用：
+
+```html
+<MyButton class="large" id="submit-btn" />
+```
+
+此时的结果是 Vue 会给出警告，因为它不知道 `class` 和 `id` 应该加到哪个根节点上了。
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-15-21-06-01.png)
+
+::: warning 警告信息注解
+
+【中文翻译】
+
+[Vue 警告]：多余的、非 props 的属性 (class, id) 被传递给了组件，但是无法被自动继承，因为组件渲染的是片段、文本或 teleport 根节点。
+
+在 `<MyButton class="large" id="submit-btn" >`
+
+在 `<Repl>`
+
+【解释说明】
+
+父组件传递了 `class` 和 `id` 这两个非 props 的 attributes 给 `<MyButton>` 组件，但由于 `<MyButton>` 渲染了一个 fragment（即多个根节点），Vue 无法自动将这些 attributes 继承到某个特定的根节点上，因此发出了警告。
+
+🤔 为什么这里要刻意介绍一下这个警告信息？
+
+主要是想要强调一个关键术语 `automatically inherited`（自动继承），这个术语在 Vue 官方文档里是专门用来描述「当组件只有一个根元素时，未被声明消费掉的 attribute 会自动透传到这个根元素上」这个行为的。
+
+:::
+
+最终的 DOM 结构将会是：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-15-21-06-39.png)
+
+### 3.4. 小结
+
+你可以先记住一个最核心的规则：当组件只有一个根元素时，未被声明消费掉的 attribute 会自动透传到这个根元素上。
 
 ## 4. 🤔 `class`、`style` 和 `v-on` 监听器会怎么透传？
 
