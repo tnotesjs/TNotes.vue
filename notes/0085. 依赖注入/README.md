@@ -409,6 +409,8 @@ sequenceDiagram
 
 :::
 
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-16-23-22-14.png)
+
 ## 11. 💻 demos.2 - 响应式共享与最佳实践（readonly + setter）
 
 ::: code-group
