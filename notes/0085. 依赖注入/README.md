@@ -5,12 +5,21 @@
 - [1. 🎯 本节内容](#1--本节内容)
 - [2. 🫧 评价](#2--评价)
 - [3. 🤔 `provide` / `inject` 主要解决什么问题？](#3--provide--inject-主要解决什么问题)
-- [4. 🤔 如何在组件中 provide 和 inject？](#4--如何在组件中-provide-和-inject)
+- [4. 🤔 如何在组件中 `provide` 和 `inject`？](#4--如何在组件中-provide-和-inject)
+  - [4.1. 示例](#41-示例)
+  - [4.2. 对比 props 逐级传递](#42-对比-props-逐级传递)
+  - [4.3. 一些注意事项](#43-一些注意事项)
 - [5. 🤔 什么是应用层 Provide？](#5--什么是应用层-provide)
 - [6. 🤔 注入不到值时怎么办？默认值怎么写？](#6--注入不到值时怎么办默认值怎么写)
 - [7. 🤔 `provide` / `inject` 和响应式数据应该如何配合？](#7--provide--inject-和响应式数据应该如何配合)
 - [8. 🤔 为什么推荐用 `Symbol` 作为注入名？](#8--为什么推荐用-symbol-作为注入名)
-- [9. 🔗 引用](#9--引用)
+- [9. 🤔 为什么 provide 和 inject 需要同步调用？【深入原理】](#9--为什么-provide-和-inject-需要同步调用深入原理)
+  - [9.1. 前置知识：`provide` 如何使用 `currentInstance`](#91-前置知识provide-如何使用-currentinstance)
+  - [9.2. 前置知识：`inject` 如何使用 `currentInstance`](#92-前置知识inject-如何使用-currentinstance)
+  - [9.3. 前置知识：`currentInstance` 的生命周期](#93-前置知识currentinstance-的生命周期)
+  - [9.4. 为什么异步调用会失败](#94-为什么异步调用会失败)
+    - [时序图](#时序图)
+- [10. 🔗 引用](#10--引用)
 
 <!-- endregion:toc -->
 
@@ -29,39 +38,46 @@
 
 ## 3. 🤔 `provide` / `inject` 主要解决什么问题？
 
-当一个较深层的后代组件需要祖先组件里的数据时，如果只靠 props 往下一级一级传，就会出现典型的 prop 逐级透传问题。
+当一个较深层的后代组件需要祖先组件里的数据时，如果只靠 props 往下一级一级传，就会出现典型的 prop 逐级透传问题。也就是说：
 
-也就是说：
-
-1. 真正需要数据的是深层组件。
-2. 中间很多组件其实根本不用这份数据。
-3. 但这些中间组件仍然要被迫接收并继续向下传。
+- 真正需要数据的是深层组件
+- 中间很多组件其实根本不用这份数据
+- 但这些中间组件仍然要被迫接收并继续向下传
 
 这种链路一长，组件接口就会被很多「只是路过」的 props 污染，维护起来也很烦。
 
-`provide` / `inject` 就是用来解决这个问题的：
+`provide` / `inject` 就是用来解决上面这个问题的。
 
-1. 祖先组件负责「提供」一份依赖。
-2. 任意深度的后代组件都可以按 key 把它「注入」进来。
+- 祖先组件负责「提供」`provide` 一份依赖
+- 任意深度的后代组件都可以按 key 把它「注入」`inject` 进来
 
 所以它本质上是一种跨层级依赖共享机制，不需要中间组件层层转手。
 
-## 4. 🤔 如何在组件中 provide 和 inject？
+## 4. 🤔 如何在组件中 `provide` 和 `inject`？
 
 在 Vue 3 里，最常见的写法是直接在 `<script setup>` 中使用 `provide()` 和 `inject()`。
 
+### 4.1. 示例
+
+假设存在两个组件：`Root.vue` 和 `DeepChild.vue`，它们之间隔了好几层组件，但 `DeepChild.vue` 需要用到 `Root.vue` 里提供的数据。我们可以：
+
+- 在 `Root.vue` 里利用 `provide()` 把数据提供出来
+- 在 `DeepChild.vue` 里用 `inject()` 获取这份数据
+
 ::: code-group
 
-```html [Provider.vue]
+```html [Root.vue]
 <script setup>
   import { provide } from 'vue'
 
   provide('theme', 'dark')
 </script>
-
-<template>
-  <slot />
-</template>
+<!--
+基础规则：
+provide() 的第一个参数是注入名，第二个参数是值
+注入名可以是字符串类型，也可以是 Symbol 类型
+一个组件可以多次 provide() 不同依赖
+-->
 ```
 
 ```html [DeepChild.vue]
@@ -74,20 +90,28 @@
 <template>
   <p>当前主题：{{ theme }}</p>
 </template>
+<!--
+基础规则：
+inject() 会沿着父组件链向上查找，取最近的那个提供者
+-->
 ```
 
 :::
 
-如果没有使用 `<script setup>`，`provide()` 和 `inject()` 也都应该在 `setup()` 里同步调用，不要放到异步回调里。否则当前组件实例的上下文可能已经丢了。
+### 4.2. 对比 props 逐级传递
 
-这里有几个基础规则：
+如果走传统的 props 来实现深层组件之间的数据传递，需要逐层传递：
 
-1. `provide()` 的第一个参数是注入名，第二个参数是值。
-2. 注入名可以是字符串，也可以是 `Symbol`。
-3. 一个组件可以多次 `provide()` 不同依赖。
-4. `inject()` 会沿着父组件链向上查找，取最近的那个提供者。
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-16-21-17-29.png)
 
-如果提供的是一个 ref，注入方拿到的仍然是这个 ref 对象，而不会自动解包。这样做的好处是，供给方和注入方之间可以保持响应式连接。
+如果使用 `provide` / `inject`，就可以直接在暴露数据的组件 `provide`，在需要消费的深层组件里注入 `inject`：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-16-21-17-38.png)
+
+### 4.3. 一些注意事项
+
+- 如果没有使用 `<script setup>`，`provide()` 和 `inject()` 也都应该在 `setup()` 里同步调用，不要放到异步回调里。
+- 如果提供的是一个 ref，注入方拿到的仍然是这个 ref 对象，而不会自动解包。这样做的好处是，供给方和注入方之间可以保持响应式连接。
 
 ## 5. 🤔 什么是应用层 Provide？
 
@@ -108,9 +132,9 @@ app.mount('#app')
 
 这种方式特别适合：
 
-1. 插件安装时注入配置
-2. 应用级共享服务
-3. 不依赖具体组件层级的全局配置
+- 插件安装时注入配置
+- 应用级共享服务
+- 不依赖具体组件层级的全局配置
 
 换句话说，组件级 provide 更像「某棵子树内共享」，应用级 provide 更像「整个应用作用域内共享」。
 
@@ -226,7 +250,101 @@ const theme = inject(themeKey)
 
 这样做的主要价值不是「写法更高级」，而是避免 key 冲突，让依赖关系更稳定、更适合复用和跨文件维护。
 
-## 9. 🔗 引用
+## 9. 🤔 为什么 provide 和 inject 需要同步调用？【深入原理】
+
+一句话解释：根本原因是 `provide` 和 `inject` 都依赖一个「模块级全局变量」 `currentInstance`，而这个变量只在 `setup()` 同步执行期间被设置为当前组件实例。
+
+必要的前置知识：
+
+- 了解 `provide` 内部实现，重点关注对 `currentInstance` 的写入逻辑
+- 了解 `inject` 内部实现，重点关注对 `currentInstance` 的读取逻辑
+- 了解 `currentInstance` 的生命周期，特别是它在 `setup()` 前后是如何被设置和重置的
+
+### 9.1. 前置知识：`provide` 如何使用 `currentInstance`
+
+`provide` 直接读取模块级的 `currentInstance`，把值写入该实例的 `provides` 对象：
+
+```js
+// packages/runtime-core/src/apiInject.ts
+export function provide(key, value) {
+  if (!currentInstance || currentInstance.isMounted) {
+    warn(`provide() can only be used inside setup().`)
+  }
+  // 写入 currentInstance.provides
+  if (currentInstance) {
+    let provides = currentInstance.provides
+    // ...
+    provides[key as string] = value
+  }
+}
+```
+
+### 9.2. 前置知识：`inject` 如何使用 `currentInstance`
+
+`inject` 通过 `getCurrentInstance()` 获取当前实例，然后沿原型链向上查找父组件的 `provides`。
+
+```js
+// packages/runtime-core/src/apiInject.ts
+export function inject(
+  key: InjectionKey<any> | string
+) {
+  const instance = getCurrentInstance()
+
+  // 读 provides[key] ...
+  if (instance || currentApp) {
+    let provides = instance.parent.provides
+
+    if (provides && (key as string | symbol) in provides) {
+      return provides[key as string]
+    }
+  }
+}
+```
+
+### 9.3. 前置知识：`currentInstance` 的生命周期
+
+在 `setupStatefulComponent` 中，Vue 在调用 `setup()` 前后分别设置和重置 `currentInstance`：
+
+```js
+// packages/runtime-core/src/component.ts
+const reset = setCurrentInstance(instance)   // ← 设置 currentInstance = 当前组件
+const setupResult = callWithErrorHandling(setup, ...)
+resetTracking()
+reset()                                       // ← 立即重置 currentInstance = null
+```
+
+`setCurrentInstance` 本身的实现也很直接，它只是把全局变量指向当前实例，并返回一个“重置函数”。
+
+### 9.4. 为什么异步调用会失败
+
+JavaScript 是单线程的，`await` 之后的代码是在「新的微任务」中执行的。此时 `setup()` 的同步部分早已执行完毕，`reset()` 也已经把 `currentInstance` 置回 `null`。
+
+```js
+async setup() {
+  provide('key', val)   // ✅ 同步，currentInstance = 当前组件
+  await someAsyncOp()   // setup() 同步部分到此结束，reset() 被调用
+  inject('key')         // ❌ currentInstance = null，找不到实例
+}
+```
+
+#### 时序图
+
+```mermaid
+sequenceDiagram
+    participant Vue as "Vue 运行时"
+    participant setup as "setup() 函数"
+    participant global as "currentInstance (全局)"
+
+    Vue->>global: "setCurrentInstance(instance)"
+    Vue->>setup: "调用 setup()"
+    setup->>global: "provide/inject 读取 currentInstance ✅"
+    setup-->>Vue: "返回 Promise (遇到 await)"
+    Vue->>global: "reset() → currentInstance = null"
+    Note over global: "此后 currentInstance 为 null"
+    setup->>global: "await 后再调用 provide/inject ❌"
+```
+
+## 10. 🔗 引用
 
 - [Vue.js 官方文档 - 依赖注入][1]
 
