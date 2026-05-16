@@ -11,7 +11,8 @@
   - [4.3. 一些注意事项](#43-一些注意事项)
 - [5. 🤔 什么是应用层 Provide？](#5--什么是应用层-provide)
 - [6. 🤔 注入不到值时怎么办？默认值怎么写？](#6--注入不到值时怎么办默认值怎么写)
-- [7. 🤔 `provide` / `inject` 和响应式数据应该如何配合？](#7--provide--inject-和响应式数据应该如何配合)
+- [7. 🤔 `provide` / `inject` 和响应式数据应该如何配合？实际开发时的最佳实践是？](#7--provide--inject-和响应式数据应该如何配合实际开发时的最佳实践是)
+  - [7.1. 最佳实践](#71-最佳实践)
 - [8. 🤔 为什么推荐用 `Symbol` 作为注入名？](#8--为什么推荐用-symbol-作为注入名)
 - [9. 🤔 为什么 provide 和 inject 需要同步调用？【深入原理】](#9--为什么-provide-和-inject-需要同步调用深入原理)
   - [9.1. 前置知识：`provide` 如何使用 `currentInstance`](#91-前置知识provide-如何使用-currentinstance)
@@ -19,7 +20,13 @@
   - [9.3. 前置知识：`currentInstance` 的生命周期](#93-前置知识currentinstance-的生命周期)
   - [9.4. 为什么异步调用会失败](#94-为什么异步调用会失败)
     - [时序图](#时序图)
-- [10. 🔗 引用](#10--引用)
+- [10. 💻 demos.1 - provide/inject 基本用法（跨层级共享）](#10--demos1---provideinject-基本用法跨层级共享)
+- [11. 💻 demos.2 - 响应式共享与最佳实践（readonly + setter）](#11--demos2---响应式共享与最佳实践readonly--setter)
+- [12. 💻 demos.3 - inject 默认值](#12--demos3---inject-默认值)
+- [13. 💻 demos.4 - Symbol 作为注入名](#13--demos4---symbol-作为注入名)
+- [14. 💻 demos.5 - 应用层 Provide](#14--demos5---应用层-provide)
+- [15. 💻 demos.6 - 为什么 provide/inject 必须同步调用](#15--demos6---为什么-provideinject-必须同步调用)
+- [16. 🔗 引用](#16--引用)
 
 <!-- endregion:toc -->
 
@@ -34,7 +41,7 @@
 
 ## 2. 🫧 评价
 
-依赖注入不是最先学、也不是最高频的组件通信方式，但它一旦出现，通常就是在解决「跨很多层传值太麻烦」这种真正的结构问题。你不需要把它用成状态管理替代品，但至少要掌握 provide、inject、默认值、响应式共享和 Symbol key 这些核心规则。
+`provide` / `inject` 主要解决跨层传值的问题。在使用的时候需要注意不能丢到异步回调里，否则会导致无法正常工作。
 
 ## 3. 🤔 `provide` / `inject` 主要解决什么问题？
 
@@ -158,10 +165,10 @@ const service = inject('service', () => createService(), true)
 
 所以默认值这一块你可以记成：
 
-1. 简单值，直接传。
-2. 昂贵对象或类实例，用工厂函数。
+- 简单值，直接传
+- 昂贵对象或类实例，用工厂函数
 
-## 7. 🤔 `provide` / `inject` 和响应式数据应该如何配合？
+## 7. 🤔 `provide` / `inject` 和响应式数据应该如何配合？实际开发时的最佳实践是？
 
 依赖注入最常见的真实用法，不是传一个普通字符串，而是传一份响应式状态。
 
@@ -177,12 +184,20 @@ const service = inject('service', () => createService(), true)
 
 后代组件拿到后，和供给方会共享同一个 ref。
 
-不过官方更推荐你把「状态修改动作」尽量保留在提供者组件内部，再把修改函数也一起 provide 出去：
+### 7.1. 最佳实践
+
+常见做法是把「状态修改的方法」 setter 也一起 provide 出去，这样可以让数据流更加清晰：
+
+- 如果消费方（后代组件）只需要读取状态的值，那么只需要导入状态本身即可
+- 如果消费方还需要修改状态，那么就同时导入状态和修改状态的方法 setter
+
+数据生产者：
 
 ```html
 <script setup>
-  import { provide, ref } from 'vue'
+  import { provide, ref, readonly } from 'vue'
 
+  // 「状态定义」和「状态修改规则」仍然内聚在提供者一侧，代码更容易维护
   const location = ref('North Pole')
 
   function updateLocation() {
@@ -190,18 +205,21 @@ const service = inject('service', () => createService(), true)
   }
 
   provide('locationContext', {
-    location,
+    location: readonly(location), // 只读导出，防止消费方误改
     updateLocation,
   })
 </script>
 ```
 
-注入方：
+数据消费者：
 
 ```html
 <script setup>
   import { inject } from 'vue'
 
+  // 按需消费，数据流清晰
+  // 只读导 - location
+  // 读写导 - location + updateLocation
   const { location, updateLocation } = inject('locationContext')
 </script>
 
@@ -209,10 +227,6 @@ const service = inject('service', () => createService(), true)
   <button @click="updateLocation">{{ location }}</button>
 </template>
 ```
-
-这样做的好处是「状态定义」和「状态修改规则」仍然内聚在提供者一侧，代码更容易维护。
-
-如果你只想让注入方读取，完全不想让它改，还可以在 provide 时用 `readonly()` 包一层。
 
 ## 8. 🤔 为什么推荐用 `Symbol` 作为注入名？
 
@@ -344,7 +358,296 @@ sequenceDiagram
     setup->>global: "await 后再调用 provide/inject ❌"
 ```
 
-## 10. 🔗 引用
+## 10. 💻 demos.1 - provide/inject 基本用法（跨层级共享）
+
+::: code-group
+
+```html [App.vue]
+<script setup>
+  import { provide } from 'vue'
+  import MiddleComp from './MiddleComp.vue'
+
+  // 祖先组件 provide 数据，后代组件无论嵌套多深都可直接 inject
+  provide('theme', 'dark')
+</script>
+
+<template>
+  <h3>App（祖先）— 提供了 theme = 'dark'</h3>
+  <MiddleComp />
+</template>
+```
+
+```html [MiddleComp.vue]
+<script setup>
+  import DeepChild from './DeepChild.vue'
+  // 中间组件完全不需要 theme，不参与传递，接口不会被污染
+</script>
+
+<template>
+  <div style="margin-left: 1em;">
+    <h4>MiddleComp（中间层，不感知 theme）</h4>
+    <DeepChild />
+  </div>
+</template>
+```
+
+```html [DeepChild.vue]
+<script setup>
+  import { inject } from 'vue'
+
+  // 沿父组件链向上查找，取最近的 provide('theme', ...)
+  const theme = inject('theme')
+</script>
+
+<template>
+  <div style="margin-left: 1em;">
+    <h4>DeepChild（深层后代）</h4>
+    <p>inject 获取到 theme: {{ theme }}</p>
+  </div>
+</template>
+```
+
+:::
+
+## 11. 💻 demos.2 - 响应式共享与最佳实践（readonly + setter）
+
+::: code-group
+
+```html [App.vue]
+<script setup>
+  import { provide, ref, readonly } from 'vue'
+  import Child from './Child.vue'
+
+  const location = ref('North Pole')
+
+  function updateLocation(newLoc) {
+    location.value = newLoc
+  }
+
+  // 最佳实践：
+  // - readonly 包裹状态，防止消费方直接修改
+  // - 同时 provide setter，让修改逻辑内聚在提供方
+  provide('locationContext', {
+    location: readonly(location),
+    updateLocation,
+  })
+</script>
+
+<template>
+  <h3>App — 当前 location: {{ location }}</h3>
+  <Child />
+</template>
+```
+
+```html [Child.vue]
+<script setup>
+  import { inject } from 'vue'
+
+  // 消费方按需取出状态和方法，数据流清晰
+  const { location, updateLocation } = inject('locationContext')
+</script>
+
+<template>
+  <div style="margin-left: 1em;">
+    <h4>Child</h4>
+    <p>location: {{ location }}</p>
+    <button @click="updateLocation('South Pole')">切换到 South Pole</button>
+  </div>
+</template>
+```
+
+:::
+
+## 12. 💻 demos.3 - inject 默认值
+
+::: code-group
+
+```html [App.vue]
+<script setup>
+  import { provide } from 'vue'
+  import Child from './Child.vue'
+
+  provide('theme', 'dark')
+  // 故意不提供 locale，演示默认值生效
+</script>
+
+<template>
+  <h3>App</h3>
+  <p>提供了 theme，未提供 locale</p>
+  <Child />
+</template>
+```
+
+```html [Child.vue]
+<script setup>
+  import { inject } from 'vue'
+
+  // 简单默认值：key 存在则取 provide 的值，否则用默认值
+  const theme = inject('theme', 'light') // 'dark'（来自 provide）
+  const locale = inject('locale', 'zh-CN') // 'zh-CN'（默认值）
+
+  // 工厂函数默认值：第三个参数 true 表示「把第二个参数当工厂函数执行」
+  // 适用于默认值创建成本较高的场景（如大对象、类实例等）
+  const config = inject('config', () => ({ debug: false, version: 1 }), true)
+</script>
+
+<template>
+  <div style="margin-left: 1em;">
+    <h4>Child</h4>
+    <p>theme: {{ theme }}</p>
+    <p>locale: {{ locale }}</p>
+    <p>config: {{ config }}</p>
+  </div>
+</template>
+```
+
+:::
+
+## 13. 💻 demos.4 - Symbol 作为注入名
+
+::: code-group
+
+```js [keys.js]
+// 统一管理注入名：Symbol 天然唯一，避免大型项目中 key 冲突
+export const ThemeKey = Symbol('theme')
+export const LocaleKey = Symbol('locale')
+```
+
+```html [App.vue]
+<script setup>
+  import { provide } from 'vue'
+  import { ThemeKey, LocaleKey } from './keys.js'
+  import Child from './Child.vue'
+
+  provide(ThemeKey, 'dark')
+  provide(LocaleKey, 'zh-CN')
+</script>
+
+<template>
+  <h3>App</h3>
+  <Child />
+</template>
+```
+
+```html [Child.vue]
+<script setup>
+  import { inject } from 'vue'
+  import { ThemeKey, LocaleKey } from './keys.js'
+
+  // 从共享模块导入同一个 Symbol 实例，保证 provide/inject 匹配
+  const theme = inject(ThemeKey)
+  const locale = inject(LocaleKey)
+</script>
+
+<template>
+  <div style="margin-left: 1em;">
+    <h4>Child</h4>
+    <p>theme: {{ theme }}</p>
+    <p>locale: {{ locale }}</p>
+  </div>
+</template>
+```
+
+:::
+
+## 14. 💻 demos.5 - 应用层 Provide
+
+::: code-group
+
+```js [main.js]
+import { createApp } from 'vue'
+import App from './App.vue'
+
+const app = createApp(App)
+
+// 应用层 provide — 适合插件配置、全局服务等不依赖组件层级的共享数据
+// 应用内任意组件都可以 inject
+app.provide('apiBaseUrl', 'https://api.example.com')
+app.provide('appName', 'MyApp')
+
+app.mount('#app')
+```
+
+```html [App.vue]
+<script setup>
+  import Child from './Child.vue'
+</script>
+
+<template>
+  <h3>App</h3>
+  <Child />
+</template>
+```
+
+```html [Child.vue]
+<script setup>
+  import { inject } from 'vue'
+
+  // 无需祖先组件逐层 provide，直接注入应用层提供的数据
+  const appName = inject('appName')
+  const apiBaseUrl = inject('apiBaseUrl')
+</script>
+
+<template>
+  <div style="margin-left: 1em;">
+    <h4>Child</h4>
+    <p>appName: {{ appName }}</p>
+    <p>apiBaseUrl: {{ apiBaseUrl }}</p>
+  </div>
+</template>
+```
+
+:::
+
+## 15. 💻 demos.6 - 为什么 provide/inject 必须同步调用
+
+::: code-group
+
+```html [App.vue]
+<script setup>
+  import { provide } from 'vue'
+  import Child from './Child.vue'
+
+  provide('theme', 'dark')
+</script>
+
+<template>
+  <h3>App</h3>
+  <Child />
+</template>
+```
+
+```html [Child.vue]
+<script setup>
+  import { inject, ref } from 'vue'
+
+  // ✅ 同步调用 — setup() 执行期间 currentInstance 存在，正常注入
+  const theme = inject('theme')
+
+  const asyncResult = ref('尚未尝试')
+
+  function tryAsyncInject() {
+    setTimeout(() => {
+      // ❌ 异步调用 — setup() 已执行完毕，currentInstance 被置为 null
+      // inject 无法定位当前组件实例，返回默认值并在控制台输出 warning
+      asyncResult.value = String(inject('theme', '⚠️ undefined'))
+    }, 0)
+  }
+</script>
+
+<template>
+  <div style="margin-left: 1em;">
+    <h4>Child</h4>
+    <p>同步 inject theme: <b>{{ theme }}</b></p>
+    <p>异步 inject 结果: <b>{{ asyncResult }}</b></p>
+    <button @click="tryAsyncInject">尝试在 setTimeout 中 inject</button>
+  </div>
+</template>
+```
+
+:::
+
+## 16. 🔗 引用
 
 - [Vue.js 官方文档 - 依赖注入][1]
 
