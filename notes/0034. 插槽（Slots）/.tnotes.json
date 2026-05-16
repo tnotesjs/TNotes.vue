@@ -2,10 +2,10 @@
   "bilibili": [],
   "tnotes": [],
   "yuque": [],
-  "done": false,
-  "enableDiscussions": false,
-  "description": "",
+  "done": true,
+  "enableDiscussions": true,
+  "description": "在某些场景中，我们可能想要为子组件传递一些模板片段，让子组件在它们的组件中渲染这些片段，这时候就可以使用 Vue 提供的插槽（Slots）来解决。",
   "id": "7eab2490-7b88-4a43-a0c2-8c2139270f9f",
   "created_at": 1772287513409,
-  "updated_at": 1772290605555
+  "updated_at": 1778899955331
 }
