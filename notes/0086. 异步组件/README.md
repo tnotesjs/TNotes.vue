@@ -5,8 +5,8 @@
 - [1. 🎯 本节内容](#1--本节内容)
 - [2. 🫧 评价](#2--评价)
 - [3. 🤔 什么是异步组件？为什么需要它？](#3--什么是异步组件为什么需要它)
-- [4. 🤔 `defineAsyncComponent()` 的基本用法怎么写？](#4--defineasynccomponent-的基本用法怎么写)
-- [5. 🤔 加载状态和错误状态应该怎么处理？](#5--加载状态和错误状态应该怎么处理)
+- [4. 🤔 `defineAsyncComponent()` 是什么？基本用法是？](#4--defineasynccomponent-是什么基本用法是)
+- [5. 🤔 异步组件的「加载状态」和「错误状态」应该怎么处理？](#5--异步组件的加载状态和错误状态应该怎么处理)
 - [6. 🤔 异步组件的真正加载时机是什么？](#6--异步组件的真正加载时机是什么)
 - [7. 🤔 Vue 3.5+ 的惰性激活是什么？](#7--vue-35-的惰性激活是什么)
 - [8. 🤔 异步组件和 `<Suspense>` 是什么关系？](#8--异步组件和-suspense-是什么关系)
@@ -35,23 +35,26 @@
 
 异步组件的目标就是把组件变成按需加载：
 
-1. 先只加载当前必须用到的代码。
-2. 某个组件真正被渲染时，再去请求它对应的代码块。
+- 先只加载当前必须用到的代码
+- 某个组件真正被渲染时，再去请求它对应的代码块
 
-所以它的核心价值不是「写法更酷」，而是和构建工具的代码分割能力配合，降低首包压力。
+所以它的核心价值是和构建工具的代码分割能力配合，降低首包压力。
 
-## 4. 🤔 `defineAsyncComponent()` 的基本用法怎么写？
+## 4. 🤔 `defineAsyncComponent()` 是什么？基本用法是？
 
-Vue 提供了 `defineAsyncComponent()` 来定义异步组件。它接收一个返回 Promise 的加载函数。
+`defineAsyncComponent()` 是 Vue 提供的一个函数，用来定义异步组件。它接收一个返回 Promise 的加载函数。如果这个 Promise 最终 reject，异步组件就会进入失败分支，如果你配置了错误组件，就会渲染错误组件。
 
-如果这个 Promise 最终 reject，异步组件就会进入失败分支；如果你配置了错误组件，它就会被渲染出来。
+示例：
 
 ```js
 import { defineAsyncComponent } from 'vue'
 
+// 定义一个异步组件
 const AsyncPanel = defineAsyncComponent(
   () => import('./components/AsyncPanel.vue'),
 )
+// 最常见的写法就是结合动态导入 import()
+// 因为 Vite、Webpack 这类构建工具会把它识别成天然的代码分割点
 ```
 
 然后它的使用方式和普通组件没有区别：
@@ -62,11 +65,11 @@ const AsyncPanel = defineAsyncComponent(
 </template>
 ```
 
-这里最常见的写法就是结合动态导入 `import()`，因为 Vite、Webpack 这类构建工具会把它识别成天然的代码分割点。
+异步组件和普通组件一样，可以局部注册也可以全局注册：
 
-异步组件既可以局部定义：
+::: code-group
 
-```html
+```html [局部注册]
 <script setup>
   import { defineAsyncComponent } from 'vue'
 
@@ -76,49 +79,86 @@ const AsyncPanel = defineAsyncComponent(
 </script>
 ```
 
-也可以在应用入口做全局注册：
-
-```js
+```js [全局注册]
 app.component(
   'AdminPage',
   defineAsyncComponent(() => import('./components/AdminPage.vue')),
 )
 ```
 
-还有一个很容易被忽略的点：异步组件只是「外面包了一层加载器」的包装组件。它接收到的 props 和 slots 最终都会继续传给真正加载出来的内部组件，所以你可以相对无缝地把普通组件替换成异步版本。
+:::
 
-## 5. 🤔 加载状态和错误状态应该怎么处理？
+异步组件只是「外面包了一层加载器」的包装组件，它接收到的 props 和 slots 最终都会继续传给真正加载出来的内部组件。这意味着你可以相对无缝地把普通组件替换成异步版本，通常只需要使用 `defineAsyncComponent()` 包裹一下就好了。
 
-异步加载一定会遇到两个现实问题：
+## 5. 🤔 异步组件的「加载状态」和「错误状态」应该怎么处理？
 
-1. 组件还没加载完时显示什么？
-2. 组件加载失败时显示什么？
+实际在使用异步组件时，异步组件的加载一定会遇到两个现实问题：
 
-`defineAsyncComponent()` 支持对象写法来处理这些状态：
+- 问题1. 组件还没加载完时显示什么？
+- 问题2. 组件加载失败时显示什么？
+
+`defineAsyncComponent()` 最基础的用法就是传入一个参数 => loader 函数（传 `AsyncComponentLoader`），这个函数返回一个 Promise，Promise resolve 的结果就是组件的定义：
+
+```js
+// AsyncComponentLoader 示例：
+const AsyncPanel = defineAsyncComponent(
+  () => import('./components/AsyncPanel.vue'),
+)
+```
+
+但是从 `defineAsyncComponent()` 的类型定义来看，直接传入一个 loader 其实只是它的一种简化写法。以下是关于 `defineAsyncComponent()` 的类型定义：
+
+```ts
+function defineAsyncComponent(
+  source: AsyncComponentLoader | AsyncComponentOptions,
+): Component
+
+type AsyncComponentLoader = () => Promise<Component>
+
+interface AsyncComponentOptions {
+  loader: AsyncComponentLoader // 返回 Promise 的异步组件加载函数
+  loadingComponent?: Component // 加载过程中显示的占位组件 - 解决上述提到的问题 1
+  errorComponent?: Component // 加载失败时显示的错误组件 - 解决上述提到的问题 2
+  delay?: number // loadingComponent 显示前的延迟时间（ms），默认 200
+  // 200ms 是一个相对合理的值，网络快的时候，如果 loading 一闪而过，视觉上反而会有闪屏的感觉
+  // 你可以先试试 200ms 是否满足需求，效果不太行再结合项目实际应用场景来调整
+  // 验证：github vuejs/core => packages/runtime-core/src/apiAsyncComponent.ts 搜 delay
+  timeout?: number // 加载超时时间（ms），超时后显示 errorComponent
+  suspensible?: boolean // 是否支持 Suspense，默认 true（Vue 3.2+）
+  // 加载出错时的回调，可决定重试或失败
+  onError?: (
+    error: Error,
+    retry: () => void, // 调用后重新尝试加载
+    fail: () => void, // 调用后标记为加载失败
+    attempts: number, // 已重试次数
+  ) => any
+}
+```
+
+`defineAsyncComponent()` 还支持更完整的对象写法（传 `AsyncComponentOptions`）来处理「加载状态」和「错误状态」：
 
 ```js
 import { defineAsyncComponent } from 'vue'
 import LoadingCard from './LoadingCard.vue'
 import ErrorCard from './ErrorCard.vue'
 
+// 示例：AsyncComponentOptions
 const AsyncChart = defineAsyncComponent({
   loader: () => import('./ChartPanel.vue'),
   loadingComponent: LoadingCard,
-  delay: 200,
   errorComponent: ErrorCard,
+  delay: 200,
   timeout: 3000,
 })
 ```
 
 这里几个配置项的含义分别是：
 
-1. `loader`：真正的异步加载函数。
-2. `loadingComponent`：加载期间先显示的组件。
-3. `delay`：延迟多久再显示 loading，默认是 200ms。
-4. `errorComponent`：加载报错或超时时显示的组件。
-5. `timeout`：超时时间，超时后会进入错误状态。
-
-默认的 200ms 延迟其实很合理，因为网络快的时候，如果 loading 一闪而过，视觉上反而会有闪烁感。
+- `loader`：真正的异步加载函数
+- `loadingComponent`：加载期间先显示的组件
+- `errorComponent`：加载报错或超时时显示的组件
+- `delay`：延迟多久再显示 loading，默认是 200ms
+- `timeout`：超时时间，超时后会进入错误状态
 
 ## 6. 🤔 异步组件的真正加载时机是什么？
 
