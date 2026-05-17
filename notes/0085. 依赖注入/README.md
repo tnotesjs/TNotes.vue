@@ -14,19 +14,19 @@
 - [7. 🤔 `provide` / `inject` 和响应式数据应该如何配合？实际开发时的最佳实践是？](#7--provide--inject-和响应式数据应该如何配合实际开发时的最佳实践是)
   - [7.1. 最佳实践](#71-最佳实践)
 - [8. 🤔 为什么推荐用 `Symbol` 作为注入名？](#8--为什么推荐用-symbol-作为注入名)
-- [9. 🤔 为什么 provide 和 inject 需要同步调用？【深入原理】](#9--为什么-provide-和-inject-需要同步调用深入原理)
-  - [9.1. 前置知识：`provide` 如何使用 `currentInstance`](#91-前置知识provide-如何使用-currentinstance)
-  - [9.2. 前置知识：`inject` 如何使用 `currentInstance`](#92-前置知识inject-如何使用-currentinstance)
-  - [9.3. 前置知识：`currentInstance` 的生命周期](#93-前置知识currentinstance-的生命周期)
-  - [9.4. 为什么异步调用会失败](#94-为什么异步调用会失败)
+- [9. 💻 demos.1 - provide/inject 基本用法（跨层级共享）](#9--demos1---provideinject-基本用法跨层级共享)
+- [10. 💻 demos.2 - 响应式共享与最佳实践（readonly + setter）](#10--demos2---响应式共享与最佳实践readonly--setter)
+- [11. 💻 demos.3 - inject 默认值](#11--demos3---inject-默认值)
+- [12. 💻 demos.4 - Symbol 作为注入名](#12--demos4---symbol-作为注入名)
+- [13. 💻 demos.5 - 应用层 Provide](#13--demos5---应用层-provide)
+- [14. 🤔 为什么 provide 和 inject 需要同步调用？【深入原理】](#14--为什么-provide-和-inject-需要同步调用深入原理)
+  - [14.1. 前置知识：`provide` 如何使用 `currentInstance`](#141-前置知识provide-如何使用-currentinstance)
+  - [14.2. 前置知识：`inject` 如何使用 `currentInstance`](#142-前置知识inject-如何使用-currentinstance)
+  - [14.3. 前置知识：`currentInstance` 的生命周期](#143-前置知识currentinstance-的生命周期)
+  - [14.4. 为什么异步调用会失败](#144-为什么异步调用会失败)
     - [时序图](#时序图)
-- [10. 💻 demos.1 - provide/inject 基本用法（跨层级共享）](#10--demos1---provideinject-基本用法跨层级共享)
-- [11. 💻 demos.2 - 响应式共享与最佳实践（readonly + setter）](#11--demos2---响应式共享与最佳实践readonly--setter)
-- [12. 💻 demos.3 - inject 默认值](#12--demos3---inject-默认值)
-- [13. 💻 demos.4 - Symbol 作为注入名](#13--demos4---symbol-作为注入名)
-- [14. 💻 demos.5 - 应用层 Provide](#14--demos5---应用层-provide)
-- [15. 💻 demos.6 - 为什么 provide/inject 必须同步调用](#15--demos6---为什么-provideinject-必须同步调用)
-- [16. 🔗 引用](#16--引用)
+  - [14.5. 示例](#145-示例)
+- [15. 🔗 引用](#15--引用)
 
 <!-- endregion:toc -->
 
@@ -264,101 +264,7 @@ const theme = inject(themeKey)
 
 这样做的主要价值不是「写法更高级」，而是避免 key 冲突，让依赖关系更稳定、更适合复用和跨文件维护。
 
-## 9. 🤔 为什么 provide 和 inject 需要同步调用？【深入原理】
-
-一句话解释：根本原因是 `provide` 和 `inject` 都依赖一个「模块级全局变量」 `currentInstance`，而这个变量只在 `setup()` 同步执行期间被设置为当前组件实例。
-
-必要的前置知识：
-
-- 了解 `provide` 内部实现，重点关注对 `currentInstance` 的写入逻辑
-- 了解 `inject` 内部实现，重点关注对 `currentInstance` 的读取逻辑
-- 了解 `currentInstance` 的生命周期，特别是它在 `setup()` 前后是如何被设置和重置的
-
-### 9.1. 前置知识：`provide` 如何使用 `currentInstance`
-
-`provide` 直接读取模块级的 `currentInstance`，把值写入该实例的 `provides` 对象：
-
-```js
-// packages/runtime-core/src/apiInject.ts
-export function provide(key, value) {
-  if (!currentInstance || currentInstance.isMounted) {
-    warn(`provide() can only be used inside setup().`)
-  }
-  // 写入 currentInstance.provides
-  if (currentInstance) {
-    let provides = currentInstance.provides
-    // ...
-    provides[key as string] = value
-  }
-}
-```
-
-### 9.2. 前置知识：`inject` 如何使用 `currentInstance`
-
-`inject` 通过 `getCurrentInstance()` 获取当前实例，然后沿原型链向上查找父组件的 `provides`。
-
-```js
-// packages/runtime-core/src/apiInject.ts
-export function inject(
-  key: InjectionKey<any> | string
-) {
-  const instance = getCurrentInstance()
-
-  // 读 provides[key] ...
-  if (instance || currentApp) {
-    let provides = instance.parent.provides
-
-    if (provides && (key as string | symbol) in provides) {
-      return provides[key as string]
-    }
-  }
-}
-```
-
-### 9.3. 前置知识：`currentInstance` 的生命周期
-
-在 `setupStatefulComponent` 中，Vue 在调用 `setup()` 前后分别设置和重置 `currentInstance`：
-
-```js
-// packages/runtime-core/src/component.ts
-const reset = setCurrentInstance(instance)   // ← 设置 currentInstance = 当前组件
-const setupResult = callWithErrorHandling(setup, ...)
-resetTracking()
-reset()                                       // ← 立即重置 currentInstance = null
-```
-
-`setCurrentInstance` 本身的实现也很直接，它只是把全局变量指向当前实例，并返回一个“重置函数”。
-
-### 9.4. 为什么异步调用会失败
-
-JavaScript 是单线程的，`await` 之后的代码是在「新的微任务」中执行的。此时 `setup()` 的同步部分早已执行完毕，`reset()` 也已经把 `currentInstance` 置回 `null`。
-
-```js
-async setup() {
-  provide('key', val)   // ✅ 同步，currentInstance = 当前组件
-  await someAsyncOp()   // setup() 同步部分到此结束，reset() 被调用
-  inject('key')         // ❌ currentInstance = null，找不到实例
-}
-```
-
-#### 时序图
-
-```mermaid
-sequenceDiagram
-    participant Vue as "Vue 运行时"
-    participant setup as "setup() 函数"
-    participant global as "currentInstance (全局)"
-
-    Vue->>global: "setCurrentInstance(instance)"
-    Vue->>setup: "调用 setup()"
-    setup->>global: "provide/inject 读取 currentInstance ✅"
-    setup-->>Vue: "返回 Promise (遇到 await)"
-    Vue->>global: "reset() → currentInstance = null"
-    Note over global: "此后 currentInstance 为 null"
-    setup->>global: "await 后再调用 provide/inject ❌"
-```
-
-## 10. 💻 demos.1 - provide/inject 基本用法（跨层级共享）
+## 9. 💻 demos.1 - provide/inject 基本用法（跨层级共享）
 
 ::: code-group
 
@@ -411,7 +317,7 @@ sequenceDiagram
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-16-23-22-14.png)
 
-## 11. 💻 demos.2 - 响应式共享与最佳实践（readonly + setter）
+## 10. 💻 demos.2 - 响应式共享与最佳实践（readonly + setter）
 
 ::: code-group
 
@@ -460,7 +366,13 @@ sequenceDiagram
 
 :::
 
-## 12. 💻 demos.3 - inject 默认值
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-17-08-56-13.png)
+
+点击切换按钮之后：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-17-08-56-36.png)
+
+## 11. 💻 demos.3 - inject 默认值
 
 ::: code-group
 
@@ -505,7 +417,9 @@ sequenceDiagram
 
 :::
 
-## 13. 💻 demos.4 - Symbol 作为注入名
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-17-08-59-13.png)
+
+## 12. 💻 demos.4 - Symbol 作为注入名
 
 ::: code-group
 
@@ -552,7 +466,9 @@ export const LocaleKey = Symbol('locale')
 
 :::
 
-## 14. 💻 demos.5 - 应用层 Provide
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-17-09-00-26.png)
+
+## 13. 💻 demos.5 - 应用层 Provide
 
 ::: code-group
 
@@ -601,7 +517,103 @@ app.mount('#app')
 
 :::
 
-## 15. 💻 demos.6 - 为什么 provide/inject 必须同步调用
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-17-09-03-12.png)
+
+## 14. 🤔 为什么 provide 和 inject 需要同步调用？【深入原理】
+
+一句话解释：根本原因是 `provide` 和 `inject` 都依赖一个「模块级全局变量」 `currentInstance`，而这个变量只在 `setup()` 同步执行期间被设置为当前组件实例。
+
+必要的前置知识：
+
+- 了解 `provide` 内部实现，重点关注对 `currentInstance` 的写入逻辑
+- 了解 `inject` 内部实现，重点关注对 `currentInstance` 的读取逻辑
+- 了解 `currentInstance` 的生命周期，特别是它在 `setup()` 前后是如何被设置和重置的
+
+### 14.1. 前置知识：`provide` 如何使用 `currentInstance`
+
+`provide` 直接读取模块级的 `currentInstance`，把值写入该实例的 `provides` 对象：
+
+```js
+// packages/runtime-core/src/apiInject.ts
+export function provide(key, value) {
+  if (!currentInstance || currentInstance.isMounted) {
+    warn(`provide() can only be used inside setup().`)
+  }
+  // 写入 currentInstance.provides
+  if (currentInstance) {
+    let provides = currentInstance.provides
+    // ...
+    provides[key as string] = value
+  }
+}
+```
+
+### 14.2. 前置知识：`inject` 如何使用 `currentInstance`
+
+`inject` 通过 `getCurrentInstance()` 获取当前实例，然后沿原型链向上查找父组件的 `provides`。
+
+```js
+// packages/runtime-core/src/apiInject.ts
+export function inject(
+  key: InjectionKey<any> | string
+) {
+  const instance = getCurrentInstance()
+
+  // 读 provides[key] ...
+  if (instance || currentApp) {
+    let provides = instance.parent.provides
+
+    if (provides && (key as string | symbol) in provides) {
+      return provides[key as string]
+    }
+  }
+}
+```
+
+### 14.3. 前置知识：`currentInstance` 的生命周期
+
+在 `setupStatefulComponent` 中，Vue 在调用 `setup()` 前后分别设置和重置 `currentInstance`：
+
+```js
+// packages/runtime-core/src/component.ts
+const reset = setCurrentInstance(instance)   // ← 设置 currentInstance = 当前组件
+const setupResult = callWithErrorHandling(setup, ...)
+resetTracking()
+reset()                                       // ← 立即重置 currentInstance = null
+```
+
+`setCurrentInstance` 本身的实现也很直接，它只是把全局变量指向当前实例，并返回一个“重置函数”。
+
+### 14.4. 为什么异步调用会失败
+
+JavaScript 是单线程的，`await` 之后的代码是在「新的微任务」中执行的。此时 `setup()` 的同步部分早已执行完毕，`reset()` 也已经把 `currentInstance` 置回 `null`。
+
+```js
+async setup() {
+  provide('key', val)   // ✅ 同步，currentInstance = 当前组件
+  await someAsyncOp()   // setup() 同步部分到此结束，reset() 被调用
+  inject('key')         // ❌ currentInstance = null，找不到实例
+}
+```
+
+#### 时序图
+
+```mermaid
+sequenceDiagram
+    participant Vue as "Vue 运行时"
+    participant setup as "setup() 函数"
+    participant global as "currentInstance (全局)"
+
+    Vue->>global: "setCurrentInstance(instance)"
+    Vue->>setup: "调用 setup()"
+    setup->>global: "provide/inject 读取 currentInstance ✅"
+    setup-->>Vue: "返回 Promise (遇到 await)"
+    Vue->>global: "reset() → currentInstance = null"
+    Note over global: "此后 currentInstance 为 null"
+    setup->>global: "await 后再调用 provide/inject ❌"
+```
+
+### 14.5. 示例
 
 ::: code-group
 
@@ -631,14 +643,15 @@ app.mount('#app')
   function tryAsyncInject() {
     setTimeout(() => {
       // ❌ 异步调用 — setup() 已执行完毕，currentInstance 被置为 null
-      // inject 无法定位当前组件实例，返回默认值并在控制台输出 warning
-      asyncResult.value = String(inject('theme', '⚠️ undefined'))
+      // inject 无法定位当前组件实例，将会得到 undefined
+      // console.log(inject('theme')) => undefined
+      asyncResult.value = String(inject('theme'))
     }, 0)
   }
 </script>
 
 <template>
-  <div style="margin-left: 1em;">
+  <div style="margin-left: 1em">
     <h4>Child</h4>
     <p>同步 inject theme: <b>{{ theme }}</b></p>
     <p>异步 inject 结果: <b>{{ asyncResult }}</b></p>
@@ -649,7 +662,13 @@ app.mount('#app')
 
 :::
 
-## 16. 🔗 引用
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-17-09-12-19.png)
+
+点击「尝试在 setTimeout 中 inject」按钮后：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-17-09-12-35.png)
+
+## 15. 🔗 引用
 
 - [Vue.js 官方文档 - 依赖注入][1]
 
