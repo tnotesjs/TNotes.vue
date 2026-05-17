@@ -43,6 +43,7 @@
 
 - [x] [0065. Vue 学习资料](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0065.%20Vue%20%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99/README.md)
 - [x] [0072. vuejs 官方文档](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0072.%20vuejs%20%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3/README.md)
+- [x] [0115. vuejs core 源码](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0115.%20vuejs%20core%20%E6%BA%90%E7%A0%81/README.md)
 
 ## 3. 开始
 
