@@ -2,10 +2,10 @@
   "bilibili": [],
   "tnotes": [],
   "yuque": [],
-  "done": false,
-  "enableDiscussions": false,
-  "description": "",
+  "done": true,
+  "enableDiscussions": true,
+  "description": "异步组件就是「只有在真正需要渲染它时，才去加载它的组件实现」，构建工具通常会把它识别成天然的代码分割点，将一些大型组件拆分成独立的代码块 chunk，从主 chunk 中分离出来，从而减少主 chunk 的体积。是一种常用的性能优化手段。",
   "id": "1c3cfdb5-7a80-4108-8621-5afab6615e90",
   "created_at": 1778391756482,
-  "updated_at": 1778391756482
+  "updated_at": 1779008772606
 }

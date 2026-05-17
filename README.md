@@ -79,7 +79,7 @@
 - [x] [0084. 透传 Attributes](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0084.%20%E9%80%8F%E4%BC%A0%20Attributes/README.md)
 - [x] [0034. 插槽（Slots）](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0034.%20%E6%8F%92%E6%A7%BD%EF%BC%88Slots%EF%BC%89/README.md)
 - [x] [0085. 依赖注入](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0085.%20%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/README.md)
-- [ ] [0086. 异步组件](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0086.%20%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6/README.md)
+- [x] [0086. 异步组件](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0086.%20%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6/README.md)
 - [ ] [0035. 动态组件与异步组件](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0035.%20%E5%8A%A8%E6%80%81%E7%BB%84%E4%BB%B6%E4%B8%8E%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6/README.md)
 - [ ] [0033. 组件通信](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0033.%20%E7%BB%84%E4%BB%B6%E9%80%9A%E4%BF%A1/README.md)
 
