@@ -11,8 +11,14 @@
 - [5. 🤔 父组件如何传递不同类型的 props？](#5--父组件如何传递不同类型的-props)
 - [6. 🤔 为什么说 props 是单向数据流？子组件应该如何正确使用 props？](#6--为什么说-props-是单向数据流子组件应该如何正确使用-props)
 - [7. 🤔 Props 如何设置默认值和校验？](#7--props-如何设置默认值和校验)
-- [8. 🤔 Boolean prop 为什么有特殊的转换规则？](#8--boolean-prop-为什么有特殊的转换规则)
+- [8. 🤔 Boolean prop 有什么需要注意的特殊转换规则？](#8--boolean-prop-有什么需要注意的特殊转换规则)
 - [9. 🤔 响应式 Props 解构有哪些注意事项？](#9--响应式-props-解构有哪些注意事项)
+  - [9.1. Vue 3.5 之前：解构会丢失响应式](#91-vue-35-之前解构会丢失响应式)
+    - [当时的解决方案：toRefs](#当时的解决方案torefs)
+  - [9.2. Vue 3.5+：解构自动保持响应式](#92-vue-35解构自动保持响应式)
+    - [编译器做了什么？](#编译器做了什么)
+  - [9.3. watch 和 watchEffect](#93-watch-和-watcheffect)
+  - [9.4. 不同场景对比](#94-不同场景对比)
 - [10. 🔗 引用](#10--引用)
 
 <!-- endregion:toc -->
@@ -311,7 +317,7 @@ Vue 会把 prop 视为只读数据，并在开发环境下给出警告。
 - `defineProps()` 里的运行时配置不能访问 `<script setup>` 里后面定义的局部变量
   - 背后原因：因为 `defineProps()` 这个宏会在编译阶段被提升处理
 
-## 8. 🤔 Boolean prop 为什么有特殊的转换规则？
+## 8. 🤔 Boolean prop 有什么需要注意的特殊转换规则？
 
 如果一个 prop 被声明成 `Boolean`，Vue 会尽量让它的行为接近原生布尔属性。
 
@@ -324,33 +330,105 @@ defineProps({
 这时：
 
 ```html
-<MyButton disabled /> <MyButton />
-```
-
-等价于：
-
-1. 第一种传入 `true`。
-2. 第二种传入 `false`。
-
-如果你显式写成：
-
-```html
+<!-- 相当于 :disabled="true"，此时传递的是 true -->
+<MyButton disabled />
+<!-- 相当于 :disabled="false"，此时传递的是 false -->
+<MyButton />
+<!-- 如果你显式写成 :disabled="false"，此时传递的是 false -->
 <MyButton :disabled="false" />
 ```
-
-那自然就是 `false`。
 
 当 Boolean 和 String 一起出现在联合类型里时，还要注意顺序问题：
 
 ```js
 defineProps({
   disabled: [Boolean, String],
+  // <MyButton disabled /> 更倾向于按 Boolean 规则处理，相当于传递了 true
+})
+
+defineProps({
+  disabled: [String, Boolean],
+  // <MyButton disabled /> 更倾向于按 String 规则处理，相当于传递了空字符串 ""
 })
 ```
 
-这种写法里，`<MyButton disabled />` 更倾向于按 Boolean 规则处理；而如果把顺序写成 `[String, Boolean]`，解析结果就可能变成空字符串，这一点在排查表单组件行为时很值得留意。
-
 ## 9. 🤔 响应式 Props 解构有哪些注意事项？
+
+这个问题需要分 Vue 版本来看，不同版本情况截然不同。
+
+先说结论：Vue 3.5 之前解构会丢响应式，Vue 3.5 及之后的版本不会了。因为在 Vue 3.5 的编译器层面在帮你做了兜底处理，如果你还在用 3.4 或更早版本，需要手动 `toRefs`。
+
+### 9.1. Vue 3.5 之前：解构会丢失响应式
+
+```js
+// ❌ 这样写会丢失响应式
+const { title, likes } = defineProps({
+  title: String,
+  likes: Number,
+})
+```
+
+`defineProps` 返回的是一个响应式 Proxy 对象，但 JavaScript 的解构赋值本质上是取值操作：
+
+```js
+// 解构等价于将 props 的 getter 提前触发了
+// 拿到的是当时的 Proxy 的快照值，和 Proxy 对象之间就断开联系了
+const {
+  title, // 拿到的是一个普通字符串
+  likes, // 拿到的是一个普通数字
+} = defineProps({
+  title: String,
+  likes: Number,
+})
+```
+
+你拿到的是那一刻的快照值，和原始响应式对象断开了联系。父组件后续更新 `likes`，子组件里解构出来的 `likes` 不会跟着变。
+
+#### 当时的解决方案：toRefs
+
+```js
+// ✅ 手动保持响应式
+const props = defineProps({ title: String, likes: Number })
+const { title, likes } = toRefs(props)
+```
+
+`toRefs` 把每个属性转成 `ref`，解构后依然保持响应式连接。
+
+### 9.2. Vue 3.5+：解构自动保持响应式
+
+从 Vue 3.5 开始，以下写法不再有问题：
+
+```js
+// ✅ Vue 3.5+ 编译器自动处理
+const { title, likes } = defineProps({
+  title: String,
+  likes: Number,
+})
+```
+
+这不是 JavaScript 行为变了，而是 Vue 的编译器在背后做了转换。
+
+#### 编译器做了什么？
+
+你写的代码：
+
+```js
+const { title, likes } = defineProps({ title: String, likes: Number })
+```
+
+编译器实际生成的（简化示意）：
+
+```js
+const __props = defineProps({ title: String, likes: Number })
+
+// 不是真正解构，而是编译为 getter，保持与源对象的连接
+const title = __props.title // 每次访问 title 都会重新读取 __props.title
+const likes = __props.likes // 每次访问 likes 都会重新读取 __props.likes
+```
+
+编译器把“一次性取值”变成了惰性访问，在模板中使用时自然就具备了响应式。
+
+### 9.3. watch 和 watchEffect
 
 在 Vue 3.5+ 里，`defineProps()` 解构出来的变量在同一个 `<script setup>` 代码块中是具备响应式语义的：
 
@@ -366,7 +444,7 @@ defineProps({
 
 这段代码在 3.5+ 中会随着 `foo` 变化而重新执行，因为编译器会把这里的 `foo` 转回 `props.foo` 来追踪依赖。
 
-不过有一个边界不要忘：把解构得到的 prop 直接传给 `watch()` 之类需要「响应式数据源」的函数时，依然应该包成 getter：
+如果把解构得到的 prop 直接传给 `watch()` 之类需要「响应式数据源」的函数时，依然应该包成 getter：
 
 ```html
 <script setup>
@@ -382,6 +460,15 @@ defineProps({
 ```
 
 如果你把 `foo` 直接传进去，传过去的只是当前值，不是一个可追踪的响应式来源。
+
+### 9.4. 不同场景对比
+
+| 子组件访问 props 的不同场景 | 是否响应式 | 原因 |
+| --- | --- | --- |
+| `props.title` 直接访问（Vue 3.5+、Vue 3.4-） | 是 | Proxy 对象始终响应式 |
+| `const { title } = defineProps(...)`（Vue 3.5+） | 是 | 编译器转换为 getter |
+| `const { title } = defineProps(...)`（Vue 3.4-） | 否 | JavaScript 解构断开了引用 |
+| `const { title } = toRefs(props)`（Vue 3.5+、Vue 3.4-） | 是 | ref 保持响应式 |
 
 ## 10. 🔗 引用
 
