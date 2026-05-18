@@ -11,17 +11,25 @@
 - [5. 🤔 什么是“运行时声明”（runtime props declarations）、“基于类型的声明”（type-based props declarations）？](#5--什么是运行时声明runtime-props-declarations基于类型的声明type-based-props-declarations)
   - [5.1. “运行时声明”（runtime props declarations）](#51-运行时声明runtime-props-declarations)
   - [5.2. “基于类型的声明”（type-based props declarations）](#52-基于类型的声明type-based-props-declarations)
-- [6. 🤔 `defineProps()` 宏中的参数为什么不能是 `<script setup>` 中定义的其他变量？](#6--defineprops-宏中的参数为什么不能是-script-setup-中定义的其他变量)
+- [6. 🤔 `defineProps()` 宏中的参数为什么不能使用 `<script setup>` 中定义的其他变量？](#6--defineprops-宏中的参数为什么不能使用-script-setup-中定义的其他变量)
   - [6.1. `<script setup>` 编译后的大致结构](#61-script-setup-编译后的大致结构)
   - [6.2. 编译器的检查逻辑](#62-编译器的检查逻辑)
   - [6.3. 一些例外](#63-一些例外)
     - [`LITERAL_CONST` 是例外](#literal_const-是例外)
     - [`import` 的变量也是例外](#import-的变量也是例外)
-- [7. 🤔 父组件如何传递不同类型的 props？](#7--父组件如何传递不同类型的-props)
+- [7. 🤔 父组件如何传递不同类型的 props？静态 props、动态 props 分别是什么？v-bind 的特殊用法是？](#7--父组件如何传递不同类型的-props静态-props动态-props-分别是什么v-bind-的特殊用法是)
+  - [7.1. 静态 props、动态 props](#71-静态-props动态-props)
+  - [7.2. 传递不同的值类型](#72-传递不同的值类型)
+  - [7.3. v-bind 绑定整个对象](#73-v-bind-绑定整个对象)
 - [8. 🤔 Prop 命名规范是？](#8--prop-命名规范是)
   - [8.1. 声明时 - camelCase](#81-声明时---camelcase)
   - [8.2. 在模板中使用时 - camelCase](#82-在模板中使用时---camelcase)
 - [9. 🤔 为什么说 props 是单向数据流？子组件应该如何正确使用 props？](#9--为什么说-props-是单向数据流子组件应该如何正确使用-props)
+  - [9.1. 单向数据流](#91-单向数据流)
+  - [9.2. 错误做法](#92-错误做法)
+  - [9.3. 子组件可以基于 prop 定义自身的局部状态或计算属性](#93-子组件可以基于-prop-定义自身的局部状态或计算属性)
+  - [9.4. 引用类型问题](#94-引用类型问题)
+  - [9.5. 小结](#95-小结)
 - [10. 🤔 Props 如何设置默认值和校验？](#10--props-如何设置默认值和校验)
 - [11. 🤔 Boolean prop 有什么需要注意的特殊转换规则？](#11--boolean-prop-有什么需要注意的特殊转换规则)
 - [12. 🤔 响应式 Props 解构有哪些注意事项？](#12--响应式-props-解构有哪些注意事项)
@@ -33,20 +41,20 @@
   - [12.3. watch 和 watchEffect（3.5+）](#123-watch-和-watcheffect35)
     - [核心源码：`watch()` 是如何识别响应式数据源的？](#核心源码watch-是如何识别响应式数据源的)
   - [12.4. 不同场景对比](#124-不同场景对比)
-- [13. 💻 demos.1 - 属性声明 - 使用泛型声明 props](#13--demos1---属性声明---使用泛型声明-props)
-- [14. 💻 demos.2 - 属性声明 - 使用泛型声明可选的 props（type-based）](#14--demos2---属性声明---使用泛型声明可选的-propstype-based)
-- [15. 💻 demos.3 - 属性声明 - 使用类型别名声明 props](#15--demos3---属性声明---使用类型别名声明-props)
-- [16. 💻 demos.4 - 属性声明 - 使用接口声明 props](#16--demos4---属性声明---使用接口声明-props)
-- [17. 💻 demos.5 - 属性声明 - 使用对象式声明 props](#17--demos5---属性声明---使用对象式声明-props)
-- [18. 💻 demos.6 - 属性声明 - 使用对象简写声明 props](#18--demos6---属性声明---使用对象简写声明-props)
-- [19. 💻 demos.7 - 属性声明 - 使用数组简写声明 props](#19--demos7---属性声明---使用数组简写声明-props)
-- [20. 💻 demos.16 - 属性声明 - 为单个 prop 指定多种可能的类型](#20--demos16---属性声明---为单个-prop-指定多种可能的类型)
-- [21. 💻 demos.11 - 属性声明 - 属性默认值（runtime）](#21--demos11---属性声明---属性默认值runtime)
-- [22. 💻 demos.12 - 属性声明 - 属性默认值（type-based）](#22--demos12---属性声明---属性默认值type-based)
-- [23. 💻 demos.8 - 属性访问 - 在 script setup 中访问使用 defineProps 定义的 props](#23--demos8---属性访问---在-script-setup-中访问使用-defineprops-定义的-props)
-- [24. 💻 demos.17 - 属性访问 - 在非 script setup 中访问 props](#24--demos17---属性访问---在非-script-setup-中访问-props)
-- [25. 💻 demos.14 - 属性校验 - Prop 校验（type-based）](#25--demos14---属性校验---prop-校验type-based)
-- [26. 💻 demos.15 - 属性校验 - Prop 校验（runtime）](#26--demos15---属性校验---prop-校验runtime)
+- [13. 💻 demos.1 - 属性声明 - type-based - 使用泛型声明 props](#13--demos1---属性声明---type-based---使用泛型声明-props)
+- [14. 💻 demos.2 - 属性声明 - type-based - 使用泛型声明可选的 props](#14--demos2---属性声明---type-based---使用泛型声明可选的-props)
+- [15. 💻 demos.3 - 属性声明 - type-based - 使用类型别名声明 props](#15--demos3---属性声明---type-based---使用类型别名声明-props)
+- [16. 💻 demos.4 - 属性声明 - type-based - 使用接口声明 props](#16--demos4---属性声明---type-based---使用接口声明-props)
+- [17. 💻 demos.5 - 属性声明 - runtime - 使用对象式声明 props](#17--demos5---属性声明---runtime---使用对象式声明-props)
+- [18. 💻 demos.6 - 属性声明 - runtime - 使用对象简写声明 props](#18--demos6---属性声明---runtime---使用对象简写声明-props)
+- [19. 💻 demos.7 - 属性声明 - runtime - 使用数组简写声明 props](#19--demos7---属性声明---runtime---使用数组简写声明-props)
+- [20. 💻 demos.16 - 属性声明 - runtime - 为单个 prop 指定多种可能的类型](#20--demos16---属性声明---runtime---为单个-prop-指定多种可能的类型)
+- [21. 💻 demos.11 - 属性声明 - runtime - 属性默认值](#21--demos11---属性声明---runtime---属性默认值)
+- [22. 💻 demos.12 - 属性声明 - type-based - 属性默认值](#22--demos12---属性声明---type-based---属性默认值)
+- [23. 💻 demos.8 - 属性访问 - 在 `<script setup>` 中访问使用 defineProps 定义的 props](#23--demos8---属性访问---在-script-setup-中访问使用-defineprops-定义的-props)
+- [24. 💻 demos.17 - 属性访问 - 在非 `<script setup>` 中访问 props](#24--demos17---属性访问---在非-script-setup-中访问-props)
+- [25. 💻 demos.14 - 属性校验 - type-based - Prop 校验](#25--demos14---属性校验---type-based---prop-校验)
+- [26. 💻 demos.15 - 属性校验 - runtime - Prop 校验](#26--demos15---属性校验---runtime---prop-校验)
 - [27. 💻 demos.9 - PropType 属性类型细化 - PropType 细化类型](#27--demos9---proptype-属性类型细化---proptype-细化类型)
 - [28. 💻 demos.10 - PropType 属性类型细化 - 使用 type-based 式写法来处理复杂类型](#28--demos10---proptype-属性类型细化---使用-type-based-式写法来处理复杂类型)
 - [29. 💻 demos.13 - toRefs 保持属性的响应式状态 - toRefs 保持响应式](#29--demos13---torefs-保持属性的响应式状态---torefs-保持响应式)
@@ -57,11 +65,42 @@
 ## 1. 🎯 本节内容
 
 - Props 声明
+  - 运行时声明（runtime declarations）
+  - 基于类型的声明（type-based declarations）
+- Prop 命名规范
+- v-bind 传递整个对象
 - 动态传值
 - 单向数据流
 - Prop 校验
 - 布尔转换
 - 响应式解构
+- demos
+  - demos => 属性声明
+    - 使用泛型声明 props
+    - 可选属性
+    - 属性默认值（runtime declarations）配置 default
+    - 属性默认值（type-based declarations）编译宏 withDefaults
+    - 使用类型别名声明 props
+    - 使用接口声明 props
+    - 使用对象式声明 props
+    - 使用对象简写声明 props
+    - 使用数组简写声明 props
+    - 声明多个 props
+    - 为单个 prop 指定多种可能的类型
+    - 使用 v-bind 一次性传递多个 prop
+  - demos => 属性访问
+    - 在 script setup 中访问使用 defineProps 定义的 props
+    - 在非 script setup 中访问 props
+    - 在模板 template 中访问使用 defineProps 定义的 props
+  - demos => 属性校验
+    - prop 校验
+    - validator 配置
+    - watch
+  - demos => PropType 细化类型
+    - 使用 PropType 在运行时声明（runtime declarations）中细化类型
+  - demos => toRefs 保持属性的响应式状态
+    - 直接解构 props，会导致响应式丢失
+    - 在解构 props 时，可以使用 toRefs 保持属性的响应式状态
 
 ## 2. 🫧 评价
 
@@ -247,7 +286,7 @@ type-based props declarations 是更好的选择。
 
 由此可见，type-based 是定义属性的另一种写法，它和 runtime 式写法都是一样的，都是用来声明 props，并没有扩展任何额外的功能，因为 type-based 式写法，最终是会被编译器推断为 runtime 式写法。
 
-## 6. 🤔 `defineProps()` 宏中的参数为什么不能是 `<script setup>` 中定义的其他变量？
+## 6. 🤔 `defineProps()` 宏中的参数为什么不能使用 `<script setup>` 中定义的其他变量？
 
 `defineProps()` 宏中的参数不可以访问 `<script setup>` 中定义的其他变量，根本原因在于 `defineProps()` 的参数会被「提升（hoist）到 `setup()` 函数外部」，成为组件选项对象的一部分，而 `<script setup>` 中定义的局部变量只存在于 `setup()` 函数内部，在模块作用域中根本不存在。
 
@@ -314,9 +353,7 @@ checkInvalidScopeReference(ctx.propsDestructureDecl, DEFINE_PROPS)
 checkInvalidScopeReference(ctx.emitsRuntimeDecl, DEFINE_EMITS)
 ```
 
-`checkInvalidScopeReference` 遍历参数的 AST，对每个标识符检查它是否在 `setupBindings` 中有记录，且类型不是 `LITERAL_CONST`。如果是，就报错：
-
-> `defineProps()` in `<script setup>` cannot reference locally declared variables because it will be hoisted outside of the `setup()` function.
+`checkInvalidScopeReference` 遍历参数的 AST，对每个标识符检查它是否在 `setupBindings` 中有记录，且类型不是 `LITERAL_CONST`。如果是，就报错：“`defineProps()` in `<script setup>` cannot reference locally declared variables because it will be hoisted outside of the `setup()` function.”。
 
 ### 6.3. 一些例外
 
@@ -344,12 +381,14 @@ test('w/ external definition', () => {
 })
 ```
 
-## 7. 🤔 父组件如何传递不同类型的 props？
+## 7. 🤔 父组件如何传递不同类型的 props？静态 props、动态 props 分别是什么？v-bind 的特殊用法是？
+
+### 7.1. 静态 props、动态 props
 
 Props 在模板里既可以传静态值，也可以传动态值。
 
-- 纯字符串可以直接写
-- 只要是 JavaScript 表达式，就要用 `v-bind`，也就是 `:`
+- 静态 props 就是纯字符串，可以直接写
+- 动态 props 就是 JS 表达式，需要使用 `v-bind`，也就是 `:`，通过它我们可以传递不同数据类型的 props
 
 ```html
 <template>
@@ -361,22 +400,82 @@ Props 在模板里既可以传静态值，也可以传动态值。
     :author="{ name: 'Ada' }"
   />
 </template>
+
+<!-- 
+静态 props => title
+动态 props => likes、is-published、comment-ids、author
+-->
 ```
 
-这里看起来 `42`、`true`、数组、对象都是常量，但它们本质上仍然是 JavaScript 表达式，不是普通字符串，所以也要加 `:`。
+这里看起来 `42`、`true`、数组、对象都是常量，但它们本质上仍然是 JS 表达式，不是普通字符串，所以也要加 `:`。
+
+### 7.2. 传递不同的值类型
+
+```html
+<!-- Number -->
+<!-- 虽然 42 是个常量，我们还是需要使用 v-bind -->
+<!-- 因为这是一个 JavaScript 表达式而不是一个字符串 -->
+<BlogPost :likes="42" />
+
+<!-- 根据一个变量的值动态传入 -->
+<BlogPost :likes="post.likes" />
+
+<!-- Boolean -->
+<!-- 仅写上 prop 但不传值，会隐式转换为 true -->
+<BlogPost is-published />
+
+<!-- 虽然 false 是静态的值，我们还是需要使用 v-bind -->
+<!-- 因为这是一个 JavaScript 表达式而不是一个字符串 -->
+<BlogPost :is-published="false" />
+
+<!-- 根据一个变量的值动态传入 -->
+<BlogPost :is-published="post.isPublished" />
+
+<!-- Array -->
+<!-- 虽然这个数组是个常量，我们还是需要使用 v-bind -->
+<!-- 因为这是一个 JavaScript 表达式而不是一个字符串 -->
+<BlogPost :comment-ids="[234, 266, 273]" />
+
+<!-- 根据一个变量的值动态传入 -->
+<BlogPost :comment-ids="post.commentIds" />
+
+<!-- Object -->
+<!-- 虽然这个对象字面量是个常量，我们还是需要使用 v-bind -->
+<!-- 因为这是一个 JavaScript 表达式而不是一个字符串 -->
+<BlogPost
+  :author="{
+    name: 'Veronica',
+    company: 'Veridian Dynamics'
+  }"
+/>
+
+<!-- 根据一个变量的值动态传入 -->
+<BlogPost :author="post.author" />
+```
+
+### 7.3. v-bind 绑定整个对象
 
 如果你已经有一个对象，并且它的字段名正好和子组件 props 对应，还可以直接使用 `v-bind` 绑定整个对象：
 
 ```html
 <script setup>
+  // 示例
   const post = {
-    title: 'Vue 组件通信',
-    likes: 99,
+    id: 1,
+    title: 'My Journey with Vue',
   }
-</script>
 
+  // 如果你想要将一个对象的所有属性都当作 props 传入，
+  // 你可以使用没有参数的 v-bind，
+  // 即只使用 v-bind 而非 :prop-name。
+</script>
 <template>
+  <!-- 写法 1（更简洁） -->
   <BlogPost v-bind="post" />
+  <!-- 写法 2 -->
+  <BlogPost :id="post.id" :title="post.title" />
+
+  <!-- 写法 1 和 写法 2 是等效的-->
 </template>
 ```
 
@@ -390,7 +489,7 @@ defineProps({
   greetingMessage: String,
 })
 // 如果一个 prop 的名字很长，应使用 camelCase 形式，
-// 它们是合法的 JavaScript 标识符
+// 它们是合法的 JS 标识符
 // 可以直接在模板的表达式中使用
 // 也可以避免在作为属性 key 名时必须加上引号
 
@@ -434,25 +533,44 @@ const { greetingMessage } = defineProps({
 
 ## 9. 🤔 为什么说 props 是单向数据流？子组件应该如何正确使用 props？
 
+### 9.1. 单向数据流
+
 Props 遵循的是单向数据流，也就是「父传子」，数据是父组件生产的，子组件作为消费方只有读的份儿，数据的维护权在父组件。
+
+- 所有的 props 都遵循着「单向绑定」原则，props 因父组件的更新而变化，自然地将新的状态向下流往子组件，而不会逆向传递。这避免了子组件意外修改父组件的状态的情况，不然应用的数据流将很容易变得混乱而难以理解。
+- 另外，每次父组件更新后，所有的子组件中的 props 都会被更新到最新值，这意味着你不应该在子组件中去更改一个 prop。若你这么做了，Vue 会在控制台上向你抛出警告。
+
+### 9.2. 错误做法
 
 下面这种写法就是不对的：
 
 ```html
 <script setup>
-  const props = defineProps(['count'])
-
+  const props = defineProps(['foo'])
   // ❌ 错误做法：视图直接修改父组件传递过来的 props
-  props.count++
+  // ⚠️ 警告！prop 是只读的！
+  props.foo = 'bar'
+  // props 是来自父组件的数据，作为子组件，你只有读的份。
+  // 虽然 JS 的引用传值的特性让你拥有修改来自父组件数据的能力。
+  // 但是这种能力最好不要在这里去用，否则会破坏单向数据流。
 </script>
 ```
 
-Vue 会把 prop 视为只读数据，并在开发环境下给出警告。
+Vue 会把 prop 视为只读数据，在开发环境下如果检查到你修改了 prop，会给出警告。
 
-虽然你无法直接修改 props，但你可以在子组件里基于 prop 创建一个本地状态来维护它的值，或者用计算属性来对 prop 做一次格式化或派生计算：
+### 9.3. 子组件可以基于 prop 定义自身的局部状态或计算属性
+
+当你想要更改一个 prop 时，通常来源于以下两种场景：
+
+- 场景 1：prop 被用于传入初始值；而子组件想在之后将其作为一个局部数据属性。在这种情况下，最好是新定义一个局部数据属性，从 props 上获取初始值即可。
+- 场景 2：需要对传入的 prop 值做进一步的转换。在这种情况中，最好是基于该 prop 值定义一个计算属性。
 
 ```html
 <script setup>
+  // 虽然你无法直接修改 props
+  // 但你可以在子组件里基于 prop 创建一个本地状态来维护它的值
+  // 或者用计算属性来对 prop 做一次格式化或派生计算
+
   import { computed, ref } from 'vue'
 
   const props = defineProps({
@@ -460,17 +578,67 @@ Vue 会把 prop 视为只读数据，并在开发环境下给出警告。
     size: String,
   })
 
+  // 场景 1
   // ✅ 正确做法：在子组件里基于 prop 创建一个本地状态来维护它的值
+  // 修改 localCount 不会影响到 props.initialCount 的值
   const localCount = ref(props.initialCount)
 
+  // 场景 2
   // ✅ 正确做法：用计算属性对 prop 做一次格式化或派生计算
+  // 当 props.size 变更时计算属性也会自动更新
   const normalizedSize = computed(() => {
     return props.size?.trim().toLowerCase()
   })
+
+  // 注意：场景 1 的写法
+  // ref() 只在创建时取一次值
+  // 如果父组件后续更新了 initialCount，localCount 不会跟着变
+  // 如果需要“既能接收父组件更新，又能本地修改”，常见的做法是配合 watch：
+  /* const localCount = ref(props.initialCount)
+
+  watch(
+    () => props.initialCount,
+    (newVal) => { localCount.value = newVal }
+  ) */
 </script>
 ```
 
-在上面的示例中，子组件没有直接修改来自父组件的 `props.initialCount`，而是创建了一个新的响应式变量 `localCount` 来维护它的值。同时，计算属性 `normalizedSize` 也没有修改 `props.size`，而是基于它进行了一些处理来得到一个新的值。这种做法是符合单向数据流原则的，同时也避免了直接修改 props 导致的潜在问题。
+在上面的示例中：
+
+- 子组件没有直接修改来自父组件的 `props.initialCount`，而是创建了一个新的响应式变量 `localCount` 来维护它的值。
+- 计算属性 `normalizedSize` 也没有修改 `props.size`，而是基于它进行了一些处理来得到一个新的值。
+
+这样的做法是符合单向数据流原则的，同时也避免了直接修改 props 导致的潜在问题。
+
+### 9.4. 引用类型问题
+
+当对象或数组作为 props 被传入时，虽然子组件无法更改 props 绑定（1），但子组件仍然可以更改对象或数组内部的值（2）。这是因为 JS 的对象和数组是按「引用」传递，对 Vue 来说，阻止这种更改需要付出的代价异常昂贵（因为要深度递归每一个成员）。
+
+1. `props = xxx` => 子组件直接替换 props，也就是直接给 props 重新赋值的行为会被 Vue 监听到
+2. `props.obj.xxx = xxx` => 这种赋值行为 Vue 不会阻止
+
+对于（2）这种更改的主要缺陷是它允许了子组件以某种不明显的方式影响父组件的状态，可能会使数据流在将来变得更难以理解。在最佳实践中，你应该尽可能避免这样的更改，除非父子组件在设计上本来就需要紧密耦合。在大多数场景下，子组件应该抛出一个事件来通知父组件做出改变。
+
+::: tip
+
+「背后的原因」
+
+Vue 对 `props` 做的是浅层 Proxy（类似 `shallowReactive`），只拦截 props 对象第一层的读写（只做浅层代理以避免性能开销）。访问 `props.obj` 返回的是原始对象，不是 `Proxy`，后续对原始对象的内部修改不经过 Vue 的拦截层。
+
+---
+
+「显式 readonly」
+
+虽然 Vue 没有自动帮你做对象 props 的深度拦截，但 Vue 提供了一个 `readonly()` 工具函数，你可以在父组件网子组件传递数据的时候手动包裹一层 `readonly()` 实现运行时的写拦截行为。需要注意的是，`readonly()` 的深度代理同样会带来额外的性能开销，所以它是可选的“安全增强”，不是默认行为。
+
+:::
+
+### 9.5. 小结
+
+无论是什么场景，始终记得不要去破坏单向数据流。对于不同的场景有不同的处理方案，其核心思想在于：
+
+- 如果你确实有修改属性值的需求，请「拷贝」一份数据出来再去修改。
+- 或者将改动行为封装成一个「事件」，通过通知父组件的方式来触发值的修改（在子组件中通知，值的修改还是发生在父组件中）。
 
 ## 10. 🤔 Props 如何设置默认值和校验？
 
@@ -573,7 +741,7 @@ const { title, likes } = defineProps({
 })
 ```
 
-`defineProps` 返回的是一个响应式 Proxy 对象，但 JavaScript 的解构赋值本质上是取值操作：
+`defineProps` 返回的是一个响应式 Proxy 对象，但 JS 的解构赋值本质上是取值操作：
 
 ```js
 // 解构等价于将 props 的 getter 提前触发了
@@ -611,7 +779,7 @@ const { title, likes } = defineProps({
 })
 ```
 
-这不是 JavaScript 行为变了，而是 Vue 的编译器在背后做了转换。
+这不是 JS 行为变了，而是 Vue 的编译器在背后做了转换。
 
 #### 编译器做了什么？
 
@@ -808,11 +976,11 @@ if (isRef(source)) {
 | --- | --- | --- |
 | `props.title` 直接访问（3.5+、3.4-） | 是 | Proxy 对象始终响应式 |
 | `const { title } = defineProps(...)`（3.5+） | 是 | 编译器转换为 getter |
-| `const { title } = defineProps(...)`（3.4-） | 否 | JavaScript 解构断开了引用 |
+| `const { title } = defineProps(...)`（3.4-） | 否 | JS 解构断开了引用 |
 | `const { title } = toRefs(props)`（3.5+、3.4-） | 是 | ref 保持响应式 |
 | `watch(() => title, ...)`（3.5+） | 是 | getter 内部被编译器重写 |
 
-## 13. 💻 demos.1 - 属性声明 - 使用泛型声明 props
+## 13. 💻 demos.1 - 属性声明 - type-based - 使用泛型声明 props
 
 ::: code-group
 
@@ -839,6 +1007,7 @@ if (isRef(source)) {
 
 <template>
   <h1>msg: {{ msg }}</h1>
+  <!-- 在模板中可以直接访问 msg -->
 </template>
 ```
 
@@ -846,27 +1015,11 @@ if (isRef(source)) {
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-18-10-58-30.png)
 
-## 14. 💻 demos.2 - 属性声明 - 使用泛型声明可选的 props（type-based）
+## 14. 💻 demos.2 - 属性声明 - type-based - 使用泛型声明可选的 props
 
-```html
-<!-- src/demos/demo2/Comp.vue -->
-<script setup lang="ts">
-  defineProps<{ msg?: string }>()
-  // 约束
-  // msg 是 string 类型
+::: code-group
 
-  // demo1 中的写法，相当于定义了一个必填的 msg 属性，并且要求类型为 string。
-  // 如果想要表达这是一个可选属性，和 TS 中的做法是一样的，只需要加一个问号即可。
-</script>
-
-<template>
-  <h1>值：{{ msg }}</h1>
-  <h1>类型：{{ typeof msg }}</h1>
-</template>
-```
-
-```html
-<!-- src/demos/demo2/App.vue -->
+```html [App.vue]
 <script setup lang="ts">
   import Comp from './Comp.vue'
 </script>
@@ -878,12 +1031,42 @@ if (isRef(source)) {
 </template>
 ```
 
-![](assets/2024-10-19-07-35-53.png)
+```html [Comp.vue]
+<script setup lang="ts">
+  defineProps<{ msg?: string }>()
+  // 约束
+  // msg 是 string 类型
 
-## 15. 💻 demos.3 - 属性声明 - 使用类型别名声明 props
+  // defineProps<{ msg: string }>()
+  // 这种写法，相当于定义了一个必填的 msg 属性，并且要求类型为 string。
+  // 如果想要表达这是一个可选属性，和 TS 中的做法是一样的，只需要加一个问号即可。
+</script>
 
-```html
-<!-- src/demos/demo3/Comp.vue -->
+<template>
+  <h1>值：{{ msg }}</h1>
+  <h1>类型：{{ typeof msg }}</h1>
+</template>
+```
+
+:::
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-18-14-14-19.png)
+
+## 15. 💻 demos.3 - 属性声明 - type-based - 使用类型别名声明 props
+
+::: code-group
+
+```html [App.vue]
+<script setup lang="ts">
+  import Comp from './Comp.vue'
+</script>
+
+<template>
+  <Comp msg="Hello World!" />
+</template>
+```
+
+```html [Comp.vue]
 <script setup lang="ts">
   type Props = {
     msg: string
@@ -902,8 +1085,15 @@ if (isRef(source)) {
 </template>
 ```
 
-```html
-<!-- src/demos/demo3/App.vue -->
+:::
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-18-10-58-30.png)
+
+## 16. 💻 demos.4 - 属性声明 - type-based - 使用接口声明 props
+
+::: code-group
+
+```html [App.vue]
 <script setup lang="ts">
   import Comp from './Comp.vue'
 </script>
@@ -913,12 +1103,7 @@ if (isRef(source)) {
 </template>
 ```
 
-![](assets/2024-10-19-07-36-56.png)
-
-## 16. 💻 demos.4 - 属性声明 - 使用接口声明 props
-
-```html
-<!-- src/demos/demo4/Comp.vue -->
+```html [Comp.vue]
 <script setup lang="ts">
   interface Props {
     msg: string
@@ -938,8 +1123,15 @@ if (isRef(source)) {
 </template>
 ```
 
-```html
-<!-- src/demos/demo4/App.vue -->
+:::
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-18-10-58-30.png)
+
+## 17. 💻 demos.5 - 属性声明 - runtime - 使用对象式声明 props
+
+::: code-group
+
+```html [App.vue]
 <script setup lang="ts">
   import Comp from './Comp.vue'
 </script>
@@ -949,12 +1141,7 @@ if (isRef(source)) {
 </template>
 ```
 
-![](assets/2024-10-19-07-38-25.png)
-
-## 17. 💻 demos.5 - 属性声明 - 使用对象式声明 props
-
-```html
-<!-- src/demos/demo5/Comp.vue -->
+```html [Comp.vue]
 <script setup lang="ts">
   defineProps({
     msg: {
@@ -969,7 +1156,7 @@ if (isRef(source)) {
   // 对象式声明提供了更详细的配置选项，如类型、默认值和验证规则等配置项。
   // 在需要详细配置 props 的场景下，这种写法是特别常见的。
   // 相对于其它写法，对象式声明 props 支持更多选项，灵活性高。
-  // 对象声明也有简化版，只需要写明一个类型信息即可，详情见 demo6。
+  // 对象声明也有简化版，只需要写明一个类型信息即可，比如 defineProps({ msg: String })
 </script>
 
 <template>
@@ -977,28 +1164,33 @@ if (isRef(source)) {
 </template>
 ```
 
-```html
-<!-- src/demos/demo5/App.vue -->
+:::
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-18-10-58-30.png)
+
+## 18. 💻 demos.6 - 属性声明 - runtime - 使用对象简写声明 props
+
+::: code-group
+
+```html [App.vue]
 <script setup lang="ts">
   import Comp from './Comp.vue'
 </script>
 
 <template>
+  <Comp />
+  <hr />
   <Comp msg="Hello World!" />
 </template>
 ```
 
-![](assets/2024-10-19-07-38-25.png)
-
-## 18. 💻 demos.6 - 属性声明 - 使用对象简写声明 props
-
-```html
-<!-- src/demos/demo6/Comp.vue -->
+```html [Comp.vue]
 <script setup lang="ts">
+  // 写法 1
   defineProps({
     msg: String,
   })
-  // 等效
+  // 写法 2（等效）
   // defineProps({
   //   msg: {
   //     type: String
@@ -1010,7 +1202,7 @@ if (isRef(source)) {
 
   // 这是对象简写形式是对象式声明的简化版。
   // 适用于简单类型的快速声明。
-  // 相较于 demo5，这种写法更加简洁明了，代码量更少。
+  // 相较于写法 2，写法 1 更加简洁明了，代码量更少。
 
   // 注意
   // key 键是 prop 的名称；
@@ -1023,25 +1215,33 @@ if (isRef(source)) {
 </template>
 ```
 
-```html
-<!-- src/demos/demo6/App.vue -->
+:::
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-18-14-23-29.png)
+
+## 19. 💻 demos.7 - 属性声明 - runtime - 使用数组简写声明 props
+
+::: code-group
+
+```html [App.vue]
 <script setup lang="ts">
   import Comp from './Comp.vue'
 </script>
 
 <template>
+  <Comp a="Hello World!" b="123" c="true" />
+  <!-- 可以传递任意类型 -->
+  <Comp :a="'Hello World!'" :b="123" :c="true" />
+  <!-- 可以只传部分值 -->
+  <Comp :a="{msg: 'Hello World!'}" :b="['1', 2, 3]" />
+  <!-- 可以啥都不传 -->
   <Comp />
-  <hr />
-  <Comp msg="Hello World!" />
+  <!-- 可以使用 v-bind 来简化 -->
+  <Comp v-bind="{a: {msg: 'Hello World!'}, b: 123, c: false}" />
 </template>
 ```
 
-![](assets/2024-10-19-07-40-25.png)
-
-## 19. 💻 demos.7 - 属性声明 - 使用数组简写声明 props
-
-```html
-<!-- src/demos/demo7/Comp.vue -->
+```html [Comp.vue]
 <script setup lang="ts">
   defineProps(['a', 'b', 'c'])
   // 无约束
@@ -1069,31 +1269,26 @@ if (isRef(source)) {
 </template>
 ```
 
-```html
-<!-- src/demos/demo7/App.vue -->
+:::
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-18-14-26-10.png)
+
+## 20. 💻 demos.16 - 属性声明 - runtime - 为单个 prop 指定多种可能的类型
+
+::: code-group
+
+```html [App.vue]
 <script setup lang="ts">
   import Comp from './Comp.vue'
 </script>
 
 <template>
-  <Comp a="Hello World!" b="123" c="true" />
-  <!-- 可以传递任意类型 -->
-  <Comp :a="'Hello World!'" :b="123" :c="true" />
-  <!-- 可以只传部分值 -->
-  <Comp :a="{msg: 'Hello World!'}" :b="['1', 2, 3]" />
-  <!-- 可以啥都不传 -->
-  <Comp />
-  <!-- 可以使用 v-bind 来简化 -->
-  <Comp v-bind="{a: {msg: 'Hello World!'}, b: 123, c: false}" />
+  <Comp a="1" :b="true" />
+  <Comp :a="1" :b="2" />
 </template>
 ```
 
-![](assets/2024-10-19-07-41-42.png)
-
-## 20. 💻 demos.16 - 属性声明 - 为单个 prop 指定多种可能的类型
-
-```html
-<!-- src/demos/demo16/Comp.vue -->
+```html [Comp.vue]
 <script setup lang="ts">
   // type-based declaration
   // interface Props {
@@ -1123,22 +1318,26 @@ if (isRef(source)) {
 </template>
 ```
 
-```html
-<!-- src/demos/demo16/App.vue -->
+:::
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-18-14-50-30.png)
+
+## 21. 💻 demos.11 - 属性声明 - runtime - 属性默认值
+
+::: code-group
+
+```html [App.vue]
 <script setup lang="ts">
   import Comp from './Comp.vue'
 </script>
 
 <template>
-  <Comp a="1" :b="true" />
-  <Comp :a="1" :b="2" />
+  <Comp />
+  <Comp msg="Hello World!" />
 </template>
 ```
 
-## 21. 💻 demos.11 - 属性声明 - 属性默认值（runtime）
-
-```html
-<!-- src/demos/demo11/Comp.vue -->
+```html [Comp.vue]
 <script setup lang="ts">
   defineProps({
     msg: {
@@ -1161,24 +1360,37 @@ if (isRef(source)) {
 </template>
 ```
 
-```html
-<!-- src/demos/demo11/App.vue -->
+:::
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-18-14-27-23.png)
+
+## 22. 💻 demos.12 - 属性声明 - type-based - 属性默认值
+
+::: code-group
+
+```html [App.vue]
 <script setup lang="ts">
   import Comp from './Comp.vue'
+  import { Props } from './Comp.vue'
+  const p1: Props = {
+    msg: 'Hello Vue 3.0!',
+  }
+  const p2: Props = {
+    msg: 'Hello Vue 3.0!',
+    labels: ['1', '2'],
+  }
 </script>
 
 <template>
   <Comp />
   <Comp msg="Hello World!" />
+  <Comp msg="123" :labels="['one']" />
+  <Comp v-bind="p1" />
+  <Comp v-bind="p2" />
 </template>
 ```
 
-![](assets/2024-10-19-07-43-09.png)
-
-## 22. 💻 demos.12 - 属性声明 - 属性默认值（type-based）
-
-```html
-<!-- src/demos/demo12/Comp.vue -->
+```html [Comp.vue]
 <script setup lang="ts">
   export interface Props {
     msg?: string
@@ -1208,37 +1420,27 @@ if (isRef(source)) {
 </template>
 ```
 
-```html
-<!-- src/demos/demo12/App.vue -->
+:::
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-18-14-31-54.png)
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-18-14-32-05.png)
+
+## 23. 💻 demos.8 - 属性访问 - 在 `<script setup>` 中访问使用 defineProps 定义的 props
+
+::: code-group
+
+```html [App.vue]
 <script setup lang="ts">
   import Comp from './Comp.vue'
-  import { Props } from './Comp.vue'
-  const p1: Props = {
-    msg: 'Hello Vue 3.0!',
-  }
-  const p2: Props = {
-    msg: 'Hello Vue 3.0!',
-    labels: ['1', '2'],
-  }
 </script>
 
 <template>
-  <Comp />
   <Comp msg="Hello World!" />
-  <Comp msg="123" :labels="['one']" />
-  <Comp v-bind="p1" />
-  <Comp v-bind="p2" />
 </template>
 ```
 
-![](assets/2024-10-19-07-44-08.png)
-
-![](assets/2024-10-19-07-44-15.png)
-
-## 23. 💻 demos.8 - 属性访问 - 在 script setup 中访问使用 defineProps 定义的 props
-
-```html
-<!-- src/demos/demo8/Comp.vue -->
+```html [Comp.vue]
 <script setup lang="ts">
   const props = defineProps<{ msg: string }>()
   console.log('props.msg:', props.msg)
@@ -1250,12 +1452,21 @@ if (isRef(source)) {
 </script>
 
 <template>
-  <h1>msg: {{ msg }}</h1>
+  <h1>msg: {{ props.msg }}</h1>
 </template>
 ```
 
-```html
-<!-- src/demos/demo8/App.vue -->
+:::
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-18-10-58-30.png)
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-18-14-32-59.png)
+
+## 24. 💻 demos.17 - 属性访问 - 在非 `<script setup>` 中访问 props
+
+::: code-group
+
+```html [App.vue]
 <script setup lang="ts">
   import Comp from './Comp.vue'
 </script>
@@ -1265,14 +1476,7 @@ if (isRef(source)) {
 </template>
 ```
 
-![](assets/2024-10-19-07-46-33.png)
-
-![](assets/2024-10-19-07-46-40.png)
-
-## 24. 💻 demos.17 - 属性访问 - 在非 script setup 中访问 props
-
-```html
-<!-- src/demos/demo17/Comp.vue -->
+```html [Comp.vue]
 <script lang="ts">
   // 如果不使用 script setup 的方式来声明 props
   export default {
@@ -1293,23 +1497,52 @@ if (isRef(source)) {
 </template>
 ```
 
-```html
-<!-- src/demos/demo17/App.vue -->
+:::
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-18-10-58-30.png)
+
+## 25. 💻 demos.14 - 属性校验 - type-based - Prop 校验
+
+::: code-group
+
+```html [App.vue]
 <script setup lang="ts">
+  import { ref } from 'vue'
   import Comp from './Comp.vue'
+  import type { Props } from './Comp.vue'
+  const prop = ref<Props>({
+    firstName: '1',
+    lastName: 'a',
+    age: 18,
+  })
+  // 传入无法通过校验的字段
+  function updatePropsError() {
+    prop.value.firstName = ''
+    prop.value.lastName = ''
+    prop.value.age = 1.1
+  }
+  // 传入可以通过校验的字段
+  function updatePropsCorrect() {
+    prop.value.firstName = '2'
+    prop.value.lastName = 'b'
+    prop.value.age = 28
+  }
+  function resetProp() {
+    prop.value.firstName = '1'
+    prop.value.lastName = 'a'
+    prop.value.age = 18
+  }
 </script>
 
 <template>
-  <Comp msg="Hello World!" />
+  <p><button @click="updatePropsError">Error Update</button></p>
+  <p><button @click="updatePropsCorrect">Correct Update</button></p>
+  <p><button @click="resetProp">resetProp</button></p>
+  <Comp v-bind="prop" />
 </template>
 ```
 
-![](assets/2024-10-19-07-47-27.png)
-
-## 25. 💻 demos.14 - 属性校验 - Prop 校验（type-based）
-
-```html
-<!-- src/demos/demo14/Comp.vue -->
+```html [Comp.vue]
 <script setup lang="ts">
   import { computed, defineProps, toRefs, watch } from 'vue'
 
@@ -1382,17 +1615,24 @@ if (isRef(source)) {
 </template>
 ```
 
-```html
-<!-- src/demos/demo14/App.vue -->
+:::
+
+## 26. 💻 demos.15 - 属性校验 - runtime - Prop 校验
+
+::: code-group
+
+```html [App.vue]
 <script setup lang="ts">
   import { ref } from 'vue'
   import Comp from './Comp.vue'
-  import type { Props } from './Comp.vue'
-  const prop = ref<Props>({
+  const prop = ref({
     firstName: '1',
     lastName: 'a',
     age: 18,
   })
+  // @ts-ignore
+  window.prop = prop
+
   // 传入无法通过校验的字段
   function updatePropsError() {
     prop.value.firstName = ''
@@ -1420,10 +1660,7 @@ if (isRef(source)) {
 </template>
 ```
 
-## 26. 💻 demos.15 - 属性校验 - Prop 校验（runtime）
-
-```html
-<!-- src/demos/demo15/Comp.vue -->
+```html [Comp.vue]
 <script setup lang="ts">
   import { reactive, computed, watch } from 'vue'
 
@@ -1534,55 +1771,47 @@ if (isRef(source)) {
 </template>
 ```
 
-```html
-<!-- src/demos/demo15/App.vue -->
-<script setup lang="ts">
-  import { ref } from 'vue'
-  import Comp from './Comp.vue'
-  const prop = ref({
-    firstName: '1',
-    lastName: 'a',
-    age: 18,
-  })
-  // @ts-ignore
-  window.prop = prop
+:::
 
-  // 传入无法通过校验的字段
-  function updatePropsError() {
-    prop.value.firstName = ''
-    prop.value.lastName = ''
-    prop.value.age = 1.1
-  }
-  // 传入可以通过校验的字段
-  function updatePropsCorrect() {
-    prop.value.firstName = '2'
-    prop.value.lastName = 'b'
-    prop.value.age = 28
-  }
-  function resetProp() {
-    prop.value.firstName = '1'
-    prop.value.lastName = 'a'
-    prop.value.age = 18
-  }
-</script>
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-18-14-35-05.png)
 
-<template>
-  <p><button @click="resetProp">resetProp</button></p>
-  <p><button @click="updatePropsError">Error Update</button></p>
-  <p><button @click="updatePropsCorrect">Correct Update</button></p>
-  <Comp v-bind="prop" />
-</template>
-```
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-18-14-35-26.png)
 
-- ![](assets/2024-10-19-07-49-34.png)
-- ![](assets/2024-10-19-07-49-40.png)
-- 更新错误的数据，控制台会报警告提示。
-  - ![](assets/2024-10-19-07-49-59.png)
+更新错误的数据，控制台会报警告提示：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-18-14-35-39.png)
 
 ## 27. 💻 demos.9 - PropType 属性类型细化 - PropType 细化类型
 
-```html
-<!-- src/demos/demo9/Comp.vue -->
+::: code-group
+
+```html [App.vue]
+<script setup lang="ts">
+  import { ref } from 'vue'
+  import type { Book } from './Comp.vue'
+  import Comp from './Comp.vue'
+  const book = ref<Book>({
+    title: '123',
+    author: 'abc',
+    year: 2024,
+  })
+</script>
+
+<template>
+  <Comp :book="book" />
+  <Comp :book='{ title: "456", author: "ABC", year: 2025 }' />
+
+  <!--
+    如果将 book 的类型约束设置为 Object
+    那么下面这种也是 ok 的
+    如果 book 的类型约束设置为 Object as PropType<Book>
+    那么下面这种就会报错
+  -->
+  <!-- <Comp :book='{a: 1, b: 2}' /> -->
+</template>
+```
+
+```html [Comp.vue]
 <script setup lang="ts">
   import type { PropType } from 'vue'
   // Used to annotate a prop with more advanced types
@@ -1630,39 +1859,13 @@ if (isRef(source)) {
 </template>
 ```
 
-```html
-<!-- src/demos/demo9/App.vue -->
-<script setup lang="ts">
-  import { ref } from 'vue'
-  import type { Book } from './Comp.vue'
-  import Comp from './Comp.vue'
-  const book = ref<Book>({
-    title: '123',
-    author: 'abc',
-    year: 2024,
-  })
-</script>
+:::
 
-<template>
-  <Comp :book="book" />
-  <Comp :book='{ title: "456", author: "ABC", year: 2025 }' />
-
-  <!--
-    如果将 book 的类型约束设置为 Object
-    那么下面这种也是 ok 的
-    如果 book 的类型约束设置为 Object as PropType<Book>
-    那么下面这种就会报错
-  -->
-  <!-- <Comp :book='{a: 1, b: 2}' /> -->
-</template>
-```
-
-![](assets/2024-10-19-07-51-01.png)
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-18-14-36-38.png)
 
 ## 28. 💻 demos.10 - PropType 属性类型细化 - 使用 type-based 式写法来处理复杂类型
 
-```html
-<!-- src/demos/demo10/Comp.vue -->
+```html [Comp.vue]
 <script setup lang="ts">
   export interface Book {
     title: string
@@ -1683,8 +1886,7 @@ if (isRef(source)) {
 </template>
 ```
 
-```html
-<!-- src/demos/demo10/App.vue -->
+```html [App.vue]
 <script setup lang="ts">
   import { ref } from 'vue'
   import type { Book } from './Comp.vue'
@@ -1702,47 +1904,13 @@ if (isRef(source)) {
 </template>
 ```
 
-![](assets/2024-10-19-07-51-39.png)
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-18-14-36-38.png)
 
 ## 29. 💻 demos.13 - toRefs 保持属性的响应式状态 - toRefs 保持响应式
 
-```html
-<!-- src/demos/demo13/Comp.vue -->
-<script setup lang="ts">
-  import { toRefs, computed } from 'vue'
+::: code-group
 
-  export interface Props {
-    firstName: string
-    lastName: string
-  }
-  const props = defineProps<Props>()
-
-  // 如果 props 是响应式数据，那么使用 toRefs 解构可以保持响应式
-  // 如果 props 本身就不是一个响应式数据，那么跟直接解构无异
-  const { firstName: f1, lastName: l1 } = toRefs(props)
-  const full1 = computed(() => `${f1.value}${l1.value}`)
-
-  // 直接解构，会失去响应式
-  const { firstName: f2, lastName: l2 } = props
-  const full2 = computed(() => `${f2}${l2}`)
-</script>
-
-<template>
-  <h3>保持响应式</h3>
-  <p>firstName: {{ f1 }}, lastName: {{ l1 }}, fullName: {{ full1 }}</p>
-  <h3>保持响应式</h3>
-  <p>
-    firstName: {{ props.firstName }}, lastName: {{ props.lastName }}, fullName:
-    {{ props.firstName + props.lastName }}
-  </p>
-  <h3>不保持响应式</h3>
-  <p>firstName: {{ f2 }}, lastName: {{ l2 }}, fullName: {{ full2 }}</p>
-  <hr />
-</template>
-```
-
-```html
-<!-- src/demos/demo13/App.vue -->
+```html [App.vue]
 <script setup lang="ts">
   import Comp from './Comp.vue'
   import { Props } from './Comp.vue'
@@ -1783,7 +1951,43 @@ if (isRef(source)) {
 </template>
 ```
 
-![](assets/demo13.gif)
+```html [Comp.vue]
+<script setup lang="ts">
+  import { toRefs, computed } from 'vue'
+
+  export interface Props {
+    firstName: string
+    lastName: string
+  }
+  const props = defineProps<Props>()
+
+  // 如果 props 是响应式数据，那么使用 toRefs 解构可以保持响应式
+  // 如果 props 本身就不是一个响应式数据，那么跟直接解构无异
+  const { firstName: f1, lastName: l1 } = toRefs(props)
+  const full1 = computed(() => `${f1.value}${l1.value}`)
+
+  // 直接解构，会失去响应式
+  const { firstName: f2, lastName: l2 } = props
+  const full2 = computed(() => `${f2}${l2}`)
+</script>
+
+<template>
+  <h3>保持响应式</h3>
+  <p>firstName: {{ f1 }}, lastName: {{ l1 }}, fullName: {{ full1 }}</p>
+  <h3>保持响应式</h3>
+  <p>
+    firstName: {{ props.firstName }}, lastName: {{ props.lastName }}, fullName:
+    {{ props.firstName + props.lastName }}
+  </p>
+  <h3>不保持响应式</h3>
+  <p>firstName: {{ f2 }}, lastName: {{ l2 }}, fullName: {{ full2 }}</p>
+  <hr />
+</template>
+```
+
+:::
+
+![](assets/demos.13.gif)
 
 ## 30. 🔗 引用
 

@@ -73,7 +73,7 @@
 
 - [x] [0079. 深入组件](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0079.%20%E6%B7%B1%E5%85%A5%E7%BB%84%E4%BB%B6/README.md)
 - [x] [0083. 组件注册](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0083.%20%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C/README.md)
-- [ ] [0001. 组件属性（Props）](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0001.%20%E7%BB%84%E4%BB%B6%E5%B1%9E%E6%80%A7%EF%BC%88Props%EF%BC%89/README.md)
+- [x] [0001. 组件属性（Props）](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0001.%20%E7%BB%84%E4%BB%B6%E5%B1%9E%E6%80%A7%EF%BC%88Props%EF%BC%89/README.md)
 - [ ] [0002. 组件事件（Emits）](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0002.%20%E7%BB%84%E4%BB%B6%E4%BA%8B%E4%BB%B6%EF%BC%88Emits%EF%BC%89/README.md)
 - [x] [0087. 组件 v-model](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0087.%20%E7%BB%84%E4%BB%B6%20v-model/README.md)
 - [x] [0084. 透传 Attributes](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0084.%20%E9%80%8F%E4%BC%A0%20Attributes/README.md)
