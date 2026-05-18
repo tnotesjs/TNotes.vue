@@ -2,6 +2,13 @@
 
 <!-- region:toc -->
 
+::: details 📚 相关资源
+
+- [📂 TNotes.yuque（笔记附件资源）](https://www.yuque.com/tdahuyou/tnotes.yuque/)
+  - [TNotes.yuque.vue.0001](https://www.yuque.com/tdahuyou/tnotes.yuque/vue.0001)
+
+:::
+
 - [1. 🎯 本节内容](#1--本节内容)
 - [2. 🫧 评价](#2--评价)
 - [3. 🤔 Props 是什么？父组件如何把数据传给子组件？](#3--props-是什么父组件如何把数据传给子组件)
@@ -53,10 +60,10 @@
 - [22. 💻 demos.12 - 属性声明 - type-based - 属性默认值](#22--demos12---属性声明---type-based---属性默认值)
 - [23. 💻 demos.8 - 属性访问 - 在 `<script setup>` 中访问使用 defineProps 定义的 props](#23--demos8---属性访问---在-script-setup-中访问使用-defineprops-定义的-props)
 - [24. 💻 demos.17 - 属性访问 - 在非 `<script setup>` 中访问 props](#24--demos17---属性访问---在非-script-setup-中访问-props)
-- [25. 💻 demos.14 - 属性校验 - type-based - Prop 校验](#25--demos14---属性校验---type-based---prop-校验)
-- [26. 💻 demos.15 - 属性校验 - runtime - Prop 校验](#26--demos15---属性校验---runtime---prop-校验)
-- [27. 💻 demos.9 - PropType 属性类型细化 - PropType 细化类型](#27--demos9---proptype-属性类型细化---proptype-细化类型)
-- [28. 💻 demos.10 - PropType 属性类型细化 - 使用 type-based 式写法来处理复杂类型](#28--demos10---proptype-属性类型细化---使用-type-based-式写法来处理复杂类型)
+- [25. 💻 demos.14 - 属性校验 - type-based - Prop 校验 - 自定义校验函数](#25--demos14---属性校验---type-based---prop-校验---自定义校验函数)
+- [26. 💻 demos.15 - 属性校验 - runtime - Prop 校验 - 走 validator 配置](#26--demos15---属性校验---runtime---prop-校验---走-validator-配置)
+- [27. 💻 demos.9 - runtime - 需要使用 `PropType<T>` 工具类型实现属性类型细化](#27--demos9---runtime---需要使用-proptypet-工具类型实现属性类型细化)
+- [28. 💻 demos.10 - type-based - 无需使用 `PropType<T>` 工具类型 - 天然支持标注复杂类型的功能](#28--demos10---type-based---无需使用-proptypet-工具类型---天然支持标注复杂类型的功能)
 - [29. 💻 demos.13 - toRefs 保持属性的响应式状态 - toRefs 保持响应式](#29--demos13---torefs-保持属性的响应式状态---torefs-保持响应式)
 - [30. 🔗 引用](#30--引用)
 
@@ -104,7 +111,9 @@
 
 ## 2. 🫧 评价
 
-Props 是组件通信里最高频的入口，你至少要掌握声明、传值、单向数据流和校验这几件事，因为它们几乎决定了一个组件的输入边界。像 Boolean 转换、响应式解构这类细节不算天天手写，但很容易在排错时卡你一下，所以也值得顺手吃透。
+props 的相关笔记写得有些多，props 也是日常开发中使用频率最高的知识点。还有一些 props 的细节没有记录到笔记中，遇到具体问题的时候可以结合着官方文档一起瞅瞅。
+
+demos 的讲解，可以参考 TNotes.yuque 中记录的早期（24.07）录制的一些视频。
 
 ## 3. 🤔 Props 是什么？父组件如何把数据传给子组件？
 
@@ -1501,7 +1510,7 @@ if (isRef(source)) {
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-18-10-58-30.png)
 
-## 25. 💻 demos.14 - 属性校验 - type-based - Prop 校验
+## 25. 💻 demos.14 - 属性校验 - type-based - Prop 校验 - 自定义校验函数
 
 ::: code-group
 
@@ -1535,9 +1544,9 @@ if (isRef(source)) {
 </script>
 
 <template>
+  <p><button @click="resetProp">resetProp</button></p>
   <p><button @click="updatePropsError">Error Update</button></p>
   <p><button @click="updatePropsCorrect">Correct Update</button></p>
-  <p><button @click="resetProp">resetProp</button></p>
   <Comp v-bind="prop" />
 </template>
 ```
@@ -1559,6 +1568,7 @@ if (isRef(source)) {
   // 使用 toRefs 保持响应性
   const { firstName, lastName, age } = toRefs(props)
 
+  // 将响应式数据绑定到全局对象身上，以便在控制台访问，检查数据是否有变更
   // @ts-ignore
   window.firstName = firstName
   // @ts-ignore
@@ -1570,6 +1580,8 @@ if (isRef(source)) {
   function validateProps() {
     if (!firstName.value || firstName.value.length === 0) {
       throw new Error('First name is required and should not be empty')
+      // 异步报错
+      // 以防响应式数据变更，因为立刻抛出 error 导致视图更新行为异常
       // setTimeout(() => {
       //   throw new Error('First name is required and should not be empty')
       // }, 1000);
@@ -1617,7 +1629,9 @@ if (isRef(source)) {
 
 :::
 
-## 26. 💻 demos.15 - 属性校验 - runtime - Prop 校验
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-18-15-39-09.png)
+
+## 26. 💻 demos.15 - 属性校验 - runtime - Prop 校验 - 走 validator 配置
 
 ::: code-group
 
@@ -1713,60 +1727,6 @@ if (isRef(source)) {
   <p>First Name: {{ state.firstName }}</p>
   <p>Last Name: {{ state.lastName }}</p>
   <p>Age: {{ state.age }}</p>
-  <p>Full Name: {{ fullName }}</p> </template
-><!-- src/demos/demo15/Comp.vue -->
-<script setup lang="ts">
-  import { reactive, computed, watch } from 'vue'
-
-  const props = defineProps({
-    firstName: {
-      type: String,
-      required: true,
-      validator: (value: string) => value.length > 0,
-      // 使用 validator 字段可以帮助你在【开发阶段】捕获潜在的问题，
-      // 确保组件接收到的 props 数据是符合预期的。
-    },
-    lastName: {
-      type: String,
-      required: true,
-      validator: (value: string) => value.length > 0,
-    },
-    age: {
-      type: Number,
-      required: false,
-      validator: (value: number) => Number.isInteger(value) && value > 0,
-    },
-  })
-
-  // 将 props 拷贝一份出来，以防破坏单向数据流。
-  // 将 props 转为响应式数据
-  const state = reactive({
-    firstName: props.firstName,
-    lastName: props.lastName,
-    age: props.age,
-  })
-
-  // @ts-ignore
-  window.state = state
-
-  watch(
-    () => props,
-    (newProps) => {
-      console.log(newProps)
-      state.firstName = newProps.firstName
-      state.lastName = newProps.lastName
-      state.age = newProps.age
-    },
-    { immediate: true, deep: true },
-  )
-
-  const fullName = computed(() => `${state.firstName}${state.lastName}`)
-</script>
-
-<template>
-  <p>First Name: {{ state.firstName }}</p>
-  <p>Last Name: {{ state.lastName }}</p>
-  <p>Age: {{ state.age }}</p>
   <p>Full Name: {{ fullName }}</p>
 </template>
 ```
@@ -1781,7 +1741,7 @@ if (isRef(source)) {
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-18-14-35-39.png)
 
-## 27. 💻 demos.9 - PropType 属性类型细化 - PropType 细化类型
+## 27. 💻 demos.9 - runtime - 需要使用 `PropType<T>` 工具类型实现属性类型细化
 
 ::: code-group
 
@@ -1828,10 +1788,12 @@ if (isRef(source)) {
 
   defineProps({
     book: {
+      // ❌ 错误写法：
       // type: Book
       // 不能直接这么写，会报错
       // 因为 Book 是一个接口，而不是一个 JS 的构造函数
 
+      // ❌ 错误写法：
       // type: {
       //   title: String,
       //   author: String,
@@ -1840,11 +1802,13 @@ if (isRef(source)) {
       // 这么写也是不允许的，会报错
       // 不满足 defineProps 的语法规则
 
+      // ⚠️ 不推荐写法：
       // type: Object,
       // 虽然可以写 Object，并且不会报错
       // 但是 Object 约束不明确
       // 只要是一个对象类型就可以传
 
+      // ✅ 正确写法：
       type: Object as PropType<Book>,
       // 使用类型工具 PropType<Book>
       // 可以进一步约束属性 book 的类型为 Book
@@ -1863,7 +1827,27 @@ if (isRef(source)) {
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-18-14-36-38.png)
 
-## 28. 💻 demos.10 - PropType 属性类型细化 - 使用 type-based 式写法来处理复杂类型
+## 28. 💻 demos.10 - type-based - 无需使用 `PropType<T>` 工具类型 - 天然支持标注复杂类型的功能
+
+::: code-group
+
+```html [App.vue]
+<script setup lang="ts">
+  import { ref } from 'vue'
+  import type { Book } from './Comp.vue'
+  import Comp from './Comp.vue'
+  const book = ref<Book>({
+    title: '123',
+    author: 'abc',
+    year: 2024,
+  })
+</script>
+
+<template>
+  <Comp :book="book" />
+  <Comp :book='{ title: "456", author: "ABC", year: 2025 }' />
+</template>
+```
 
 ```html [Comp.vue]
 <script setup lang="ts">
@@ -1886,23 +1870,7 @@ if (isRef(source)) {
 </template>
 ```
 
-```html [App.vue]
-<script setup lang="ts">
-  import { ref } from 'vue'
-  import type { Book } from './Comp.vue'
-  import Comp from './Comp.vue'
-  const book = ref<Book>({
-    title: '123',
-    author: 'abc',
-    year: 2024,
-  })
-</script>
-
-<template>
-  <Comp :book="book" />
-  <Comp :book='{ title: "456", author: "ABC", year: 2025 }' />
-</template>
-```
+:::
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-18-14-36-38.png)
 

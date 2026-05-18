@@ -1,11 +1,13 @@
 {
   "bilibili": [],
   "tnotes": [],
-  "yuque": [],
+  "yuque": [
+    "vue.0001"
+  ],
   "done": true,
   "enableDiscussions": true,
-  "description": "",
+  "description": "props 是组件接收外部数据（父组件的数据）的入口，是最常用的一种组件间通信方式，属于日常开发中必备的知识点。",
   "id": "5e531a6b-33e9-498c-bbc4-0cd5452396c2",
   "created_at": 1758172048001,
-  "updated_at": 1779083401051
+  "updated_at": 1779091989454
 }
