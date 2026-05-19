@@ -2,10 +2,10 @@
   "bilibili": [],
   "tnotes": [],
   "yuque": [],
-  "done": false,
-  "enableDiscussions": false,
-  "description": "",
+  "done": true,
+  "enableDiscussions": true,
+  "description": "子组件通过 emit 向父组件“发出通知”，父组件负责决定是否监听来自子组件的通知。子组件在触发事件的时候可以携带一些必要的事件参数，父组件可以在监听器里拿到这些参数来做进一步的处理。",
   "id": "f77559c5-667b-4a24-ad54-8e03339c7631",
   "created_at": 1758172048003,
-  "updated_at": 1758172048003
+  "updated_at": 1779178453810
 }
