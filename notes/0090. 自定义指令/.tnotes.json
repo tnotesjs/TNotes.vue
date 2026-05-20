@@ -3,9 +3,9 @@
   "tnotes": [],
   "yuque": [],
   "done": false,
-  "enableDiscussions": false,
-  "description": "",
+  "enableDiscussions": true,
+  "description": "自定义指令在日常业务里没有组件、组合式函数那么高频，但它很适合解决「必须直接碰 DOM」的问题。",
   "id": "d1ed3aca-e9f8-41c3-9e51-5473b272b895",
   "created_at": 1778413062776,
-  "updated_at": 1778413062776
+  "updated_at": 1779271313973
 }
