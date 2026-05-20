@@ -152,10 +152,6 @@
         "link": "/notes/0086. 异步组件/README"
       },
       {
-        "text": "⏰ 0035. 动态组件",
-        "link": "/notes/0035. 动态组件/README"
-      },
-      {
         "text": "⏰ 0033. 组件通信",
         "link": "/notes/0033. 组件通信/README"
       }
@@ -192,6 +188,14 @@
         "link": "/notes/0081. 内置组件/README"
       },
       {
+        "text": "⏰ 0035. 动态组件",
+        "link": "/notes/0035. 动态组件/README"
+      },
+      {
+        "text": "⏰ 0011. 特殊元素 component",
+        "link": "/notes/0011. 特殊元素 component/README"
+      },
+      {
         "text": "⏰ 0095. Transition",
         "link": "/notes/0095. Transition/README"
       },
@@ -202,6 +206,10 @@
       {
         "text": "⏰ 0093. KeepAlive",
         "link": "/notes/0093. KeepAlive/README"
+      },
+      {
+        "text": "⏰ 0012. 内置组件 keep-alive",
+        "link": "/notes/0012. 内置组件 keep-alive/README"
       },
       {
         "text": "⏰ 0092. Teleport",
@@ -562,14 +570,6 @@
           {
             "text": "⏰ 0004. 插槽",
             "link": "/notes/0004. 插槽/README"
-          },
-          {
-            "text": "⏰ 0011. 特殊元素 component",
-            "link": "/notes/0011. 特殊元素 component/README"
-          },
-          {
-            "text": "⏰ 0012. 内置组件 keep-alive",
-            "link": "/notes/0012. 内置组件 keep-alive/README"
           }
         ]
       },
@@ -624,14 +624,6 @@
           {
             "text": "⏰ 0010. defineModel",
             "link": "/notes/0010. defineModel/README"
-          },
-          {
-            "text": "⏰ 0011. 特殊元素 component",
-            "link": "/notes/0011. 特殊元素 component/README"
-          },
-          {
-            "text": "⏰ 0012. 内置组件 keep-alive",
-            "link": "/notes/0012. 内置组件 keep-alive/README"
           }
         ]
       },
