@@ -9,13 +9,20 @@
 - [5. 🤔 为什么要把逻辑提取成 composable？](#5--为什么要把逻辑提取成-composable)
 - [6. 🤔 应该如何设计响应式参数让 composable 更加灵活？](#6--应该如何设计响应式参数让-composable-更加灵活)
 - [7. 🤔 为什么建议 composable 返回多个 ref，而不是 reactive 对象？](#7--为什么建议-composable-返回多个-ref而不是-reactive-对象)
-- [8. 🤔 组合式函数里可以写副作用吗？](#8--组合式函数里可以写副作用吗)
-- [9. 🤔 组合式函数只能在什么地方调用？](#9--组合式函数只能在什么地方调用)
-- [10. 🤔 组合式函数和 mixin、无渲染组件有什么区别？](#10--组合式函数和-mixin无渲染组件有什么区别)
+- [8. 🤔 composable 里可以写副作用吗？](#8--composable-里可以写副作用吗)
+- [9. 🤔 composable 的调用限制是？](#9--composable-的调用限制是)
+- [10. 🤔 composable 和 mixin、无渲染组件有什么区别？](#10--composable-和-mixin无渲染组件有什么区别)
   - [10.1. 和 mixin 的区别](#101-和-mixin-的区别)
   - [10.2. 和无渲染组件的区别](#102-和无渲染组件的区别)
   - [10.3. 和 React Hooks 的区别](#103-和-react-hooks-的区别)
-- [11. 🔗 引用](#11--引用)
+- [11. 💻 demos.1 - 组合式函数的基本定义与使用](#11--demos1---组合式函数的基本定义与使用)
+- [12. 💻 demos.2 - 组合式函数的嵌套组合](#12--demos2---组合式函数的嵌套组合)
+- [13. 💻 demos.3 - 返回 ref 而非 reactive 以保留解构后的响应性](#13--demos3---返回-ref-而非-reactive-以保留解构后的响应性)
+- [14. 💻 demos.4 - 响应式参数设计：toValue + watchEffect](#14--demos4---响应式参数设计tovalue--watcheffect)
+- [15. 💻 demos.5 - 副作用清理与生命周期挂靠](#15--demos5---副作用清理与生命周期挂靠)
+- [16. 💻 demos.6 - 用 composable 改善代码组织（多个 composable 协作）](#16--demos6---用-composable-改善代码组织多个-composable-协作)
+- [17. 💻 demos.7 - composable 的调用限制与 Options API 中的使用](#17--demos7---composable-的调用限制与-options-api-中的使用)
+- [18. 🔗 引用](#18--引用)
 
 <!-- endregion:toc -->
 
@@ -215,9 +222,15 @@ console.log(mouse.x)
 
 简单来说，返回「普通对象 + 多个 ref」兼容性最高，也最符合组合式函数的解构使用方式。
 
-## 8. 🤔 组合式函数里可以写副作用吗？
+## 8. 🤔 composable 里可以写副作用吗？
 
-可以，而且很多组合式函数本来就是为了封装副作用。
+::: tip 理解术语：“副作用”
+
+副作用就是函数除了返回值之外，对外部产生的变化，比如修改 DOM、发起网络请求、改变全局变量等。
+
+:::
+
+可以，而且很多 composable 本来就是为了封装副作用。
 
 比如：
 
@@ -231,7 +244,7 @@ console.log(mouse.x)
 1. 要在合适的生命周期里启动副作用
 2. 要在组件卸载时清理副作用
 
-还是以事件监听为例：
+示例：
 
 ```js
 import { onMounted, onUnmounted } from 'vue'
@@ -246,17 +259,17 @@ export function useEventListener(target, event, callback) {
 
 对于 SSR，也要额外注意：依赖浏览器 DOM 的代码不能在服务端执行，所以这类逻辑应该放在 `onMounted()` 这类仅浏览器端触发的钩子里。
 
-## 9. 🤔 组合式函数只能在什么地方调用？
+## 9. 🤔 composable 的调用限制是？
 
-组合式函数不是任何地方都能随便调。
+composable 不是任何地方都能随便调。
 
 官方给出的限制是：
 
-- 只能在 `<script setup>` 中调用。
-- 或者在组件的 `setup()` 中调用。
-- 一般要求同步调用。
+- 只能在 `<script setup>` 中调用
+- 或者在组件的 `setup()` 中调用
+- 一般要求同步调用
 
-这样做不是 Vue 在故意限制你，而是因为组合式函数内部经常会注册生命周期、计算属性和侦听器。Vue 需要知道「当前正在为哪个组件实例注册这些东西」，否则这些绑定关系就立不住。
+这样做不是 Vue 在故意添加限制，而是因为组合式函数内部经常会注册生命周期、计算属性和侦听器。Vue 需要知道「当前正在为哪个组件实例注册这些东西」，否则这些绑定关系就无法建立。
 
 ```html
 <script setup>
@@ -266,7 +279,7 @@ export function useEventListener(target, event, callback) {
 </script>
 ```
 
-在选项式 API 中也能使用组合式函数，但要放在 `setup()` 里：
+在 Options API 中也能使用组合式函数，但要放在 `setup()` 里：
 
 ```js
 import { useMouse } from './useMouse'
@@ -279,42 +292,476 @@ export default {
 }
 ```
 
-有一个例外值得记一下：`<script setup>` 对异步场景支持更好。即便你在其中用了 `await`，编译器也会帮你恢复当前组件实例上下文，这一点比普通 `setup()` 更省心。
+::: tip
 
-## 10. 🤔 组合式函数和 mixin、无渲染组件有什么区别？
+`<script setup>` 是唯一在调用 `await` 之后仍可调用组合式函数的地方。编译器会在异步操作之后自动为你恢复当前的组件实例上下文。
 
-这部分官方主要是在回答一个问题：为什么 Vue 3 更推荐组合式函数，而不是继续重度依赖老方案。
+:::
+
+## 10. 🤔 composable 和 mixin、无渲染组件有什么区别？
+
+::: details 看看 Vue 官方怎么描述
+
+这部分官方主要是在回答一个问题：为什么 Vue 3 更推荐 composable ，而不是继续重度依赖老方案。
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-20-14-23-55.png)
+
+:::
 
 ### 10.1. 和 mixin 的区别
 
 mixin 在 Vue 2 时代很常见，但它有几个老问题：
 
-- 数据和方法的来源不清晰。
-- 多个 mixin 之间容易发生命名冲突。
-- mixin 之间可能靠约定属性名隐式耦合。
+- 数据和方法的来源不清晰
+- 多个 mixin 之间容易发生命名冲突
+- mixin 之间可能靠约定属性名隐式耦合
 
-组合式函数更像普通函数调用，依赖关系是显式的，返回什么、传入什么都写在代码上，读起来更可控。
+composable 更像普通函数调用，依赖关系是显式的，返回什么、传入什么都写在代码上，读起来更可控。
 
 ### 10.2. 和无渲染组件的区别
 
 无渲染组件可以通过插槽复用逻辑和部分渲染控制，但它会引入额外组件实例。
 
-如果你只是想复用纯逻辑，组合式函数更轻量，因为它不会多创建组件层级。只有当你既想复用逻辑，又想复用渲染结构时，无渲染组件才更合适。
+如果你只是想复用纯逻辑，composable 更轻量，因为它不会多创建组件层级。只有当你既想复用逻辑，又想复用渲染结构时，无渲染组件才更合适。
 
 ### 10.3. 和 React Hooks 的区别
 
-组合式函数和 React Hooks 在「抽离逻辑」这件事上很像，但底层模型不一样。
+composable 和 React Hooks 在「抽离逻辑」这件事上很像，但底层模型不一样。
 
-Vue 的组合式函数是建立在细粒度响应式系统上的，不依赖每次组件重渲染都重新执行整套 Hook 逻辑。所以它们在依赖追踪方式、心智负担和性能特征上都和 React Hooks 不完全相同。
+Vue 的 composable 是建立在细粒度响应式系统上的，不依赖每次组件重渲染都重新执行整套 Hook 逻辑。所以它们在依赖追踪方式、心智负担和性能特征上都和 React Hooks 不完全相同。
 
 你可以把它理解成：两者解决的问题很像，但 Vue 走的是响应式驱动路线，不是调用顺序驱动路线。
 
-## 11. 🔗 引用
+## 11. 💻 demos.1 - 组合式函数的基本定义与使用
+
+::: code-group
+
+```html [App.vue]
+<script setup>
+  import { useMouse } from './useMouse.js'
+
+  // 调用组合式函数，解构获取响应式状态
+  const { x, y } = useMouse()
+</script>
+
+<template>
+  <!-- 模板中直接使用 ref，自动解包 -->
+  <p>鼠标位置：{{ x }}, {{ y }}</p>
+</template>
+```
+
+```js [useMouse.js]
+import { ref, onMounted, onUnmounted } from 'vue'
+
+// 约定：组合式函数以 use 开头，使用驼峰命名
+export function useMouse() {
+  // 用 ref 管理有状态逻辑
+  const x = ref(0)
+  const y = ref(0)
+
+  function update(event) {
+    x.value = event.pageX
+    y.value = event.pageY
+  }
+
+  // 组合式函数可以挂靠在调用方的生命周期上
+  onMounted(() => window.addEventListener('mousemove', update))
+  onUnmounted(() => window.removeEventListener('mousemove', update))
+
+  // 返回需要暴露的状态
+  return { x, y }
+}
+```
+
+:::
+
+![gif](./assets/1.gif)
+
+鼠标在视图中移动，坐标会实时更新。这个功能完全由 `useMouse()` 组合式函数提供，组件本身没有任何与鼠标事件相关的代码。
+
+## 12. 💻 demos.2 - 组合式函数的嵌套组合
+
+::: code-group
+
+```html [App.vue]
+<script setup>
+  import { useMouse } from './useMouse.js'
+
+  // useMouse 内部复用了 useEventListener，实现了逻辑的嵌套组合
+  const { x, y } = useMouse()
+</script>
+
+<template>
+  <p>鼠标位置：{{ x }}, {{ y }}</p>
+</template>
+```
+
+```js [useMouse.js]
+import { ref } from 'vue'
+import { useEventListener } from './useEventListener.js'
+
+export function useMouse() {
+  const x = ref(0)
+  const y = ref(0)
+
+  // composable 可以调用其他 composable，像搭积木一样组合逻辑
+  useEventListener(window, 'mousemove', (event) => {
+    x.value = event.pageX
+    y.value = event.pageY
+  })
+
+  return { x, y }
+}
+```
+
+```js [useEventListener.js]
+import { onMounted, onUnmounted } from 'vue'
+
+// 将「注册 / 移除事件监听器」这个通用逻辑单独抽成 composable
+export function useEventListener(target, event, callback) {
+  onMounted(() => target.addEventListener(event, callback))
+  onUnmounted(() => target.removeEventListener(event, callback))
+}
+```
+
+:::
+
+![gif](./assets/1.gif)
+
+每个 composable 负责一个单一的功能点，composable 之间可以相互调用，形成层层嵌套的组合关系。`useMouse()` 内部复用了 `useEventListener()`，实现了事件监听逻辑的抽离和复用。
+
+## 13. 💻 demos.3 - 返回 ref 而非 reactive 以保留解构后的响应性
+
+::: code-group
+
+```html [App.vue]
+<script setup>
+  import { reactive } from 'vue'
+  import { useMouseRef } from './useMouseRef.js'
+  import { useMouseReactive } from './useMouseReactive.js'
+
+  // ✅ 正确做法：返回普通对象 + 多个 ref，解构后仍保持响应性
+  const { x: rx, y: ry } = useMouseRef()
+
+  // ❌ 错误做法：返回 reactive 对象，解构后丢失响应性
+  // 用 reactive 包一层才能恢复，但已失去 composable 简洁的优势
+  const { x, y } = useMouseReactive()
+  const state = reactive(useMouseReactive())
+</script>
+
+<template>
+  <h4>✅ 返回 ref（推荐）</h4>
+  <p>解构后直接使用：{{ rx }}, {{ ry }}</p>
+
+  <h4>❌ 返回 reactive（解构会丢失响应性）</h4>
+  <p>丢失响应式：{{ x }}, {{ y }}</p>
+  <p>需要再包一层 reactive：{{ state.x }}, {{ state.y }}</p>
+</template>
+```
+
+```js [useMouseRef.js]
+import { ref, onMounted, onUnmounted } from 'vue'
+
+// 推荐：返回包含多个 ref 的普通对象
+export function useMouseRef() {
+  const x = ref(0)
+  const y = ref(0)
+
+  const update = (e) => {
+    x.value = e.pageX
+    y.value = e.pageY
+  }
+  onMounted(() => window.addEventListener('mousemove', update))
+  onUnmounted(() => window.removeEventListener('mousemove', update))
+
+  return { x, y } // 普通对象，解构后 x、y 各自是 ref，响应性不丢失
+}
+```
+
+```js [useMouseReactive.js]
+import { reactive, onMounted, onUnmounted } from 'vue'
+
+// 不推荐：返回 reactive 对象
+export function useMouseReactive() {
+  const state = reactive({ x: 0, y: 0 })
+
+  const update = (e) => {
+    state.x = e.pageX
+    state.y = e.pageY
+  }
+  onMounted(() => window.addEventListener('mousemove', update))
+  onUnmounted(() => window.removeEventListener('mousemove', update))
+
+  return state // 如果调用方直接 const { x, y } = useMouseReactive()，响应性就断了
+}
+```
+
+:::
+
+![gif](./assets/2.gif)
+
+## 14. 💻 demos.4 - 响应式参数设计：toValue + watchEffect
+
+::: code-group
+
+```html [App.vue]
+<script setup>
+  import { ref } from 'vue'
+  import { useFetch } from './useFetch.js'
+
+  // 传入 ref，URL 变化时自动重新请求
+  const userId = ref(1)
+  const { data, error, loading } = useFetch(() => `/api/user/${userId.value}`)
+
+  function nextUser() {
+    userId.value++
+  }
+</script>
+
+<template>
+  <button @click="nextUser">切换用户 (当前: {{ userId }})</button>
+  <p v-if="loading">加载中...</p>
+  <p v-else-if="error">出错了：{{ error }}</p>
+  <pre v-else>{{ data }}</pre>
+</template>
+```
+
+```js [useFetch.js]
+import { ref, watchEffect, toValue } from 'vue'
+
+// 参数设计：同时支持 ref、getter 函数和普通字符串
+export function useFetch(url) {
+  const data = ref(null)
+  const error = ref(null)
+  const loading = ref(false)
+
+  watchEffect(() => {
+    // toValue 会自动解析 ref 或 getter，得到最终值
+    // 在 watchEffect 内调用，确保依赖被正确追踪
+    const resolvedUrl = toValue(url)
+
+    loading.value = true
+    data.value = null
+    error.value = null
+
+    // 用 setTimeout 模拟异步请求（实际项目中用 fetch）
+    setTimeout(() => {
+      // mock 数据
+      const id = resolvedUrl.match(/\d+/)?.[0] ?? '0'
+      data.value = { id, name: `用户${id}`, email: `user${id}@example.com` }
+      loading.value = false
+    }, 500)
+  })
+
+  return { data, error, loading }
+}
+```
+
+:::
+
+---
+
+## 15. 💻 demos.5 - 副作用清理与生命周期挂靠
+
+::: code-group
+
+```html [App.vue]
+<script setup>
+  import { ref } from 'vue'
+  import { useTimer } from './useTimer.js'
+
+  // composable 内部管理了定时器的启动与清理
+  const { count, pause, resume } = useTimer(1000)
+  const show = ref(true)
+</script>
+
+<template>
+  <button @click="show = false">卸载子组件（触发清理）</button>
+  <button @click="show = true">重新挂载</button>
+  <hr />
+  <div v-if="show">
+    <p>计数：{{ count }}</p>
+    <button @click="pause">暂停</button>
+    <button @click="resume">恢复</button>
+  </div>
+  <p v-else style="color: gray;">组件已卸载，定时器已清理</p>
+</template>
+```
+
+```js [useTimer.js]
+import { ref, onUnmounted } from 'vue'
+
+export function useTimer(interval = 1000) {
+  const count = ref(0)
+  let timer = null
+
+  function resume() {
+    if (timer) return
+    timer = setInterval(() => {
+      count.value++
+    }, interval)
+  }
+
+  function pause() {
+    clearInterval(timer)
+    timer = null
+  }
+
+  // 关键：组件卸载时清理副作用，防止内存泄漏
+  onUnmounted(() => {
+    clearInterval(timer)
+    timer = null
+  })
+
+  // 默认启动
+  resume()
+
+  return { count, pause, resume }
+}
+```
+
+:::
+
+---
+
+## 16. 💻 demos.6 - 用 composable 改善代码组织（多个 composable 协作）
+
+::: code-group
+
+```html [App.vue]
+<script setup>
+  import { useTodoList } from './useTodoList.js'
+
+  // 一个 composable 聚合了多个子 composable，组件代码非常简洁
+  const { newTodo, todos, add, remove, remaining } = useTodoList()
+</script>
+
+<template>
+  <div>
+    <input v-model="newTodo" placeholder="输入待办..." @keyup.enter="add" />
+    <button @click="add">添加</button>
+  </div>
+  <ul>
+    <li v-for="todo in todos" :key="todo.id">
+      {{ todo.text }}
+      <button @click="remove(todo.id)">删除</button>
+    </li>
+  </ul>
+  <p>剩余 {{ remaining }} 项</p>
+</template>
+```
+
+```js [useTodoList.js]
+import { ref, computed } from 'vue'
+import { useInput } from './useInput.js'
+
+// 聚合 composable：内部调用子 composable，把「输入」和「列表管理」分开
+export function useTodoList() {
+  const { value: newTodo, reset } = useInput()
+  const todos = ref([
+    { id: 1, text: '学习 Vue 组合式函数' },
+    { id: 2, text: '写精读笔记' },
+  ])
+
+  let nextId = 3
+
+  function add() {
+    const text = newTodo.value.trim()
+    if (!text) return
+    todos.value.push({ id: nextId++, text })
+    reset()
+  }
+
+  function remove(id) {
+    todos.value = todos.value.filter((t) => t.id !== id)
+  }
+
+  const remaining = computed(() => todos.value.length)
+
+  return { newTodo, todos, add, remove, remaining }
+}
+```
+
+```js [useInput.js]
+import { ref } from 'vue'
+
+// 独立的小 composable：封装输入框的值管理和重置
+export function useInput(initial = '') {
+  const value = ref(initial)
+  function reset() {
+    value.value = initial
+  }
+  return { value, reset }
+}
+```
+
+:::
+
+---
+
+## 17. 💻 demos.7 - composable 的调用限制与 Options API 中的使用
+
+::: code-group
+
+```html [App.vue]
+<script setup>
+  import { useMouse } from './useMouse.js'
+
+  // ✅ 在 <script setup> 中同步调用 composable
+  const { x, y } = useMouse()
+</script>
+
+<template>
+  <p>&lt;script setup&gt; 中调用：{{ x }}, {{ y }}</p>
+</template>
+```
+
+```html [OptionsApiDemo.vue]
+<script>
+  import { useMouse } from './useMouse.js'
+
+  // Options API 中使用 composable，必须在 setup() 里调用
+  // 返回值要从 setup() 中 return，才能暴露给模板和 this
+  export default {
+    setup() {
+      const { x, y } = useMouse()
+      return { x, y }
+    },
+    mounted() {
+      // setup 暴露的属性可通过 this 访问
+      console.log('Options API 中通过 this 访问：', this.x, this.y)
+    },
+  }
+</script>
+
+<template>
+  <p>Options API 中调用：{{ x }}, {{ y }}</p>
+</template>
+```
+
+```js [useMouse.js]
+import { ref, onMounted, onUnmounted } from 'vue'
+
+// 标准 composable：可在 <script setup> 和 setup() 中调用
+export function useMouse() {
+  const x = ref(0)
+  const y = ref(0)
+
+  const update = (e) => {
+    x.value = e.pageX
+    y.value = e.pageY
+  }
+  onMounted(() => window.addEventListener('mousemove', update))
+  onUnmounted(() => window.removeEventListener('mousemove', update))
+
+  return { x, y }
+}
+```
+
+:::
+
+## 18. 🔗 引用
 
 - [Vue.js 官方文档 - 组合式函数][1]
-- [Vue.js 官方文档 - 状态管理][2]
-- [Vue.js 官方文档 - 测试组合式函数][3]
 
 [1]: https://cn.vuejs.org/guide/reusability/composables.html
-[2]: https://cn.vuejs.org/guide/scaling-up/state-management.html
-[3]: https://cn.vuejs.org/guide/scaling-up/testing.html#testing-composables
