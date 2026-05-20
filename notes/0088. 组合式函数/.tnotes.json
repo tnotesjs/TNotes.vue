@@ -2,10 +2,10 @@
   "bilibili": [],
   "tnotes": [],
   "yuque": [],
-  "done": false,
-  "enableDiscussions": false,
-  "description": "",
+  "done": true,
+  "enableDiscussions": true,
+  "description": "“组合式函数”(Composables) 是一个利用 Vue 的组合式 API 来封装和复用有状态逻辑的函数。是 Vue3 中主要推荐的一种逻辑复用模式。",
   "id": "b7656b0a-0b0d-4085-8b2b-e20b270b8ed9",
   "created_at": 1778413057404,
-  "updated_at": 1778413057404
+  "updated_at": 1779262782638
 }

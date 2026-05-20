@@ -19,9 +19,9 @@
 - [12. 💻 demos.2 - 组合式函数的嵌套组合](#12--demos2---组合式函数的嵌套组合)
 - [13. 💻 demos.3 - 返回 ref 而非 reactive 以保留解构后的响应性](#13--demos3---返回-ref-而非-reactive-以保留解构后的响应性)
 - [14. 💻 demos.4 - 响应式参数设计：toValue + watchEffect](#14--demos4---响应式参数设计tovalue--watcheffect)
-- [15. 💻 demos.5 - 副作用清理与生命周期挂靠](#15--demos5---副作用清理与生命周期挂靠)
-- [16. 💻 demos.6 - 用 composable 改善代码组织（多个 composable 协作）](#16--demos6---用-composable-改善代码组织多个-composable-协作)
-- [17. 💻 demos.7 - composable 的调用限制与 Options API 中的使用](#17--demos7---composable-的调用限制与-options-api-中的使用)
+- [15. 💻 demos.5 - composable 的生命周期绑定到宿主组件](#15--demos5---composable-的生命周期绑定到宿主组件)
+- [16. 💻 demos.6 - TODO LIST 示例](#16--demos6---todo-list-示例)
+- [17. 💻 demos.7 - composable 在 `<script setup>` 和非 `<script setup>` 中的写法差异](#17--demos7---composable-在-script-setup-和非-script-setup-中的写法差异)
 - [18. 🔗 引用](#18--引用)
 
 <!-- endregion:toc -->
@@ -39,7 +39,9 @@
 
 ## 2. 🫧 评价
 
-这一节的高频内容是「怎么写、怎么用、怎么设计返回值」，你在业务开发里会频繁遇到。像和 mixin、无渲染组件的对比属于理解型知识点，先知道为什么官方更推荐组合式函数就够了。
+composables 是 Vue 3 最核心的设计之一，它提供了一种全新的方式来组织和复用组件逻辑，极大地提升了代码的可维护性和可组合性。
+
+掌握 composable 的基本写法其实不难，我们日常组件咋写，composables 就可以咋写，它里边儿能正常使用 Vue 3 的 API（包括响应式 API、生命周期钩子等），难点在于合理拆分逻辑、明确 composable 的边界设计上。
 
 ## 3. 🤔 什么是组合式函数？
 
@@ -559,32 +561,47 @@ export function useFetch(url) {
 
 :::
 
----
+![gif](./assets/3.gif)
 
-## 15. 💻 demos.5 - 副作用清理与生命周期挂靠
+## 15. 💻 demos.5 - composable 的生命周期绑定到宿主组件
 
 ::: code-group
 
 ```html [App.vue]
 <script setup>
   import { ref } from 'vue'
-  import { useTimer } from './useTimer.js'
+  import TimerDemo from './TimerDemo.vue'
 
-  // composable 内部管理了定时器的启动与清理
-  const { count, pause, resume } = useTimer(1000)
   const show = ref(true)
 </script>
 
 <template>
-  <button @click="show = false">卸载子组件（触发清理）</button>
-  <button @click="show = true">重新挂载</button>
+  <p>
+    <button @click="show = false">卸载子组件（触发 onUnmounted 清理）</button>
+  </p>
+  <p>
+    <button @click="show = true">重新挂载（触发 onMounted 重启）</button>
+  </p>
   <hr />
-  <div v-if="show">
-    <p>计数：{{ count }}</p>
-    <button @click="pause">暂停</button>
-    <button @click="resume">恢复</button>
-  </div>
+  <!-- v-if=false 时，TimerDemo 组件会被卸载，触发其内部 composable 的 onUnmounted -->
+  <TimerDemo v-if="show" />
   <p v-else style="color: gray;">组件已卸载，定时器已清理</p>
+</template>
+```
+
+```html [TimerDemo.vue]
+<script setup>
+  import { useTimer } from './useTimer.js'
+
+  // composable 的生命周期钩子绑定到当前组件实例
+  // 当 TimerDemo 被卸载时，onUnmounted 会自动执行清理逻辑
+  const { count, pause, resume } = useTimer(1000)
+</script>
+
+<template>
+  <p>计数：{{ count }}</p>
+  <button @click="pause">暂停</button>
+  <button @click="resume">恢复</button>
 </template>
 ```
 
@@ -607,7 +624,8 @@ export function useTimer(interval = 1000) {
     timer = null
   }
 
-  // 关键：组件卸载时清理副作用，防止内存泄漏
+  // 关键：composable 内部的生命周期钩子绑定到调用它的组件实例
+  // 当组件卸载时，Vue 自动调用此回调，清理定时器，防止内存泄漏
   onUnmounted(() => {
     clearInterval(timer)
     timer = null
@@ -622,9 +640,9 @@ export function useTimer(interval = 1000) {
 
 :::
 
----
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-20-15-18-09.png)
 
-## 16. 💻 demos.6 - 用 composable 改善代码组织（多个 composable 协作）
+## 16. 💻 demos.6 - TODO LIST 示例
 
 ::: code-group
 
@@ -697,13 +715,15 @@ export function useInput(initial = '') {
 
 :::
 
----
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-20-15-21-56.png)
 
-## 17. 💻 demos.7 - composable 的调用限制与 Options API 中的使用
+每个 composable 负责一个单一的功能点，组件本身只关注「怎么渲染」，复杂逻辑则拆到独立文件中。这样代码更清晰，也更容易维护。
+
+## 17. 💻 demos.7 - composable 在 `<script setup>` 和非 `<script setup>` 中的写法差异
 
 ::: code-group
 
-```html [App.vue]
+```html [App.vue（setup）]
 <script setup>
   import { useMouse } from './useMouse.js'
 
@@ -712,11 +732,11 @@ export function useInput(initial = '') {
 </script>
 
 <template>
-  <p>&lt;script setup&gt; 中调用：{{ x }}, {{ y }}</p>
+  <p>鼠标位置：{{ x }}, {{ y }}</p>
 </template>
 ```
 
-```html [OptionsApiDemo.vue]
+```html [App.vue（非 setup）]
 <script>
   import { useMouse } from './useMouse.js'
 
@@ -735,7 +755,7 @@ export function useInput(initial = '') {
 </script>
 
 <template>
-  <p>Options API 中调用：{{ x }}, {{ y }}</p>
+  <p>鼠标位置：{{ x }}, {{ y }}</p>
 </template>
 ```
 
@@ -759,6 +779,13 @@ export function useMouse() {
 ```
 
 :::
+
+![gif](./assets/1.gif)
+
+两种写法的最终效果都是一样的，都是在组件中使用 `useMouse()` 组合式函数来获取鼠标坐标。区别在于：
+
+- `<script setup>` 语法更简洁，直接在顶层调用 `useMouse()`，不需要显式写 `setup()` 函数。
+- 非 `<script setup>` 语法需要在 `setup()` 函数里调用 `useMouse()`，并且要把返回值通过 `return` 暴露出来，才能在模板中使用。
 
 ## 18. 🔗 引用
 
