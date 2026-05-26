@@ -21,7 +21,15 @@
   - [8.2. 本质区别](#82-本质区别)
   - [8.3. 调用时机的关系](#83-调用时机的关系)
   - [8.4. 小结](#84-小结)
-- [9. 🔗 引用](#9--引用)
+- [9. 💻 demos.1 - 局部注册与基本用法](#9--demos1---局部注册与基本用法)
+- [10. 💻 demos.2 - 函数简写](#10--demos2---函数简写)
+- [11. 💻 demos.3 - 指令钩子与 binding 参数](#11--demos3---指令钩子与-binding-参数)
+- [12. 💻 demos.4 - 对象字面量传值](#12--demos4---对象字面量传值)
+- [13. 💻 demos.5 - 全局注册](#13--demos5---全局注册)
+- [14. 💻 demos.6 - 通过 dataset 共享钩子间数据](#14--demos6---通过-dataset-共享钩子间数据)
+- [15. 💻 demos.7 - 指令不推荐用在组件上](#15--demos7---指令不推荐用在组件上)
+- [16. 💻 demos.8 - 指令钩子与组件钩子的调用顺序](#16--demos8---指令钩子与组件钩子的调用顺序)
+- [17. 🔗 引用](#17--引用)
 
 <!-- endregion:toc -->
 
@@ -445,7 +453,451 @@ export interface ObjectDirective<
 - `before*` 类钩子：组件先于指令（组件先开始渲染/更新/卸载，指令在子树处理中才触发）
 - `mounted/updated/unmounted` 类钩子：指令先于组件（指令在子树处理中先入队，组件在子树处理完成后才入队）
 
-## 9. 🔗 引用
+## 9. 💻 demos.1 - 局部注册与基本用法
+
+::: code-group
+
+```html [App.vue]
+<template>
+  <!-- v-focus：页面加载后自动聚焦 -->
+  <input v-focus placeholder="页面加载后我会自动聚焦" />
+
+  <!-- v-highlight：插入 DOM 后添加高亮样式 -->
+  <p v-highlight>这段文字被指令高亮了</p>
+  <p>这段文字是普通的</p>
+</template>
+
+<script setup>
+  // 在 <script setup> 中，变量名以 v 开头且驼峰命名即可直接在模板中使用
+  // vFocus 模板中写 v-focus
+  const vFocus = {
+    mounted(el) {
+      el.focus()
+    },
+  }
+
+  // vHighlight 模板中写 v-highlight
+  const vHighlight = {
+    mounted(el) {
+      el.style.backgroundColor = '#fff3bf'
+    },
+  }
+</script>
+```
+
+:::
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-21-16-42-38.png)
+
+## 10. 💻 demos.2 - 函数简写
+
+::: code-group
+
+```html [App.vue]
+<template>
+  <p>颜色：<input v-model="color" /></p>
+  <!-- 指令值变化时，函数简写会自动在 mounted 和 updated 中执行同一段逻辑 -->
+  <p v-color="color">我的颜色会随输入变化（当前: {{ color }}）</p>
+  <p v-color="'teal'">我是固定的 teal 色</p>
+</template>
+
+<script setup>
+  import { ref } from 'vue'
+
+  const color = ref('cornflowerblue')
+
+  // 函数简写：等价于在 mounted + updated 中执行相同逻辑
+  // 适合简单的值同步场景（颜色、尺寸、属性等）
+  const vColor = (el, binding) => {
+    el.style.color = binding.value
+  }
+</script>
+```
+
+:::
+
+默认的 cornflowerblue：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-21-16-48-36.png)
+
+改为 red：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-21-16-48-45.png)
+
+## 11. 💻 demos.3 - 指令钩子与 binding 参数
+
+::: code-group
+
+```html [App.vue]
+<template>
+  <p>颜色：<input v-model="color" style="width:120px" /></p>
+  <!--
+    :color   → arg = 'color'
+    .bold    → modifiers = { bold: true }
+    "color"  → value = color ref 的当前值
+  -->
+  <p v-if="isVisible" v-demo:color.bold="color">
+    打开控制台查看各钩子的触发与 binding 参数
+  </p>
+  <button @click="color = 'tomato'">改为 tomato</button>
+  <button @click="color = 'cornflowerblue'">改为 cornflowerblue</button>
+  <button @click="isVisible = false">卸载元素</button>
+</template>
+
+<script setup>
+  import { ref } from 'vue'
+
+  const color = ref('teal')
+  const isVisible = ref(true)
+
+  // 完整指令对象包含 7 个钩子，最常用的是 mounted / updated / unmounted
+  const vDemo = {
+    // created: 元素创建后、属性设置前
+    created(el, binding) {
+      console.log('[created]', {
+        arg: binding.arg,
+        modifiers: binding.modifiers,
+      })
+    },
+    // beforeMount: 元素插入 DOM 前
+    beforeMount(el, binding) {
+      console.log('[beforeMount] value:', binding.value)
+    },
+    // mounted: 元素已插入 DOM，可安全操作
+    mounted(el, binding) {
+      // binding.value      → 绑定值
+      // binding.arg        → 参数（冒号后的字符串）
+      // binding.modifiers  → 修饰符对象
+      // binding.instance   → 当前组件实例
+      // binding.dir        → 指令定义对象
+      console.log('[mounted]', {
+        value: binding.value,
+        arg: binding.arg,
+        modifiers: binding.modifiers,
+      })
+      applyStyle(el, binding)
+    },
+    // beforeUpdate: 元素更新前，oldValue 可用
+    beforeUpdate(el, binding) {
+      console.log('[beforeUpdate]', {
+        value: binding.value,
+        oldValue: binding.oldValue,
+      })
+    },
+    // updated: 元素及其子节点更新完成后
+    updated(el, binding) {
+      console.log('[updated]', {
+        value: binding.value,
+        oldValue: binding.oldValue,
+      })
+      applyStyle(el, binding)
+    },
+    beforeUnmount() {
+      console.log('[beforeUnmount]')
+    },
+    unmounted() {
+      console.log('[unmounted]')
+    },
+  }
+
+  function applyStyle(el, binding) {
+    el.style.color = binding.value
+    el.style.fontWeight = binding.modifiers.bold ? 'bold' : 'normal'
+  }
+</script>
+```
+
+:::
+
+测试流程：
+
+1. 页面首次渲染
+2. 点击「改为 tomato」
+3. 点击「改为 cornflowerblue」
+4. 点击「卸载元素」
+
+::: swiper
+
+![1](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-21-16-56-12.png)
+
+![2](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-21-16-55-37.png)
+
+![3](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-21-16-55-46.png)
+
+![4](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-21-17-03-11.png)
+
+:::
+
+控制台输出：
+
+::: code-group
+
+```[1]
+[created] {
+    "arg": "color",
+    "modifiers": {
+        "bold": true
+    }
+}
+[beforeMount] value: teal
+[mounted] {
+    "value": "teal",
+    "arg": "color",
+    "modifiers": {
+        "bold": true
+    }
+}
+```
+
+```[2]
+[beforeUpdate] {value: 'tomato', oldValue: 'teal'}
+[updated] {value: 'tomato', oldValue: 'teal'}
+```
+
+```[3]
+[beforeUpdate] {value: 'cornflowerblue', oldValue: 'tomato'}
+[updated] {value: 'cornflowerblue', oldValue: 'tomato'}
+```
+
+```[4]
+[beforeUnmount]
+[unmounted]
+```
+
+:::
+
+## 12. 💻 demos.4 - 对象字面量传值
+
+::: code-group
+
+```html [App.vue]
+<template>
+  <!-- 传入对象字面量时，binding.value 就是整个对象 -->
+  <p v-style="{ color: 'white', backgroundColor: 'teal', padding: '8px' }">
+    通过对象字面量传入多个样式配置
+  </p>
+  <p
+    v-style="{ color: 'white', backgroundColor: 'rebeccapurple', padding: '8px' }"
+  >
+    同一个指令，不同配置
+  </p>
+</template>
+
+<script setup>
+  // 适合一次传递多个配置项的场景
+  const vStyle = (el, binding) => {
+    // binding.value 就是传入的对象 { color, backgroundColor, padding }
+    const { color, backgroundColor, padding } = binding.value
+    Object.assign(el.style, { color, backgroundColor, padding })
+  }
+</script>
+```
+
+:::
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-21-17-10-14.png)
+
+## 13. 💻 demos.5 - 全局注册
+
+::: code-group
+
+```js [main.js]
+import { createApp } from 'vue'
+import App from './App.vue'
+
+const app = createApp(App)
+
+// 全局注册：所有组件均可直接使用 v-focus，无需重复声明
+app.directive('focus', {
+  mounted(el) {
+    el.focus()
+  },
+})
+
+app.mount('#app')
+```
+
+```html [App.vue]
+<template>
+  <h4>App 中使用 v-focus</h4>
+  <input v-focus placeholder="App 中的输入框" />
+  <hr />
+  <ChildComp />
+</template>
+
+<script setup>
+  import ChildComp from './ChildComp.vue'
+</script>
+```
+
+```html [ChildComp.vue]
+<template>
+  <h4>ChildComp 中使用 v-focus（无需局部注册）</h4>
+  <input v-focus placeholder="子组件中的输入框" />
+</template>
+```
+
+:::
+
+## 14. 💻 demos.6 - 通过 dataset 共享钩子间数据
+
+::: code-group
+
+```html [App.vue]
+<template>
+  <!--
+    binding 参数除 el 外都是只读的
+    不同钩子间共享数据推荐通过 el.dataset 实现
+  -->
+  <p v-track="{ id: 101, event: 'click' }" @click="handleClick">
+    点击我 —— 指令通过 dataset 存储了数据
+  </p>
+  <p v-if="info">{{ info }}</p>
+</template>
+
+<script setup>
+  import { ref } from 'vue'
+
+  const info = ref('')
+
+  const vTrack = {
+    mounted(el, binding) {
+      // 写入 dataset，后续钩子或事件处理器均可读取
+      el.dataset.trackId = binding.value.id
+      el.dataset.trackEvent = binding.value.event
+      el.style.cursor = 'pointer'
+      el.style.textDecoration = 'underline'
+    },
+    updated(el, binding) {
+      // updated 中可以读到 mounted 时写入的 dataset
+      console.log('[updated] dataset:', { ...el.dataset })
+    },
+  }
+
+  function handleClick(e) {
+    const { trackId, trackEvent } = e.target.dataset
+    info.value = `命中埋点 → id=${trackId}, event=${trackEvent}`
+  }
+</script>
+```
+
+:::
+
+## 15. 💻 demos.7 - 指令不推荐用在组件上
+
+::: code-group
+
+```html [App.vue]
+<template>
+  <h4>1. 指令用在原生元素上 ✓ 推荐</h4>
+  <input v-focus placeholder="我会正常聚焦" />
+
+  <h4>2. 指令用在单根节点组件（行为不稳定）</h4>
+  <!-- 指令会落到 MyInput 的根 <input> 上，但组件内部结构一旦变化行为就可能改变 -->
+  <MyInput v-focus placeholder="透传到根元素" />
+
+  <h4>3. 指令用在多根节点组件（被忽略 + 控制台警告）</h4>
+  <!-- Vue 无法确定应用到哪个根节点，直接忽略 -->
+  <MultiRoot v-focus />
+</template>
+
+<script setup>
+  import MyInput from './MyInput.vue'
+  import MultiRoot from './MultiRoot.vue'
+
+  const vFocus = {
+    mounted(el) {
+      el.focus()
+      console.log('v-focus 作用于:', el.tagName)
+    },
+  }
+</script>
+```
+
+```html [MyInput.vue]
+<template>
+  <!-- 单根节点：指令会落到这个根元素上，但属于不可靠行为 -->
+  <input placeholder="我是 MyInput 组件" />
+</template>
+```
+
+```html [MultiRoot.vue]
+<template>
+  <!-- 多根节点：指令无法确定目标，会被忽略并产生警告 -->
+  <input placeholder="input 1" />
+  <input placeholder="input 2" />
+</template>
+```
+
+:::
+
+## 16. 💻 demos.8 - 指令钩子与组件钩子的调用顺序
+
+::: code-group
+
+```html [App.vue]
+<template>
+  <button @click="show = !show">挂载/卸载 Child</button>
+  <button @click="count++">触发更新（count={{ count }}）</button>
+  <hr />
+  <Child v-if="show" :count="count" />
+  <p>打开控制台查看完整的触发顺序</p>
+</template>
+
+<script setup>
+  import { ref } from 'vue'
+  import Child from './Child.vue'
+  const show = ref(true)
+  const count = ref(0)
+</script>
+```
+
+```html [Child.vue]
+<template>
+  <p v-timing="count">count = {{ count }}</p>
+</template>
+
+<script setup>
+  import {
+    onBeforeMount,
+    onMounted,
+    onBeforeUpdate,
+    onUpdated,
+    onBeforeUnmount,
+    onUnmounted,
+  } from 'vue'
+
+  defineProps({ count: Number })
+
+  // ==================== 组件钩子 ====================
+  // setup 本身等价于 Options API 的 created，最先执行
+  console.log('① 组件 setup (同步)')
+  onBeforeMount(() => console.log('② 组件 beforeMount (同步)'))
+  onMounted(() => console.log('⑥ 组件 mounted (排队，后于指令)'))
+  onBeforeUpdate(() => console.log('⑦ 组件 beforeUpdate (同步)'))
+  onUpdated(() => console.log('⑩ 组件 updated (排队，后于指令)'))
+  onBeforeUnmount(() => console.log('⑪ 组件 beforeUnmount (同步)'))
+  onUnmounted(() => console.log('⑭ 组件 unmounted (排队，后于指令)'))
+
+  // ==================== 指令钩子 ====================
+  // 规律：
+  //   before* 类 → 组件先触发，指令后触发（指令在子树处理中才同步执行）
+  //   完成类     → 指令先入队，组件后入队（flush 时指令先执行）
+  const vTiming = {
+    created: () => console.log('③ 指令 created (同步)'),
+    beforeMount: () => console.log('④ 指令 beforeMount (同步)'),
+    mounted: () => console.log('⑤ 指令 mounted (排队，先于组件)'),
+    beforeUpdate: () => console.log('⑧ 指令 beforeUpdate (同步)'),
+    updated: () => console.log('⑨ 指令 updated (排队，先于组件)'),
+    beforeUnmount: () => console.log('⑫ 指令 beforeUnmount (同步)'),
+    unmounted: () => console.log('⑬ 指令 unmounted (排队，先于组件)'),
+  }
+</script>
+```
+
+:::
+
+## 17. 🔗 引用
 
 - [Vue.js 官方文档 - 自定义指令][1]
 - [MDN - HTMLElement.dataset][2]
