@@ -86,7 +86,7 @@
 
 - [ ] [0080. 逻辑复用](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0080.%20%E9%80%BB%E8%BE%91%E5%A4%8D%E7%94%A8/README.md)
 - [x] [0088. 组合式函数](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0088.%20%E7%BB%84%E5%90%88%E5%BC%8F%E5%87%BD%E6%95%B0/README.md)
-- [ ] [0090. 自定义指令](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0090.%20%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E4%BB%A4/README.md)
+- [x] [0090. 自定义指令](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0090.%20%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E4%BB%A4/README.md)
 - [ ] [0089. 插件](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0089.%20%E6%8F%92%E4%BB%B6/README.md)
 
 ## 7. 内置组件

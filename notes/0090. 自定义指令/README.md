@@ -14,22 +14,23 @@
 - [5. 🤔 指令对象有哪些生命周期钩子？每个钩子的参数分别都有哪些？](#5--指令对象有哪些生命周期钩子每个钩子的参数分别都有哪些)
   - [5.1. 钩子列表](#51-钩子列表)
   - [5.2. 钩子参数](#52-钩子参数)
-- [6. 🤔 什么时候可以用函数简写或对象字面量？](#6--什么时候可以用函数简写或对象字面量)
-- [7. 🤔 为什么不推荐把自定义指令直接用在组件上？](#7--为什么不推荐把自定义指令直接用在组件上)
-- [8. 🤔 自定义指令的生命周期钩子和组件的生命周期钩子之间有什么关系吗？它们是互相独立的吗？【深入源码】](#8--自定义指令的生命周期钩子和组件的生命周期钩子之间有什么关系吗它们是互相独立的吗深入源码)
-  - [8.1. 核心源码](#81-核心源码)
-  - [8.2. 本质区别](#82-本质区别)
-  - [8.3. 调用时机的关系](#83-调用时机的关系)
-  - [8.4. 小结](#84-小结)
-- [9. 💻 demos.1 - 局部注册与基本用法](#9--demos1---局部注册与基本用法)
-- [10. 💻 demos.2 - 函数简写](#10--demos2---函数简写)
-- [11. 💻 demos.3 - 指令钩子与 binding 参数](#11--demos3---指令钩子与-binding-参数)
-- [12. 💻 demos.4 - 对象字面量传值](#12--demos4---对象字面量传值)
-- [13. 💻 demos.5 - 全局注册](#13--demos5---全局注册)
-- [14. 💻 demos.6 - 通过 dataset 共享钩子间数据](#14--demos6---通过-dataset-共享钩子间数据)
-- [15. 💻 demos.7 - 指令不推荐用在组件上](#15--demos7---指令不推荐用在组件上)
-- [16. 💻 demos.8 - 指令钩子与组件钩子的调用顺序](#16--demos8---指令钩子与组件钩子的调用顺序)
-- [17. 🔗 引用](#17--引用)
+- [6. 🤔 封装一个自定义指令的时候使用函数简写是什么意思？](#6--封装一个自定义指令的时候使用函数简写是什么意思)
+- [7. 🤔 自定义指令在模板中被使用时，可以直接通过对象字面量的形式传递整个对象吗？](#7--自定义指令在模板中被使用时可以直接通过对象字面量的形式传递整个对象吗)
+- [8. 🤔 为什么不推荐把自定义指令直接用在组件上？](#8--为什么不推荐把自定义指令直接用在组件上)
+- [9. 🤔 自定义指令的生命周期钩子和组件的生命周期钩子之间有什么关系吗？它们是互相独立的吗？【深入源码】](#9--自定义指令的生命周期钩子和组件的生命周期钩子之间有什么关系吗它们是互相独立的吗深入源码)
+  - [9.1. 核心源码](#91-核心源码)
+  - [9.2. 本质区别](#92-本质区别)
+  - [9.3. 调用时机的关系](#93-调用时机的关系)
+  - [9.4. 小结](#94-小结)
+- [10. 💻 demos.1 - 局部注册与基本用法](#10--demos1---局部注册与基本用法)
+- [11. 💻 demos.2 - 函数简写](#11--demos2---函数简写)
+- [12. 💻 demos.3 - 指令钩子与 binding 参数](#12--demos3---指令钩子与-binding-参数)
+- [13. 💻 demos.4 - 对象字面量传值](#13--demos4---对象字面量传值)
+- [14. 💻 demos.5 - 全局注册](#14--demos5---全局注册)
+- [15. 💻 demos.6 - 通过 dataset 共享钩子间数据](#15--demos6---通过-dataset-共享钩子间数据)
+- [16. 💻 demos.7 - 指令不推荐用在组件上](#16--demos7---指令不推荐用在组件上)
+- [17. 💻 demos.8 - 指令钩子与组件钩子的调用顺序](#17--demos8---指令钩子与组件钩子的调用顺序)
+- [18. 🔗 引用](#18--引用)
 
 <!-- endregion:toc -->
 
@@ -46,7 +47,7 @@
 
 ## 2. 🫧 评价
 
-自定义指令在日常业务里没有组件、组合式函数那么高频，但它很适合解决「必须直接碰 DOM」的问题。
+自定义指令在日常业务里没有组件、组合式函数那么高频，但它很适合解决“必须直接碰 DOM”的问题。
 
 ## 3. 🤔 什么是自定义指令，什么时候才该用？
 
@@ -58,15 +59,15 @@
 
 ### 3.1. 自定义指令（Custom Directives）
 
-自定义指令（Custom Directives）是 Vue 提供的一种扩展机制，用来复用「依赖底层 DOM 操作」的逻辑。
+自定义指令（Custom Directives）是 Vue 提供的一种扩展机制，用来复用依赖底层 DOM 操作的逻辑。
 
-自定义指令不是 Components 的替代品，也不是 Composables 的替代品，它主要解决的是「普通元素上的 DOM 行为复用问题」。
+自定义指令不是 Components 的替代品，也不是 Composables 的替代品，它主要解决的是普通元素上的 DOM 行为复用问题。
 
 ### 3.2. 使用时机
 
 官方给出的判断标准很直接：只有当某个功能必须通过直接操作 DOM 才能实现时，才应该考虑自定义指令。
 
-比如：让一个输入框在插入页面后自动获取焦点，这就很适合用指令：
+比如，让一个输入框在插入页面后自动获取焦点，这就很适合用指令：
 
 ```html
 <template>
@@ -90,6 +91,7 @@
 - 抽 UI 结构
 - 复用有状态逻辑
 - 统一数据流
+- ……
 
 那你应该优先考虑 Components、Props、Slots、Composables，而不是 Custom Directives。
 
@@ -264,7 +266,7 @@ const myDirective = {
 
 :::
 
-## 6. 🤔 什么时候可以用函数简写或对象字面量？
+## 6. 🤔 封装一个自定义指令的时候使用函数简写是什么意思？
 
 如果你的指令只需要在指令的 `mounted` 和 `updated` 两个钩子中执行相同逻辑，可以直接使用函数简写。
 
@@ -276,6 +278,13 @@ app.directive('color', (el, binding) => {
 ```
 
 这个写法等价于“在 `mounted` 和 `updated` 钩子中都运行这段逻辑”。它非常适合一些简单场景，比如同步颜色、尺寸、属性值。
+
+选择建议：
+
+- 优先考虑函数简写：常见场景，比如只需要在指令的 `mounted` 和 `updated` 两个钩子中执行相同逻辑
+- 需要走完整指令对象：场景较为复杂，比如需要在多个钩子中执行不同逻辑
+
+## 7. 🤔 自定义指令在模板中被使用时，可以直接通过对象字面量的形式传递整个对象吗？
 
 如果你需要一次传多个配置项，可以直接给指令传对象字面量：
 
@@ -294,12 +303,7 @@ app.directive('demo', (el, binding) => {
 })
 ```
 
-选择建议：
-
-- 优先考虑函数简写：常见场景，比如只需要在指令的 `mounted` 和 `updated` 两个钩子中执行相同逻辑
-- 需要走完整指令对象：场景较为复杂，比如需要在多个钩子中执行不同逻辑
-
-## 7. 🤔 为什么不推荐把自定义指令直接用在组件上？
+## 8. 🤔 为什么不推荐把自定义指令直接用在组件上？
 
 ::: details 看看官方原话
 
@@ -321,18 +325,18 @@ app.directive('demo', (el, binding) => {
 - 指令拿到的 DOM 元素不可靠 => 你很难从组件外部稳定控制它真正作用到哪个 DOM，组件内部结构稍微变化，指令行为就可能跟着变化。
 - 子组件内部无法派发指令到特定元素 => 透传 Attributes 可以在子组件内部通过 `$attrs` 精确派发调用方传入的 arrts 到特定元素身上，但指令不能像 `$attrs` 那样轻松转发给内部另一个元素。
 
-因此更稳妥的做法是：把指令直接写在你明确知道的原生元素上，而不是压在组件标签上赌实现细节。
+因此，更稳妥的做法是：把指令直接写在你明确知道的原生元素上，而不是压在组件标签上赌实现细节。
 
-## 8. 🤔 自定义指令的生命周期钩子和组件的生命周期钩子之间有什么关系吗？它们是互相独立的吗？【深入源码】
+## 9. 🤔 自定义指令的生命周期钩子和组件的生命周期钩子之间有什么关系吗？它们是互相独立的吗？【深入源码】
 
 两者名称相似，但它们是「完全独立的两套机制」，作用对象、参数、调用位置都不同。不过它们的触发时机是由渲染器协调的，存在固定的先后顺序关系。
 
-### 8.1. 核心源码
+### 9.1. 核心源码
 
 - github.com/vuejs/core -> packages/runtime-core/src/directives.ts
 - github.com/vuejs/core -> packages/runtime-core/src/renderer.ts
 
-### 8.2. 本质区别
+### 9.2. 本质区别
 
 |  | 组件钩子 | 指令钩子 |
 | --- | --- | --- |
@@ -381,7 +385,7 @@ export interface ObjectDirective<
 }
 ```
 
-### 8.3. 调用时机的关系
+### 9.3. 调用时机的关系
 
 ::: code-group
 
@@ -440,7 +444,7 @@ export interface ObjectDirective<
 
 :::
 
-### 8.4. 小结
+### 9.4. 小结
 
 「自定义指令的生命周期钩子」和「组件的生命周期钩子」不是一个东西，它们是互相独立的，它们之间的触发顺序规律如下：
 
@@ -453,7 +457,7 @@ export interface ObjectDirective<
 - `before*` 类钩子：组件先于指令（组件先开始渲染/更新/卸载，指令在子树处理中才触发）
 - `mounted/updated/unmounted` 类钩子：指令先于组件（指令在子树处理中先入队，组件在子树处理完成后才入队）
 
-## 9. 💻 demos.1 - 局部注册与基本用法
+## 10. 💻 demos.1 - 局部注册与基本用法
 
 ::: code-group
 
@@ -489,7 +493,7 @@ export interface ObjectDirective<
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-21-16-42-38.png)
 
-## 10. 💻 demos.2 - 函数简写
+## 11. 💻 demos.2 - 函数简写
 
 ::: code-group
 
@@ -524,7 +528,7 @@ export interface ObjectDirective<
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-21-16-48-45.png)
 
-## 11. 💻 demos.3 - 指令钩子与 binding 参数
+## 12. 💻 demos.3 - 指令钩子与 binding 参数
 
 ::: code-group
 
@@ -618,11 +622,11 @@ export interface ObjectDirective<
 
 ::: swiper
 
-![1](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-21-16-56-12.png)
+![1](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-27-21-30-40.png)
 
-![2](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-21-16-55-37.png)
+![2](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-27-21-30-53.png)
 
-![3](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-21-16-55-46.png)
+![3](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-27-21-31-06.png)
 
 ![4](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-21-17-03-11.png)
 
@@ -666,7 +670,7 @@ export interface ObjectDirective<
 
 :::
 
-## 12. 💻 demos.4 - 对象字面量传值
+## 13. 💻 demos.4 - 对象字面量传值
 
 ::: code-group
 
@@ -697,7 +701,7 @@ export interface ObjectDirective<
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-21-17-10-14.png)
 
-## 13. 💻 demos.5 - 全局注册
+## 14. 💻 demos.5 - 全局注册
 
 ::: code-group
 
@@ -722,6 +726,11 @@ app.mount('#app')
   <h4>App 中使用 v-focus</h4>
   <input v-focus placeholder="App 中的输入框" />
   <hr />
+  <!-- 
+  页面上的多个输入框无法同时聚焦
+  如果将 ChildComp 注释掉，那么 App 组件中的 Input 会自动聚焦。
+  如果渲染 ChildComp，那么后渲染的 ChildComp 中的 Input 会抢占焦点。
+   -->
   <ChildComp />
 </template>
 
@@ -739,7 +748,9 @@ app.mount('#app')
 
 :::
 
-## 14. 💻 demos.6 - 通过 dataset 共享钩子间数据
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-27-21-42-48.png)
+
+## 15. 💻 demos.6 - 通过 dataset 共享钩子间数据
 
 ::: code-group
 
@@ -783,32 +794,53 @@ app.mount('#app')
 
 :::
 
-## 15. 💻 demos.7 - 指令不推荐用在组件上
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-27-21-49-33.png)
+
+组件渲染之后，会触发钩子函数 `mounted`，在这个钩子函数中，我们通过 `el.dataset` 将一些数据存储在 DOM 元素上。
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-27-21-49-57.png)
+
+点击按钮之后的页面变化：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-27-21-44-36.png)
+
+此时 `info` 的值被更新为 `命中埋点 → id=101, event=click`，说明我们成功地通过 `dataset` 在指令钩子和事件处理器之间共享了数据。
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-27-21-48-03.png)
+
+对应的控制台输出：
+
+```
+[updated] dataset: {trackId: '101', trackEvent: 'click'}
+```
+
+## 16. 💻 demos.7 - 指令不推荐用在组件上
 
 ::: code-group
 
 ```html [App.vue]
 <template>
   <h4>1. 指令用在原生元素上 ✓ 推荐</h4>
-  <input v-focus placeholder="我会正常聚焦" />
+  <input v-highlight placeholder="我会正常高亮" />
 
   <h4>2. 指令用在单根节点组件（行为不稳定）</h4>
   <!-- 指令会落到 MyInput 的根 <input> 上，但组件内部结构一旦变化行为就可能改变 -->
-  <MyInput v-focus placeholder="透传到根元素" />
+  <MyInput v-highlight placeholder="透传到根元素" />
 
   <h4>3. 指令用在多根节点组件（被忽略 + 控制台警告）</h4>
   <!-- Vue 无法确定应用到哪个根节点，直接忽略 -->
-  <MultiRoot v-focus />
+  <MultiRoot v-highlight />
 </template>
 
 <script setup>
   import MyInput from './MyInput.vue'
   import MultiRoot from './MultiRoot.vue'
 
-  const vFocus = {
+  const vHighlight = {
     mounted(el) {
-      el.focus()
-      console.log('v-focus 作用于:', el.tagName)
+      el.style.backgroundColor = '#fff3bf'
+      el.style.outline = '2px solid #f0c040'
+      console.log('v-highlight 作用于:', el.tagName)
     },
   }
 </script>
@@ -831,7 +863,23 @@ app.mount('#app')
 
 :::
 
-## 16. 💻 demos.8 - 指令钩子与组件钩子的调用顺序
+最终渲染结果：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-27-21-58-44.png)
+
+::: warning
+
+Vue 的警告信息如下：
+
+```
+[Vue warn]: Runtime directive used on component with non-element root node. The directives will not function as intended.
+  at <MultiRoot>
+  at <Repl>
+```
+
+:::
+
+## 17. 💻 demos.8 - 指令钩子与组件钩子的调用顺序
 
 ::: code-group
 
@@ -897,7 +945,40 @@ app.mount('#app')
 
 :::
 
-## 17. 🔗 引用
+控制台输出：
+
+1. 页面首次渲染
+2. 点击更新按钮
+3. 点击卸载按钮
+
+::: code-group
+
+```[1]
+① 组件 setup (同步)
+② 组件 beforeMount (同步)
+③ 指令 created (同步)
+④ 指令 beforeMount (同步)
+⑤ 指令 mounted (排队，先于组件)
+⑥ 组件 mounted (排队，后于指令)
+```
+
+```[2]
+⑦ 组件 beforeUpdate (同步)
+⑧ 指令 beforeUpdate (同步)
+⑨ 指令 updated (排队，先于组件)
+⑩ 组件 updated (排队，后于指令)
+```
+
+```[3]
+⑪ 组件 beforeUnmount (同步)
+⑫ 指令 beforeUnmount (同步)
+⑬ 指令 unmounted (排队，先于组件)
+⑭ 组件 unmounted (排队，后于指令)
+```
+
+:::
+
+## 18. 🔗 引用
 
 - [Vue.js 官方文档 - 自定义指令][1]
 - [MDN - HTMLElement.dataset][2]
