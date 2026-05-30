@@ -4,8 +4,8 @@
   "yuque": [],
   "done": true,
   "enableDiscussions": true,
-  "description": "",
+  "description": "插件本身不是高频业务知识点，但你一旦接触路由、状态管理、国际化，就一定会碰到它。你需要重点理解的是“插件是应用级扩展”，别把只在单个页面里使用的小能力也硬做成插件。",
   "id": "2ba833b2-68f8-463a-81b4-475fd5587940",
   "created_at": 1778413060595,
-  "updated_at": 1780065949103
+  "updated_at": 1780120192896
 }

@@ -44,6 +44,7 @@
 - [x] [0065. Vue 学习资料](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0065.%20Vue%20%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99/README.md)
 - [x] [0072. vuejs 官方文档](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0072.%20vuejs%20%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3/README.md)
 - [x] [0115. vuejs core 源码](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0115.%20vuejs%20core%20%E6%BA%90%E7%A0%81/README.md)
+- [x] [0017. Vue SFC Playground](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0017.%20Vue%20SFC%20Playground/README.md)
 
 ## 3. 开始
 
@@ -84,7 +85,7 @@
 
 ## 6. 逻辑复用
 
-- [ ] [0080. 逻辑复用](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0080.%20%E9%80%BB%E8%BE%91%E5%A4%8D%E7%94%A8/README.md)
+- [x] [0080. 逻辑复用](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0080.%20%E9%80%BB%E8%BE%91%E5%A4%8D%E7%94%A8/README.md)
 - [x] [0088. 组合式函数](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0088.%20%E7%BB%84%E5%90%88%E5%BC%8F%E5%87%BD%E6%95%B0/README.md)
 - [x] [0090. 自定义指令](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0090.%20%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E4%BB%A4/README.md)
 - [x] [0089. 插件](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0089.%20%E6%8F%92%E4%BB%B6/README.md)
@@ -92,14 +93,14 @@
 ## 7. 内置组件
 
 - [ ] [0081. 内置组件](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0081.%20%E5%86%85%E7%BD%AE%E7%BB%84%E4%BB%B6/README.md)
-- [ ] [0035. 动态组件](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0035.%20%E5%8A%A8%E6%80%81%E7%BB%84%E4%BB%B6/README.md)
-- [ ] [0011. 特殊元素 component](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0011.%20%E7%89%B9%E6%AE%8A%E5%85%83%E7%B4%A0%20component/README.md)
 - [ ] [0095. Transition](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0095.%20Transition/README.md)
 - [ ] [0094. TransitionGroup](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0094.%20TransitionGroup/README.md)
 - [ ] [0093. KeepAlive](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0093.%20KeepAlive/README.md)
-- [ ] [0012. 内置组件 keep-alive](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0012.%20%E5%86%85%E7%BD%AE%E7%BB%84%E4%BB%B6%20keep-alive/README.md)
 - [ ] [0092. Teleport](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0092.%20Teleport/README.md)
 - [ ] [0091. Suspense](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0091.%20Suspense/README.md)
+- [ ] [0035. 动态组件](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0035.%20%E5%8A%A8%E6%80%81%E7%BB%84%E4%BB%B6/README.md)
+- [ ] [0011. 特殊元素 component](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0011.%20%E7%89%B9%E6%AE%8A%E5%85%83%E7%B4%A0%20component/README.md)
+- [ ] [0012. 内置组件 keep-alive](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0012.%20%E5%86%85%E7%BD%AE%E7%BB%84%E4%BB%B6%20keep-alive/README.md)
 
 ## 8. 应用规模化
 
@@ -205,8 +206,6 @@
 
 ### 12.12. vue playground
 
-- [ ] [0017. vue playground](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0017.%20vue%20playground/README.md)
-
 ### 12.13. 面试题
 
 - [ ] [0013. 谈谈你对 MVVM 模式的理解，可以对比 MVC 来讲讲。](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0013.%20%E8%B0%88%E8%B0%88%E4%BD%A0%E5%AF%B9%20MVVM%20%E6%A8%A1%E5%BC%8F%E7%9A%84%E7%90%86%E8%A7%A3%EF%BC%8C%E5%8F%AF%E4%BB%A5%E5%AF%B9%E6%AF%94%20MVC%20%E6%9D%A5%E8%AE%B2%E8%AE%B2%E3%80%82/README.md)
@@ -239,4 +238,3 @@
 
 - [ ] [0015. vue github 仓库](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0015.%20vue%20github%20%E4%BB%93%E5%BA%93/README.md)
 - [ ] [0073. vue 风格指南](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0073.%20vue%20%E9%A3%8E%E6%A0%BC%E6%8C%87%E5%8D%97/README.md)
-- [x] [0082. 侦听器（watch）](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0082.%20%E4%BE%A6%E5%90%AC%E5%99%A8%EF%BC%88watch%EF%BC%89/README.md)

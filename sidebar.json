@@ -24,6 +24,10 @@
       {
         "text": "✅ 0115. vuejs core 源码",
         "link": "/notes/0115. vuejs core 源码/README"
+      },
+      {
+        "text": "✅ 0017. Vue SFC Playground",
+        "link": "/notes/0017. Vue SFC Playground/README"
       }
     ]
   },
@@ -162,7 +166,7 @@
     "collapsed": true,
     "items": [
       {
-        "text": "⏰ 0080. 逻辑复用",
+        "text": "✅ 0080. 逻辑复用",
         "link": "/notes/0080. 逻辑复用/README"
       },
       {
@@ -188,14 +192,6 @@
         "link": "/notes/0081. 内置组件/README"
       },
       {
-        "text": "⏰ 0035. 动态组件",
-        "link": "/notes/0035. 动态组件/README"
-      },
-      {
-        "text": "⏰ 0011. 特殊元素 component",
-        "link": "/notes/0011. 特殊元素 component/README"
-      },
-      {
         "text": "⏰ 0095. Transition",
         "link": "/notes/0095. Transition/README"
       },
@@ -208,16 +204,24 @@
         "link": "/notes/0093. KeepAlive/README"
       },
       {
-        "text": "⏰ 0012. 内置组件 keep-alive",
-        "link": "/notes/0012. 内置组件 keep-alive/README"
-      },
-      {
         "text": "⏰ 0092. Teleport",
         "link": "/notes/0092. Teleport/README"
       },
       {
         "text": "⏰ 0091. Suspense",
         "link": "/notes/0091. Suspense/README"
+      },
+      {
+        "text": "⏰ 0035. 动态组件",
+        "link": "/notes/0035. 动态组件/README"
+      },
+      {
+        "text": "⏰ 0011. 特殊元素 component",
+        "link": "/notes/0011. 特殊元素 component/README"
+      },
+      {
+        "text": "⏰ 0012. 内置组件 keep-alive",
+        "link": "/notes/0012. 内置组件 keep-alive/README"
       }
     ]
   },
@@ -538,12 +542,7 @@
       {
         "text": "12.12. vue playground",
         "collapsed": true,
-        "items": [
-          {
-            "text": "⏰ 0017. vue playground",
-            "link": "/notes/0017. vue playground/README"
-          }
-        ]
+        "items": []
       },
       {
         "text": "12.13. 面试题",
@@ -638,10 +637,6 @@
           {
             "text": "⏰ 0073. vue 风格指南",
             "link": "/notes/0073. vue 风格指南/README"
-          },
-          {
-            "text": "✅ 0082. 侦听器（watch）",
-            "link": "/notes/0082. 侦听器（watch）/README"
           }
         ]
       }

@@ -15,7 +15,11 @@
 - [8. 🤔 什么场景适合写成插件，什么场景不适合？](#8--什么场景适合写成插件什么场景不适合)
 - [9. 🤔 如果要发布给别人用，还要注意什么？](#9--如果要发布给别人用还要注意什么)
 - [10. 🤔 Vue 有插件市场吗？](#10--vue-有插件市场吗)
-- [11. 🔗 引用](#11--引用)
+- [11. 💻 demos.1 - 插件的两种基本形式与 install 参数](#11--demos1---插件的两种基本形式与-install-参数)
+- [12. 💻 demos.2 - globalProperties 挂载全局方法（i18n 插件示例）](#12--demos2---globalproperties-挂载全局方法i18n-插件示例)
+- [13. 💻 demos.3 - 插件中使用 provide/inject 注入全局资源](#13--demos3---插件中使用-provideinject-注入全局资源)
+- [14. 💻 demos.4 - globalProperties 与 provide/inject 的选择差异](#14--demos4---globalproperties-与-provideinject-的选择差异)
+- [15. 🔗 引用](#15--引用)
 
 <!-- endregion:toc -->
 
@@ -34,6 +38,12 @@
 ## 2. 🫧 评价
 
 插件本身不是高频业务知识点，但你一旦接触路由、状态管理、国际化，就一定会碰到它。你需要重点理解的是“插件是应用级扩展”，别把只在单个页面里使用的小能力也硬做成插件。
+
+::: tip demos 运行说明
+
+由于插件演示的示例需要操作 `app` 实例，在 Vue SFC Playground 单文件组件中不便于演示，本节示例可在 [stackblitz][6] 中在线运行测试。
+
+:::
 
 ## 3. 🤔 什么是 Vue 插件？
 
@@ -265,16 +275,284 @@ app.config.globalProperties.$track = track
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-29-22-32-51.png)
 
-## 11. 🔗 引用
+## 11. 💻 demos.1 - 插件的两种基本形式与 install 参数
+
+插件有两种写法：对象式（含 `install` 方法）和函数式（直接导出函数）。`app.use()` 会调用插件的 `install`，并将 `app` 实例和可选的 `options` 传入。
+
+::: code-group
+
+```js [main.js]
+import { createApp } from 'vue'
+import App from './App.vue'
+
+// ===== 对象式插件 =====
+// 导出一个包含 install(app, options) 方法的对象
+const objectPlugin = {
+  install(app, options) {
+    // app: createApp() 返回的应用实例，可用来注册全局组件、指令、属性等
+    // options: app.use(plugin, options) 传入的第二个参数
+    console.log('[对象式插件] 已安装，options:', options)
+    app.config.globalProperties.$fromObject = '对象式插件注入'
+  },
+}
+
+// ===== 函数式插件 =====
+// 直接导出函数，函数体即 install 逻辑，等价于上面的 install 方法
+function functionPlugin(app, options) {
+  console.log('[函数式插件] 已安装，options:', options)
+  app.config.globalProperties.$fromFunction = '函数式插件注入'
+}
+
+const app = createApp(App)
+
+// app.use() 的第二个参数起会作为 options 传入插件
+app.use(objectPlugin, { mode: 'object' })
+app.use(functionPlugin, { mode: 'function' })
+
+app.mount('#app')
+```
+
+```html [App.vue]
+<template>
+  <h3>插件的两种基本形式</h3>
+  <!-- globalProperties 挂载的属性在模板中直接可用 -->
+  <p>{{ $fromObject }}</p>
+  <p>{{ $fromFunction }}</p>
+  <p style="color: #999; font-size: 13px">打开控制台可查看插件安装日志</p>
+</template>
+```
+
+:::
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-30-13-36-35.png)
+
+控制台输出日志：
+
+```
+[对象式插件] 已安装，options: { mode: 'object' }
+[函数式插件] 已安装，options: { mode: 'function' }
+```
+
+## 12. 💻 demos.2 - globalProperties 挂载全局方法（i18n 插件示例）
+
+通过 `app.config.globalProperties` 挂载的方法可在模板中以 `$xxx` 形式直接调用，无需 import。这是插件最经典的用法之一。
+
+::: code-group
+
+```js [i18n-plugin.js]
+// 简化版 i18n 插件
+// 通过 globalProperties 挂载 $translate 方法，模板中可直接使用
+export default {
+  install(app, options) {
+    // options 即翻译字典，$translate 根据点分隔的 key 查找翻译
+    app.config.globalProperties.$translate = (key) => {
+      return key.split('.').reduce((o, i) => (o ? o[i] : undefined), options)
+    }
+  },
+}
+```
+
+```js [main.js]
+import { createApp } from 'vue'
+import App from './App.vue'
+import i18nPlugin from './i18n-plugin'
+
+const app = createApp(App)
+
+// 翻译字典作为 options 传入插件
+app.use(i18nPlugin, {
+  greetings: {
+    hello: '你好，世界！',
+    welcome: '欢迎使用 Vue 插件',
+  },
+  nav: {
+    home: '首页',
+    about: '关于',
+  },
+})
+
+app.mount('#app')
+```
+
+```html [App.vue]
+<template>
+  <h3>i18n 插件示例</h3>
+  <!-- $translate 来自 globalProperties，无需 import，模板中直接调用 -->
+  <p>{{ $translate('greetings.hello') }}</p>
+  <p>{{ $translate('greetings.welcome') }}</p>
+  <p>{{ $translate('nav.home') }} | {{ $translate('nav.about') }}</p>
+</template>
+```
+
+:::
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-30-13-38-00.png)
+
+## 13. 💻 demos.3 - 插件中使用 provide/inject 注入全局资源
+
+插件可通过 `app.provide()` 向整个应用注入资源，后代组件通过 `inject()` 显式获取。相比 `globalProperties`，这种方式支持响应式且依赖声明更清晰。
+
+::: code-group
+
+```js [theme-plugin.js]
+import { reactive } from 'vue'
+
+export default {
+  install(app, options) {
+    // 用 reactive 包装，使注入值支持响应式更新
+    // 后代组件通过 inject('theme') 获取此对象
+    app.provide('theme', reactive(options))
+  },
+}
+```
+
+```js [main.js]
+import { createApp } from 'vue'
+import App from './App.vue'
+import themePlugin from './theme-plugin'
+
+const app = createApp(App)
+
+app.use(themePlugin, {
+  primaryColor: '#42b883',
+  fontSize: '16px',
+})
+
+app.mount('#app')
+```
+
+```html [App.vue]
+<script setup>
+  import ThemeDisplay from './ThemeDisplay.vue'
+  import { inject } from 'vue'
+
+  // inject 显式声明依赖了 'theme'，来源一目了然
+  const theme = inject('theme')
+</script>
+
+<template>
+  <h3>provide/inject 配合插件</h3>
+  <p>当前主题色：{{ theme.primaryColor }}</p>
+  <!-- 修改响应式对象，所有 inject 了该对象的组件都会同步更新 -->
+  <button @click="theme.primaryColor = '#e8c547'">切换主题色</button>
+  <ThemeDisplay />
+</template>
+```
+
+```html [ThemeDisplay.vue]
+<script setup>
+  import { inject } from 'vue'
+
+  // 子组件同样通过 inject 获取插件注入的资源
+  const theme = inject('theme')
+</script>
+
+<template>
+  <div :style="{ color: theme.primaryColor, fontSize: theme.fontSize }">
+    子组件 — 主题色：{{ theme.primaryColor }}
+  </div>
+</template>
+```
+
+:::
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-30-13-40-28.png)
+
+切换主题色之后：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-30-13-40-49.png)
+
+## 14. 💻 demos.4 - globalProperties 与 provide/inject 的选择差异
+
+同一个插件同时用两种方式注入数据，点击按钮可直观观察到：`provide/inject`（reactive）支持响应式更新，`globalProperties` 上的值修改后视图不会自动刷新。
+
+::: code-group
+
+```js [comparison-plugin.js]
+import { reactive } from 'vue'
+
+export default {
+  install(app, options) {
+    // --- 方式一：globalProperties ---
+    // 挂载的是普通对象，修改属性不会触发视图更新
+    // 模板中直接 $xxx 使用，零 import
+    app.config.globalProperties.$color = options.color
+
+    // --- 方式二：provide/inject ---
+    // 注入 reactive 对象，修改属性会触发视图更新
+    // 组件需 import { inject } 并显式声明依赖
+    app.provide('colorState', reactive({ value: options.color }))
+  },
+}
+```
+
+```js [main.js]
+import { createApp } from 'vue'
+import App from './App.vue'
+import comparisonPlugin from './comparison-plugin'
+
+const app = createApp(App)
+app.use(comparisonPlugin, { color: '#42b883' })
+app.mount('#app')
+```
+
+```html [App.vue]
+<script setup>
+  import { inject } from 'vue'
+
+  // provide/inject：显式依赖声明，返回值是响应式的
+  const colorState = inject('colorState')
+</script>
+
+<template>
+  <h3>globalProperties vs provide/inject</h3>
+
+  <!-- provide/inject：点击后视图立即更新 -->
+  <p>provide/inject（响应式）：{{ colorState.value }}</p>
+  <button @click="colorState.value = 'tomato'">改为红色</button>
+
+  <!-- globalProperties：点击后值变了但视图不变，需其他原因触发重渲染才会更新 -->
+  <p>globalProperties（非响应式）：{{ $color }}</p>
+  <button @click="$color = 'dodgerblue'">改为蓝色</button>
+
+  <!--
+    核心区别总结：
+    1. 响应性：provide/inject（reactive）支持；globalProperties 不支持
+    2. 依赖感知：inject() 显式声明；$xxx 隐式，来源不直观
+    3. TypeScript：inject<T>() 可用泛型；globalProperties 需额外类型声明
+    4. 模板便捷性：globalProperties 更方便（直接 $xxx）；inject 需先 import
+  -->
+  <p style="color: #999; font-size: 13px; margin-top: 16px">
+    分别点击两个按钮，观察上方颜色值的变化
+  </p>
+</template>
+```
+
+:::
+
+初始状态：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-30-13-45-22.png)
+
+点击“改为红色”按钮和“改为蓝色”按钮后：
+
+- “改为红色”具备响应式，值变了，视图立即更新
+- “改为蓝色”不具备响应式，虽然值变了，但视图不变
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-30-13-45-44.png)
+
+## 15. 🔗 引用
 
 - [Vue.js 官方文档 - 插件][1]
 - [Vue.js 官方文档 - 依赖注入][2]
 - [Vue.js 官方文档 - Application API][3]
 - [Vite 官方文档 - Library Mode][4]
 - [Vue.js 官方提供的插件社区][5]
+- [stackblitz][6]
 
 [1]: https://cn.vuejs.org/guide/reusability/plugins.html
 [2]: https://cn.vuejs.org/guide/components/provide-inject.html
 [3]: https://cn.vuejs.org/api/application.html
 [4]: https://vite.dev/guide/build.html#library-mode
 [5]: https://www.vue-plugins.org/
+[6]: https://stackblitz.com/edit/vitejs-vite-d9r7njcs?file=index.html&terminal=dev
