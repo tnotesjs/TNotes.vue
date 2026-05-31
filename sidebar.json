@@ -200,8 +200,8 @@
         "link": "/notes/0094. TransitionGroup/README"
       },
       {
-        "text": "⏰ 0093. KeepAlive",
-        "link": "/notes/0093. KeepAlive/README"
+        "text": "⏰ 0093. KeepAlive 和 component",
+        "link": "/notes/0093. KeepAlive 和 component/README"
       },
       {
         "text": "⏰ 0092. Teleport",
@@ -210,18 +210,6 @@
       {
         "text": "⏰ 0091. Suspense",
         "link": "/notes/0091. Suspense/README"
-      },
-      {
-        "text": "⏰ 0035. 动态组件",
-        "link": "/notes/0035. 动态组件/README"
-      },
-      {
-        "text": "⏰ 0011. 特殊元素 component",
-        "link": "/notes/0011. 特殊元素 component/README"
-      },
-      {
-        "text": "⏰ 0012. 内置组件 keep-alive",
-        "link": "/notes/0012. 内置组件 keep-alive/README"
       }
     ]
   },
@@ -540,12 +528,7 @@
         ]
       },
       {
-        "text": "12.12. vue playground",
-        "collapsed": true,
-        "items": []
-      },
-      {
-        "text": "12.13. 面试题",
+        "text": "12.12. 面试题",
         "collapsed": true,
         "items": [
           {
@@ -559,7 +542,7 @@
         ]
       },
       {
-        "text": "12.14. 组件",
+        "text": "12.13. 组件",
         "collapsed": true,
         "items": [
           {
@@ -573,7 +556,7 @@
         ]
       },
       {
-        "text": "12.15. 指令 `v-model`",
+        "text": "12.14. 指令 `v-model`",
         "collapsed": true,
         "items": [
           {
@@ -591,7 +574,7 @@
         ]
       },
       {
-        "text": "12.16. 宏",
+        "text": "12.15. 宏",
         "collapsed": true,
         "items": [
           {
@@ -601,7 +584,7 @@
         ]
       },
       {
-        "text": "12.17. 国际化",
+        "text": "12.16. 国际化",
         "collapsed": true,
         "items": [
           {
@@ -627,7 +610,7 @@
         ]
       },
       {
-        "text": "12.18. TODO",
+        "text": "12.17. TODO",
         "collapsed": true,
         "items": [
           {
