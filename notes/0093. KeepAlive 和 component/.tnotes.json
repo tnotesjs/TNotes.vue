@@ -2,10 +2,10 @@
   "bilibili": [],
   "tnotes": [],
   "yuque": [],
-  "done": false,
-  "enableDiscussions": false,
-  "description": "",
+  "done": true,
+  "enableDiscussions": true,
+  "description": "<keep-alive> 很常用，尤其是标签页、动态组件和路由页面缓存。在使用的时候需要注意 <keep-alive> 的适用场景和边界，不能盲目缓存所有组件，否则可能会带来内存压力和状态混乱的问题。合理使用 <keep-alive> 可以大大提升用户体验，但不当使用反而会适得其反。",
   "id": "8e830800-2a97-4ef6-b0e5-13cfa18c3751",
   "created_at": 1778414161000,
-  "updated_at": 1778416081000
+  "updated_at": 1780235988222
 }

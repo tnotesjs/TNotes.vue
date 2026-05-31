@@ -21,12 +21,11 @@
 - [8. 💻 demos.1 - `<component>` - 基本用法：标签页切换](#8--demos1---component---基本用法标签页切换)
 - [9. 💻 demos.2 - `<component>` - 实现动态 HTML 元素](#9--demos2---component---实现动态-html-元素)
 - [10. 💻 demos.3 - `<component>` - 传递 props 和监听事件](#10--demos3---component---传递-props-和监听事件)
-- [11. 💻 demos.4 - `<keep-alive>` - 基本用法](#11--demos4---keep-alive---基本用法)
-- [12. 💻 demos.5 - `<keep-alive>` - include / exclude / max](#12--demos5---keep-alive---include--exclude--max)
-- [13. 💻 demos.6 - `<keep-alive>` - onActivated / onDeactivated 生命周期](#13--demos6---keep-alive---onactivated--ondeactivated-生命周期)
-- [14. 💻 demos.x - xxx](#14--demosx---xxx)
-- [15. 💻 demos.x - xxx](#15--demosx---xxx)
-- [16. 🔗 引用](#16--引用)
+- [11. 💻 demos.4 - `<keep-alive>` - 基本用法：缓存组件状态](#11--demos4---keep-alive---基本用法缓存组件状态)
+- [12. 💻 demos.5 - `<keep-alive>` - 属性 - `include` / `exclude` / `max`](#12--demos5---keep-alive---属性---include--exclude--max)
+- [13. 💻 demos.6 - `<keep-alive>` - 生命周期 - `onActivated` / `onDeactivated`](#13--demos6---keep-alive---生命周期---onactivated--ondeactivated)
+- [14. 💻 demos.7 - 实战练习：结合 `<keep-alive>` + `<component>` + Vue Router 实现动态组件缓存效果](#14--demos7---实战练习结合-keep-alive--component--vue-router-实现动态组件缓存效果)
+- [15. 🔗 引用](#15--引用)
 
 <!-- endregion:toc -->
 
@@ -43,7 +42,7 @@
 
 ## 2. 🫧 评价
 
-`<keep-alive>` 很常用，尤其是标签页、动态组件和路由页面缓存。你需要真正搞懂的是「它缓存的是组件实例，不是纯 DOM」「匹配靠组件名」「激活 / 停用不是挂载 / 卸载的简单别名」，这样后面配合路由用才不容易踩坑。
+`<keep-alive>` 很常用，尤其是标签页、动态组件和路由页面缓存。在使用的时候需要注意 `<keep-alive>` 的适用场景和边界，不能盲目缓存所有组件，否则可能会带来内存压力和状态混乱的问题。合理使用 `<keep-alive>` 可以大大提升用户体验，但不当使用反而会适得其反。
 
 ## 3. 🤔 `<keep-alive>` 是什么？
 
@@ -351,7 +350,7 @@ LRU = Least Recently Used，最近最少使用。
 
 ## 8. 💻 demos.1 - `<component>` - 基本用法：标签页切换
 
-这是动态组件最典型的场景——根据当前选中的标签，在同一个位置渲染不同的组件：
+这是动态组件最典型的场景 => 根据当前选中的标签，在同一个位置渲染不同的组件：
 
 ::: code-group
 
@@ -481,7 +480,7 @@ LRU = Least Recently Used，最近最少使用。
 
 ## 10. 💻 demos.3 - `<component>` - 传递 props 和监听事件
 
-动态组件和普通组件一样，可以传递 props 和监听事件。下面这个示例模拟了一个通知系统，支持多种通知类型：
+动态组件和普通组件一样，可以传递 props 和监听事件。下面这个示例模拟了一个通知系统，支持多种通知类型。三种通知的共有结构和行为被抽成了 `BaseNotice`，具体的通知组件委托给 `BaseNotice` 渲染：
 
 ::: code-group
 
@@ -524,15 +523,15 @@ LRU = Least Recently Used，最近最少使用。
 </template>
 ```
 
-```html [SuccessNotice.vue]
+```html [BaseNotice.vue]
 <script setup>
-  defineProps(['message'])
+  defineProps(['icon', 'message'])
   const emit = defineEmits(['dismiss'])
 </script>
 
 <template>
   <div class="msg-box">
-    <span>✅ {{ message }}</span>
+    <span>{{ icon }} {{ message }}</span>
     <p>
       <button @click="emit('dismiss')">关闭</button>
     </p>
@@ -546,54 +545,39 @@ LRU = Least Recently Used，最近最少使用。
     text-align: center;
   }
 </style>
+```
+
+```html [SuccessNotice.vue]
+<script setup>
+  import BaseNotice from './BaseNotice.vue'
+  defineOptions({ inheritAttrs: false })
+</script>
+
+<template>
+  <BaseNotice icon="✅" v-bind="$attrs" />
+</template>
 ```
 
 ```html [WarningNotice.vue]
 <script setup>
-  defineProps(['message'])
-  const emit = defineEmits(['dismiss'])
+  import BaseNotice from './BaseNotice.vue'
+  defineOptions({ inheritAttrs: false })
 </script>
 
 <template>
-  <div class="msg-box">
-    <span>⚠️ {{ message }}</span>
-    <p>
-      <button @click="emit('dismiss')">关闭</button>
-    </p>
-  </div>
+  <BaseNotice icon="⚠️" v-bind="$attrs" />
 </template>
-
-<style scoped>
-  .msg-box {
-    width: 200px;
-    border: 1px solid #ddd;
-    text-align: center;
-  }
-</style>
 ```
 
 ```html [ErrorNotice.vue]
 <script setup>
-  defineProps(['message'])
-  const emit = defineEmits(['dismiss'])
+  import BaseNotice from './BaseNotice.vue'
+  defineOptions({ inheritAttrs: false })
 </script>
 
 <template>
-  <div class="msg-box">
-    <span>❌ {{ message }}</span>
-    <p>
-      <button @click="emit('dismiss')">关闭</button>
-    </p>
-  </div>
+  <BaseNotice icon="❌" v-bind="$attrs" />
 </template>
-
-<style scoped>
-  .msg-box {
-    width: 200px;
-    border: 1px solid #ddd;
-    text-align: center;
-  }
-</style>
 ```
 
 :::
@@ -608,9 +592,9 @@ LRU = Least Recently Used，最近最少使用。
 
 :::
 
-`:message` 和 `@dismiss` 是写在 `<component>` 上的，但 Vue 会自动透传给当前实际渲染的子组件，无论切换到哪个通知类型，props 和事件都会正确传递。
+`:message` 和 `@dismiss` 是写在 `<component>` 上的，但 Vue 会自动透传给当前实际渲染的子组件，无论切换到哪个通知类型，props 和事件都会正确传递。三个通知组件通过委托 `BaseNotice` 复用结构，仅通过 `icon` prop 区分图标。
 
-## 11. 💻 demos.4 - `<keep-alive>` - 基本用法
+## 11. 💻 demos.4 - `<keep-alive>` - 基本用法：缓存组件状态
 
 下面这个示例用一个计数器直观对比「有 / 无 keep-alive」的效果差异：
 
@@ -694,7 +678,7 @@ LRU = Least Recently Used，最近最少使用。
    - 无 keep-alive：count 归零，因为组件被销毁重建了
    - 有 keep-alive：count 仍然是 2，因为组件被缓存而非销毁
 
-## 12. 💻 demos.5 - `<keep-alive>` - include / exclude / max
+## 12. 💻 demos.5 - `<keep-alive>` - 属性 - `include` / `exclude` / `max`
 
 下面的示例演示了三个 prop 的用法：
 
@@ -721,7 +705,7 @@ LRU = Least Recently Used，最近最少使用。
     组件 {{ key }}
   </button>
 
-  <!-- 1. include：只缓存 A 和 B，C 不缓存 -->
+  <!-- 1. include：只缓存 A 和 B，不缓存 C -->
   <h4>include="CounterA,CounterB"（C 切换后状态丢失）</h4>
   <keep-alive include="CounterA,CounterB">
     <component :is="components[current]" />
@@ -803,7 +787,7 @@ LRU = Least Recently Used，最近最少使用。
 - max：依次 A->B->C->A，A 的 count 归零（因为缓存上限为 2，A 已被淘汰）
   - 注意事项：当你切换到一个组件的时候，这个组件就会占一个位置，比如你在 A、B 点击了 +1 之后，如果你继续只在 A、B 之间切换，那么它们的状态都会被保留，因为它们都在缓存中；但是一旦你切换到 C，C 就会占用一个新的缓存位置，此时缓存已经满了（A、B、C 三个组件），根据 LRU 策略，最久未访问的组件就会被淘汰掉。此时如果你是从 B 切到 C，那么 B 的状态保留，A 的状态被重置；如果你是从 A 切到 C，那么 A 的状态保留，B 的状态被重置。
 
-## 13. 💻 demos.6 - `<keep-alive>` - onActivated / onDeactivated 生命周期
+## 13. 💻 demos.6 - `<keep-alive>` - 生命周期 - `onActivated` / `onDeactivated`
 
 ::: code-group
 
@@ -903,128 +887,39 @@ App mounted
 
 注意：此时 A 的 onMounted 不会再触发，因为它来自缓存，不是重新挂载。
 
-## 14. 💻 demos.x - xxx
+## 14. 💻 demos.7 - 实战练习：结合 `<keep-alive>` + `<component>` + Vue Router 实现动态组件缓存效果
 
 ::: code-group
 
-```html [App.vue]
-<template>
-  <div id="app">
-    <p>currentLabel: {{ currentLabel }}</p>
-    <nav>
-      <button @click="toggleComponent">切换组件</button>
-    </nav>
-    <component :is="currentComponent" />
-  </div>
-</template>
+```js [main.js]
+import { createApp } from 'vue'
+import router from './router'
+import App from './App.vue'
 
-<script setup>
-  import { shallowRef } from 'vue'
-  import ComponentA from './ComponentA.vue'
-  import ComponentB from './ComponentB.vue'
-
-  // 该状态主要用于记录当前渲染的组件
-  const currentComponent = shallowRef(ComponentA)
-  // 该状态主要用于记录当前渲染的组件的一个标识
-  const currentLabel = shallowRef('A')
-
-  const toggleComponent = () => {
-    if (currentLabel.value === 'A') {
-      currentComponent.value = ComponentB
-      currentLabel.value = 'B'
-    } else {
-      currentComponent.value = ComponentA
-      currentLabel.value = 'A'
-    }
-  }
-</script>
-
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f9f9f9;
-  }
-  #app {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    text-align: center;
-  }
-  nav {
-    margin-bottom: 20px;
-  }
-  button {
-    padding: 10px 20px;
-    background-color: #42b983;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 0 10px;
-  }
-  button:hover {
-    background-color: #36a373;
-  }
-</style>
+const app = createApp(App)
+app.use(router)
+app.mount('#app')
 ```
 
-```html [ComponentA.vue]
-<template>
-  <div class="component">
-    <h1>这是组件 A</h1>
-    <p>这里是一些关于组件 A 的内容</p>
-  </div>
-</template>
+```js [router.js]
+import { createRouter, createWebHistory } from 'vue-router'
+import Counter from './Counter.vue'
+import TextInput from './TextInput.vue'
+import CheckboxList from './CheckboxList.vue'
+import Timer from './Timer.vue'
 
-<style>
-  .component {
-    padding: 20px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  h1 {
-    color: #333;
-  }
-  p {
-    font-size: 1.2em;
-  }
-</style>
+const routes = [
+  { path: '/', component: Counter },
+  { path: '/input', component: TextInput },
+  { path: '/checkboxlist', component: CheckboxList },
+  { path: '/timer', component: Timer },
+]
+
+export default createRouter({
+  history: createWebHistory(),
+  routes,
+})
 ```
-
-```html [ComponentB.vue]
-<template>
-  <div class="component">
-    <h1>这是组件 B</h1>
-    <p>这里是一些关于组件 B 的内容</p>
-  </div>
-</template>
-
-<style>
-  .component {
-    padding: 20px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  h1 {
-    color: #333;
-  }
-  p {
-    font-size: 1.2em;
-  }
-</style>
-```
-
-:::
-
-## 15. 💻 demos.x - xxx
-
-::: code-group
 
 ```html [App.vue]
 <template>
@@ -1171,26 +1066,6 @@ App mounted
 </style>
 ```
 
-```ts [router.ts]
-import { createRouter, createWebHistory } from 'vue-router'
-import Counter from './Counter.vue'
-import TextInput from './TextInput.vue'
-import CheckboxList from './CheckboxList.vue'
-import Timer from './Timer.vue'
-
-const routes = [
-  { path: '/', component: Counter },
-  { path: '/input', component: TextInput },
-  { path: '/checkboxlist', component: CheckboxList },
-  { path: '/timer', component: Timer },
-]
-
-export default createRouter({
-  history: createWebHistory(),
-  routes,
-})
-```
-
 ```html [TextInput.vue]
 <template>
   <div>
@@ -1320,7 +1195,23 @@ export default createRouter({
 
 :::
 
-## 16. 🔗 引用
+初始状态：
+
+::: swiper
+
+![1](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-31-21-53-38.png)
+
+![2](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-31-21-53-48.png)
+
+![3](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-31-21-53-57.png)
+
+![4](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-31-21-54-07.png)
+
+:::
+
+App.vue 中配置了 `max=3`，表示最多缓存 3 个组件实例。你可以在四个组件之间分别修改状态，然后随意切换，观察它们的状态是否被保留，来测试 `<keep-alive>` 的缓存效果。
+
+## 15. 🔗 引用
 
 - [Vue.js 官方文档 - KeepAlive][1]
 - [Vue.js 官方文档 - `<keep-alive>` API][2]
