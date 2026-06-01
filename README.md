@@ -95,7 +95,7 @@
 - [x] [0095. Transition](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0095.%20Transition/README.md)
 - [x] [0094. TransitionGroup](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0094.%20TransitionGroup/README.md)
 - [x] [0093. KeepAlive 和 component](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0093.%20KeepAlive%20%E5%92%8C%20component/README.md)
-- [ ] [0092. Teleport](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0092.%20Teleport/README.md)
+- [x] [0092. Teleport](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0092.%20Teleport/README.md)
 - [ ] [0091. Suspense](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0091.%20Suspense/README.md)
 
 ## 8. 应用规模化
