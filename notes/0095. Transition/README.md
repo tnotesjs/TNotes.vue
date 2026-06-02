@@ -118,6 +118,8 @@
 
 ## 5. 🤔 六个过渡类名（CSS Transition）分别是什么？分别在什么阶段生效？
 
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-02-07-50-54.png)
+
 `<Transition>` 会在过渡的不同阶段自动添加/移除以下 CSS 类：
 
 进入阶段有 3 个 class：

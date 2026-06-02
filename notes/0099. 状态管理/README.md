@@ -35,9 +35,11 @@
 
 一个最简单的计数器组件里，通常就包含 3 个部分：
 
-- 状态：比如 `count`
-- 视图：比如模板里显示 `count`
-- 动作：比如点击按钮执行 `increment`
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-02-07-57-43.png)
+
+- `State` => 状态：比如 `count`
+- `View` => 视图：比如模板里显示 `count`
+- `Actions` => 动作：比如点击按钮执行 `increment`
 
 这就是最基础的单向数据流：状态驱动视图，用户交互再反过来修改状态。
 

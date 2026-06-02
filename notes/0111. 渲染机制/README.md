@@ -58,6 +58,10 @@ const vnode = {
 
 ## 4. 🤔 一个 Vue 组件从模板到真实 DOM 会经历什么？
 
+渲染管线：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-02-08-03-32.png)
+
 官方把渲染管线概括成 3 步：
 
 1. 编译
