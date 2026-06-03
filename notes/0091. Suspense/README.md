@@ -15,31 +15,35 @@
 - [5. 🤔 `<Suspense>` 都有哪些插槽？](#5--suspense-都有哪些插槽)
   - [5.1. `default` 和 `fallback` 插槽](#51-default-和-fallback-插槽)
   - [5.2. 注意：插槽内容中的节点数量](#52-注意插槽内容中的节点数量)
+    - [示例：单个根节点](#示例单个根节点)
+    - [示例：特殊的 `v-if` 注释节点](#示例特殊的-v-if-注释节点)
+    - [示例：多个子节点，无法确定单一根](#示例多个子节点无法确定单一根)
   - [5.3. `default` 和 `fallback` 插槽的切换逻辑是什么？什么情况下会再次回退到 `fallback`？](#53-default-和-fallback-插槽的切换逻辑是什么什么情况下会再次回退到-fallback)
     - [初次渲染](#初次渲染)
     - [后续更新](#后续更新)
+    - [示例：根节点类型变化，回退到 `fallback`](#示例根节点类型变化回退到-fallback)
+    - [示例：持续触发异步，但只有首次触发 `fallback`](#示例持续触发异步但只有首次触发-fallback)
 - [6. 🤔 `<Suspense>` 都有哪些属性？](#6--suspense-都有哪些属性)
-  - [6.1. `timeout` 的作用](#61-timeout-的作用)
-  - [6.2. `timeout` 仅影响切换，不影响首次渲染](#62-timeout-仅影响切换不影响首次渲染)
+  - [6.1. `SuspenseProps` 接口](#61-suspenseprops-接口)
+  - [6.2. `timeout` 的作用](#62-timeout-的作用)
+  - [6.3. `timeout` 仅影响切换，不影响首次渲染](#63-timeout-仅影响切换不影响首次渲染)
 - [7. 🤔 `<Suspense>` 都有哪些事件？](#7--suspense-都有哪些事件)
   - [7.1. `<Suspense>` 一共有 3 个事件：`@pending`、`@fallback`、`@resolve`](#71-suspense-一共有-3-个事件pendingfallbackresolve)
   - [7.2. `@pending` 和 `@fallback` 的区别](#72-pending-和-fallback-的区别)
 - [8. 🤔 `<Suspense>` 如何做错误处理？](#8--suspense-如何做错误处理)
+  - [8.1. 官方原话](#81-官方原话)
+  - [8.2. 示例：`onErrorCaptured()` + `v-if` 条件渲染](#82-示例onerrorcaptured--v-if-条件渲染)
+  - [8.3. 示例：用 `<Suspense>` 的嵌套做优雅降级](#83-示例用-suspense-的嵌套做优雅降级)
 - [9. 🤔 `<Suspense>` 和 `<Transition>`、`<KeepAlive>`、`<RouterView>` 该怎么配合？](#9--suspense-和-transitionkeepaliverouterview-该怎么配合)
-- [10. 🤔 嵌套 Suspense 时 `suspensible` 有什么用？](#10--嵌套-suspense-时-suspensible-有什么用)
+- [10. 🤔 嵌套 `<Suspense>` 时 `suspensible` 有什么用？](#10--嵌套-suspense-时-suspensible-有什么用)
 - [11. 🤔 异步组件和 `<Suspense>` 是什么关系？](#11--异步组件和-suspense-是什么关系)
   - [11.1. `<Suspense>` 简介](#111-suspense-简介)
   - [11.2. 两者之间的关系](#112-两者之间的关系)
   - [11.3. 配合使用](#113-配合使用)
   - [11.4. 错误处理的最佳实践 - 外层用 `onErrorCaptured` 兜底](#114-错误处理的最佳实践---外层用-onerrorcaptured-兜底)
-  - [11.5. 小结](#115-小结)
-- [12. 💻 demos.1 - 异步组件 `defineAsyncComponent` 与 `<Suspense>` 配合使用](#12--demos1---异步组件-defineasynccomponent-与-suspense-配合使用)
-- [13. 💻 demos.2 - 插槽内容中的节点数量问题 - 单个根节点](#13--demos2---插槽内容中的节点数量问题---单个根节点)
-- [14. 💻 demos.3 - 插槽内容中的节点数量问题 - 特殊的 `v-if` 注释节点](#14--demos3---插槽内容中的节点数量问题---特殊的-v-if-注释节点)
-- [15. 💻 demos.4 - 插槽内容中的节点数量问题 - 多个子节点，无法确定单一根](#15--demos4---插槽内容中的节点数量问题---多个子节点无法确定单一根)
-- [16. 💻 demos.5 - `default` 和 `fallback` 插槽的切换逻辑 - 根节点类型变化，回退到 `fallback`](#16--demos5---default-和-fallback-插槽的切换逻辑---根节点类型变化回退到-fallback)
-- [17. 💻 demos.6 - `default` 和 `fallback` 插槽的切换逻辑 - 持续触发异步，但只有首次触发 `fallback`](#17--demos6---default-和-fallback-插槽的切换逻辑---持续触发异步但只有首次触发-fallback)
-- [18. 🔗 引用](#18--引用)
+  - [11.5. 示例：异步组件 `defineAsyncComponent` 与 `<Suspense>` 配合使用](#115-示例异步组件-defineasynccomponent-与-suspense-配合使用)
+  - [11.6. 小结](#116-小结)
+- [12. 🔗 引用](#12--引用)
 
 <!-- endregion:toc -->
 
@@ -212,6 +216,161 @@ const AsyncPanel = defineAsyncComponent(
 
 :::
 
+#### 示例：单个根节点
+
+::: code-group
+
+```html [App.vue]
+<script setup>
+  import AsyncComp from './AsyncComp.vue'
+</script>
+
+<template>
+  <Suspense>
+    <template #default>
+      <!-- 可以有额外的注释节点 -->
+      <AsyncComp />
+    </template>
+    <template #fallback>
+      <!-- 可以有额外的注释节点 -->
+      <p>Loading…</p>
+    </template>
+  </Suspense>
+</template>
+```
+
+```html [AsyncComp.vue]
+<script setup>
+  const data = await new Promise(resolve => {
+    setTimeout(() => resolve('Hello, Suspense!'), 1000)
+  })
+</script>
+
+<template>
+  <div>{{ data }}</div>
+</template>
+```
+
+:::
+
+最终效果：
+
+1. 先展示 Loading...
+2. 1s 后展示 Hello, Suspense!
+
+::: swiper
+
+![1](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-03-14-29-36.png)
+
+![2](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-03-14-29-45.png)
+
+:::
+
+#### 示例：特殊的 `v-if` 注释节点
+
+::: code-group
+
+```html [App.vue]
+<script setup>
+  import AsyncComp from './AsyncComp.vue'
+</script>
+
+<template>
+  <Suspense>
+    <template #default>
+      <!--v-if-->
+      <AsyncComp />
+    </template>
+    <template #fallback>
+      <p>Loading…</p>
+    </template>
+  </Suspense>
+</template>
+```
+
+```html [AsyncComp.vue]
+<script setup>
+  const data = await new Promise(resolve => {
+    setTimeout(() => resolve('Hello, Suspense!'), 1000)
+  })
+</script>
+
+<template>
+  <div>{{ data }}</div>
+</template>
+```
+
+:::
+
+这种情况下，页面无法正常渲染，并且会在开发环境下抛出警告信息：
+
+::: warning
+
+`[Vue warn]: <Suspense> slots expect a single root node.`
+
+:::
+
+#### 示例：多个子节点，无法确定单一根
+
+::: code-group
+
+```html [App.vue]
+<script setup>
+  import AsyncA from './AsyncA.vue'
+  import AsyncB from './AsyncB.vue'
+</script>
+
+<template>
+  <Suspense>
+    <template #default>
+      <AsyncA />
+      <AsyncB />
+    </template>
+    <template #fallback>
+      <p>Loading…</p>
+    </template>
+  </Suspense>
+</template>
+```
+
+```html [AsyncA.vue]
+<script setup>
+  const data = await new Promise(resolve => {
+    setTimeout(() => resolve('A'), 1000)
+  })
+</script>
+
+<template>
+  <div>{{ data }}</div>
+</template>
+```
+
+```html [AsyncB.vue]
+<script setup>
+  const data = await new Promise(resolve => {
+    setTimeout(() => resolve('B'), 2000)
+  })
+</script>
+
+<template>
+  <div>{{ data }}</div>
+</template>
+```
+
+:::
+
+这种情况下，页面无法正常渲染，并且会在开发环境下抛出警告信息：
+
+::: warning
+
+`[Vue warn]: <Suspense> slots expect a single root node.`
+
+:::
+
+对应的真实 DOM 结构中，会插入一个空的注释节点：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-03-14-55-47.png)
+
 ### 5.3. `default` 和 `fallback` 插槽的切换逻辑是什么？什么情况下会再次回退到 `fallback`？
 
 `default` 和 `fallback` 插槽的执行逻辑可以分成两个阶段理解：
@@ -238,7 +397,165 @@ const AsyncPanel = defineAsyncComponent(
 
 不会。因为 `<Suspense>` 只追踪通过 `setup` 返回的 Promise（即顶层 `await` 或 `async setup()`）注册的异步依赖，且 `setup` 只执行一次。组件内部的其他异步操作（如 `watchEffect`、事件处理器中的 `await` 等）不会被 `<Suspense>` 感知，不会触发 fallback。
 
+#### 示例：根节点类型变化，回退到 `fallback`
+
+::: code-group
+
+```html [App.vue]
+<script setup>
+  import { ref } from 'vue'
+  import AsyncA from './AsyncA.vue'
+  import AsyncB from './AsyncB.vue'
+
+  const flag = ref(true)
+</script>
+
+<template>
+  <div style="padding: 20px;">
+    <button @click="flag = !flag">切换组件</button>
+    <!--
+      timeout="0"：根节点类型切换时，立即展示 fallback，不做延迟。
+      每次点击按钮，根节点从 AsyncA ↔ AsyncB 切换，
+      isSameVNodeType 返回 false，进入 else 分支重新挂起。
+      因为新组件有 async setup（suspense.deps > 0），所以会展示 fallback。
+    -->
+    <Suspense timeout="0">
+      <template #default>
+        <AsyncA v-if="flag" />
+        <AsyncB v-else />
+      </template>
+      <template #fallback>
+        <p style="color: gray; font-size: 24px; padding: 20px;">Loading…</p>
+      </template>
+    </Suspense>
+  </div>
+</template>
+```
+
+```html [AsyncA.vue]
+<script setup>
+  // async setup → 被 Suspense 追踪为异步依赖
+  const data = await new Promise(resolve => {
+    setTimeout(() => resolve('A（等待 1s）'), 1000)
+  })
+</script>
+
+<template>
+  <div style="color: blue; font-size: 24px; padding: 20px;">{{ data }}</div>
+</template>
+```
+
+```html [AsyncB.vue]
+<script setup>
+  // async setup → 被 Suspense 追踪为异步依赖
+  const data = await new Promise(resolve => {
+    setTimeout(() => resolve('B（等待 1.5s）'), 1500)
+  })
+</script>
+
+<template>
+  <div style="color: red; font-size: 24px; padding: 20px;">{{ data }}</div>
+</template>
+```
+
+:::
+
+每次点击切换组件，页面会在下面状态中依次改变：
+
+::: swiper
+
+![1](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-03-16-51-29.png)
+
+![2](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-03-16-51-44.png)
+
+![3](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-03-16-51-29.png)
+
+![4](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-03-16-52-09.png)
+
+:::
+
+如果不加 `timeout="0"`，`Loading...` 只会在首次加载的时候出现，后续 A B 之间的切换都不会出现。
+
+| `timeout` 值 | 后续更新有异步依赖时的行为 |
+| --- | --- |
+| 未设置（内部为 `-1`） | 继续显示旧内容，等新内容 resolve 后再切换，不显示 fallback |
+| `0` | 立即切换到 fallback |
+| `> 0`（如 `10`） | 等待 N 毫秒后切换到 fallback |
+
+#### 示例：持续触发异步，但只有首次触发 `fallback`
+
+::: code-group
+
+```html [App.vue]
+<script setup>
+  import AsyncComp from './AsyncComp.vue'
+</script>
+
+<template>
+  <!--
+    首次渲染：AsyncComp 的 async setup 被 Suspense 追踪，
+    suspense.deps > 0，展示 fallback，等 setup resolve 后切换到 default。
+
+    后续点击按钮：根节点始终是 AsyncComp，类型不变，
+    走 isSameVNodeType 为 true 的普通 patch 分支。
+    registerDep 中 isInPendingSuspense 为 false（pendingBranch 已清空），
+    即使 watch 内部触发了新的异步操作，Suspense 也不会感知，不会回退到 fallback。
+  -->
+  <Suspense>
+    <template #default>
+      <AsyncComp />
+    </template>
+    <template #fallback>
+      <p style="padding: 20px; color: gray; font-size: 24px;">Loading…</p>
+    </template>
+  </Suspense>
+</template>
+```
+
+```html [AsyncComp.vue]
+<script setup>
+  import { ref, watch } from 'vue'
+
+  const count = ref(0)
+  const watchResult = ref('')
+  const pending = ref(false)
+
+  // async setup → 被 Suspense 追踪，只有这一次会触发 fallback
+  const data = await new Promise(resolve => {
+    setTimeout(() => resolve('setup 就绪'), 1000)
+  })
+
+  // watch 中的异步操作 → 不被 Suspense 追踪
+  // Suspense 只追踪 setup 阶段注册的 Promise，watch 是运行时行为
+  watch(count, async (newVal) => {
+    pending.value = true
+    watchResult.value = ''
+    const result = await new Promise(resolve => {
+      setTimeout(() => resolve(`watch 异步完成：count = ${newVal}`), 1000)
+    })
+    watchResult.value = result
+    pending.value = false
+  })
+</script>
+
+<template>
+  <div style="padding: 20px;">
+    <p style="font-size: 24px;">{{ data }}</p>
+    <button @click="count++">count: {{ count }}</button>
+    <!-- pending 状态由组件内部自行管理，与 Suspense 无关 -->
+    <p v-if="pending" style="color: gray;">watch 异步中…</p>
+    <p v-else style="color: green;">{{ watchResult }}</p>
+  </div>
+</template>
+```
+
+:::
+
+![gif](./assets/1.gif)
+
 ## 6. 🤔 `<Suspense>` 都有哪些属性？
+
+### 6.1. `SuspenseProps` 接口
 
 ```ts
 interface SuspenseProps {
@@ -247,7 +564,7 @@ interface SuspenseProps {
 }
 ```
 
-### 6.1. `timeout` 的作用
+### 6.2. `timeout` 的作用
 
 `timeout` 控制的是切换场景下 `fallback` 的展示时机，即 `<Suspense>` 已经渲染着 `default` 内容，新的异步依赖出现需要重新加载时，等多久才展示 `fallback`。
 
@@ -270,7 +587,7 @@ interface SuspenseProps {
 </Suspense>
 ```
 
-### 6.2. `timeout` 仅影响切换，不影响首次渲染
+### 6.3. `timeout` 仅影响切换，不影响首次渲染
 
 ```html
 <Suspense timeout="2000">
@@ -371,16 +688,215 @@ triggerEvent(vnode, 'onFallback')
 
 ## 8. 🤔 `<Suspense>` 如何做错误处理？
 
-`<Suspense>` 自己不负责错误处理。
+### 8.1. 官方原话
 
-如果异步依赖内部抛错，你需要在父级组件中通过：
+`<Suspense>` 组件自身目前还不提供错误处理，不过你可以使用 `errorCaptured` 选项或者 `onErrorCaptured()` 钩子，在使用到 `<Suspense>` 的父组件中捕获和处理异步错误。
 
-- `errorCaptured`
-- `onErrorCaptured()`
+### 8.2. 示例：`onErrorCaptured()` + `v-if` 条件渲染
 
-来捕获和处理。
+::: code-group
 
-这意味着 `<Suspense>` 解决的是“等待什么、何时显示 fallback”，不是“如何处理异常”。
+```html [App.vue]
+<script setup>
+  import { ref, onErrorCaptured } from 'vue'
+  import AsyncUser from './AsyncUser.vue'
+
+  const error = ref(null)
+
+  onErrorCaptured((err) => {
+    error.value = err
+    return false
+  })
+
+  function reload() {
+    error.value = null
+  }
+</script>
+
+<template>
+  <div v-if="error">
+    <p>出错了：{{ error.message }}</p>
+    <button @click="reload">重试</button>
+  </div>
+
+  <Suspense v-else>
+    <template #default>
+      <AsyncUser />
+    </template>
+    <template #fallback>
+      <p>加载中…</p>
+    </template>
+  </Suspense>
+</template>
+```
+
+```html [AsyncUser.vue]
+<script setup>
+  // 模拟异步请求，随机成功或失败
+  function mockFetch() {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (Math.random() > 0.5) {
+          resolve({ name: '张三', email: 'zhangsan@example.com' });
+        } else {
+          reject(new Error('模拟接口异常（概率触发）'));
+        }
+      }, 800);
+    });
+  }
+
+  const user = await mockFetch();
+</script>
+
+<template>
+  <h2>{{ user.name }}</h2>
+  <p>{{ user.email }}</p>
+</template>
+```
+
+:::
+
+成功是失败的概率各占 50%，可以多刷新几次，验证错误处理逻辑。
+
+1. 成功示例
+2. 失败示例
+
+::: swiper
+
+![1](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-03-19-36-10.png)
+
+![2](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-03-19-36-03.png)
+
+:::
+
+### 8.3. 示例：用 `<Suspense>` 的嵌套做优雅降级
+
+::: code-group
+
+```html [App.vue]
+<script setup>
+  import ErrorBoundary from './ErrorBoundary.vue'
+  import AsyncWidgetA from './AsyncWidgetA.vue'
+  import AsyncWidgetB from './AsyncWidgetB.vue'
+</script>
+
+<template>
+  <h1>仪表盘</h1>
+
+  <!--
+    关键：ErrorBoundary 包在 Suspense 外面（作为父级）
+    这样 onErrorCaptured 才能正确捕获异步错误
+    WidgetA 失败不影响 WidgetB
+  -->
+  <ErrorBoundary>
+    <Suspense>
+      <template #default>
+        <AsyncWidgetA />
+      </template>
+      <template #fallback>
+        <p>WidgetA 加载中…</p>
+      </template>
+    </Suspense>
+  </ErrorBoundary>
+
+  <ErrorBoundary>
+    <Suspense>
+      <template #default>
+        <AsyncWidgetB />
+      </template>
+      <template #fallback>
+        <p>WidgetB 加载中…</p>
+      </template>
+    </Suspense>
+  </ErrorBoundary>
+</template>
+```
+
+```html [ErrorBoundary.vue]
+<!--
+  通用错误边界组件
+  必须作为 <Suspense> 的父级使用，不能放在 Suspense 的 default slot 内部
+-->
+<script setup>
+  import { ref, onErrorCaptured } from 'vue'
+
+  const error = ref(null)
+
+  onErrorCaptured((err) => {
+    error.value = err
+    return false // 阻止冒泡，实现局部隔离
+  })
+
+  function retry() {
+    // 置空后 slot 重新渲染，Suspense 及其子组件会重新创建，再次触发异步
+    error.value = null
+  }
+</script>
+
+<template>
+  <slot v-if="!error" />
+  <div v-else>
+    <p>{{ error.message }}</p>
+    <button @click="retry">重试此组件</button>
+  </div>
+</template>
+```
+
+```html [AsyncWidgetA.vue]
+<script setup>
+  // 模拟异步请求，50% 概率失败
+  function mockFetch() {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (Math.random() > 0.5) {
+          resolve({ title: 'A 组件数据', value: 42 })
+        } else {
+          reject(new Error('WidgetA 接口异常'))
+        }
+      }, 500)
+    })
+  }
+
+  const data = await mockFetch()
+</script>
+
+<template>
+  <div>
+    <h3>{{ data.title }}</h3>
+    <p>数值：{{ data.value }}</p>
+  </div>
+</template>
+```
+
+```html [AsyncWidgetB.vue]
+<script setup>
+  // 模拟异步请求，50% 概率失败
+  function mockFetch() {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (Math.random() > 0.5) {
+          resolve({ title: 'B 组件数据', count: 128 })
+        } else {
+          reject(new Error('WidgetB 接口异常'))
+        }
+      }, 500)
+    })
+  }
+
+  const data = await mockFetch()
+</script>
+
+<template>
+  <div>
+    <h3>{{ data.title }}</h3>
+    <p>数量：{{ data.count }}</p>
+  </div>
+</template>
+```
+
+:::
+
+![gif](./assets/3.gif)
 
 ## 9. 🤔 `<Suspense>` 和 `<Transition>`、`<KeepAlive>`、`<RouterView>` 该怎么配合？
 
@@ -394,8 +910,10 @@ triggerEvent(vnode, 'onFallback')
     <Transition mode="out-in">
       <KeepAlive>
         <Suspense>
-          <component :is="Component" />
+          <!-- 主要内容 -->
+          <component :is="Component"></component>
 
+          <!-- 加载中状态 -->
           <template #fallback> 正在加载... </template>
         </Suspense>
       </KeepAlive>
@@ -410,9 +928,9 @@ triggerEvent(vnode, 'onFallback')
 - `<KeepAlive>` 负责页面缓存
 - `<Suspense>` 负责异步依赖协调
 
-另外还有一个很容易误会的点：Vue Router 的路由懒加载虽然也用了动态导入，但它和“异步组件”不是一回事，因此路由懒加载本身目前不会触发 `<Suspense>`。不过路由组件内部如果继续使用了异步组件或异步 `setup()`，这些后代依赖仍然会触发 `<Suspense>`。
+注意：Vue Router 的路由懒加载虽然也用了动态导入，但它和“异步组件”不是一回事，因此路由懒加载本身目前不会触发 `<Suspense>`。不过路由组件内部如果继续使用了异步组件或异步 `setup()`，这些后代依赖仍然会触发 `<Suspense>`。
 
-## 10. 🤔 嵌套 Suspense 时 `suspensible` 有什么用？
+## 10. 🤔 嵌套 `<Suspense>` 时 `suspensible` 有什么用？
 
 这个能力在 3.3+ 才支持。
 
@@ -651,18 +1169,7 @@ Suspense 内部的异步错误（如顶层 await 的 fetch 失败）不会被异
 </script>
 ```
 
-### 11.5. 小结
-
-- 如果你的页面里只是单个低频组件想做延迟加载，通常直接用异步组件就够了
-- 如果是一整片组件子树都可能进入异步等待态，`<Suspense>` 会更适合统一管理加载体验
-
-::: tip
-
-需要注意的是，Suspense 目前仍是实验性功能，API 可能在未来版本中发生变化。但其核心概念 => 「协调异步依赖的加载状态」在实际开发中已经被广泛使用。
-
-:::
-
-## 12. 💻 demos.1 - 异步组件 `defineAsyncComponent` 与 `<Suspense>` 配合使用
+### 11.5. 示例：异步组件 `defineAsyncComponent` 与 `<Suspense>` 配合使用
 
 ::: code-group
 
@@ -723,318 +1230,18 @@ Suspense 内部的异步错误（如顶层 await 的 fetch 失败）不会被异
 
 ![gif](./assets/2.gif)
 
-## 13. 💻 demos.2 - 插槽内容中的节点数量问题 - 单个根节点
+### 11.6. 小结
 
-::: code-group
+- 如果你的页面里只是单个低频组件想做延迟加载，通常直接用异步组件就够了
+- 如果是一整片组件子树都可能进入异步等待态，`<Suspense>` 会更适合统一管理加载体验
 
-```html [App.vue]
-<script setup>
-  import AsyncComp from './AsyncComp.vue'
-</script>
+::: tip
 
-<template>
-  <Suspense>
-    <template #default>
-      <!-- 可以有额外的注释节点 -->
-      <AsyncComp />
-    </template>
-    <template #fallback>
-      <!-- 可以有额外的注释节点 -->
-      <p>Loading…</p>
-    </template>
-  </Suspense>
-</template>
-```
-
-```html [AsyncComp.vue]
-<script setup>
-  const data = await new Promise(resolve => {
-    setTimeout(() => resolve('Hello, Suspense!'), 1000)
-  })
-</script>
-
-<template>
-  <div>{{ data }}</div>
-</template>
-```
+需要注意的是，Suspense 目前仍是实验性功能，API 可能在未来版本中发生变化。但其核心概念 => 「协调异步依赖的加载状态」在实际开发中已经被广泛使用。
 
 :::
 
-最终效果：
-
-1. 先展示 Loading...
-2. 1s 后展示 Hello, Suspense!
-
-::: swiper
-
-![1](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-03-14-29-36.png)
-
-![2](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-03-14-29-45.png)
-
-:::
-
-## 14. 💻 demos.3 - 插槽内容中的节点数量问题 - 特殊的 `v-if` 注释节点
-
-::: code-group
-
-```html [App.vue]
-<script setup>
-  import AsyncComp from './AsyncComp.vue'
-</script>
-
-<template>
-  <Suspense>
-    <template #default>
-      <!--v-if-->
-      <AsyncComp />
-    </template>
-    <template #fallback>
-      <p>Loading…</p>
-    </template>
-  </Suspense>
-</template>
-```
-
-```html [AsyncComp.vue]
-<script setup>
-  const data = await new Promise(resolve => {
-    setTimeout(() => resolve('Hello, Suspense!'), 1000)
-  })
-</script>
-
-<template>
-  <div>{{ data }}</div>
-</template>
-```
-
-:::
-
-这种情况下，页面无法正常渲染，并且会在开发环境下抛出警告信息：
-
-::: warning
-
-`[Vue warn]: <Suspense> slots expect a single root node.`
-
-:::
-
-## 15. 💻 demos.4 - 插槽内容中的节点数量问题 - 多个子节点，无法确定单一根
-
-::: code-group
-
-```html [App.vue]
-<script setup>
-  import AsyncA from './AsyncA.vue'
-  import AsyncB from './AsyncB.vue'
-</script>
-
-<template>
-  <Suspense>
-    <template #default>
-      <AsyncA />
-      <AsyncB />
-    </template>
-    <template #fallback>
-      <p>Loading…</p>
-    </template>
-  </Suspense>
-</template>
-```
-
-```html [AsyncA.vue]
-<script setup>
-  const data = await new Promise(resolve => {
-    setTimeout(() => resolve('A'), 1000)
-  })
-</script>
-
-<template>
-  <div>{{ data }}</div>
-</template>
-```
-
-```html [AsyncB.vue]
-<script setup>
-  const data = await new Promise(resolve => {
-    setTimeout(() => resolve('B'), 2000)
-  })
-</script>
-
-<template>
-  <div>{{ data }}</div>
-</template>
-```
-
-:::
-
-这种情况下，页面无法正常渲染，并且会在开发环境下抛出警告信息：
-
-::: warning
-
-`[Vue warn]: <Suspense> slots expect a single root node.`
-
-:::
-
-对应的真实 DOM 结构中，会插入一个空的注释节点：
-
-![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-03-14-55-47.png)
-
-## 16. 💻 demos.5 - `default` 和 `fallback` 插槽的切换逻辑 - 根节点类型变化，回退到 `fallback`
-
-::: code-group
-
-```html [App.vue]
-<script setup>
-  import { ref } from 'vue'
-  import AsyncA from './AsyncA.vue'
-  import AsyncB from './AsyncB.vue'
-
-  const flag = ref(true)
-</script>
-
-<template>
-  <div style="padding: 20px;">
-    <button @click="flag = !flag">切换组件</button>
-    <!--
-      timeout="0"：根节点类型切换时，立即展示 fallback，不做延迟。
-      每次点击按钮，根节点从 AsyncA ↔ AsyncB 切换，
-      isSameVNodeType 返回 false，进入 else 分支重新挂起。
-      因为新组件有 async setup（suspense.deps > 0），所以会展示 fallback。
-    -->
-    <Suspense timeout="0">
-      <template #default>
-        <AsyncA v-if="flag" />
-        <AsyncB v-else />
-      </template>
-      <template #fallback>
-        <p style="color: gray; font-size: 24px; padding: 20px;">Loading…</p>
-      </template>
-    </Suspense>
-  </div>
-</template>
-```
-
-```html [AsyncA.vue]
-<script setup>
-  // async setup → 被 Suspense 追踪为异步依赖
-  const data = await new Promise(resolve => {
-    setTimeout(() => resolve('A（等待 1s）'), 1000)
-  })
-</script>
-
-<template>
-  <div style="color: blue; font-size: 24px; padding: 20px;">{{ data }}</div>
-</template>
-```
-
-```html [AsyncB.vue]
-<script setup>
-  // async setup → 被 Suspense 追踪为异步依赖
-  const data = await new Promise(resolve => {
-    setTimeout(() => resolve('B（等待 1.5s）'), 1500)
-  })
-</script>
-
-<template>
-  <div style="color: red; font-size: 24px; padding: 20px;">{{ data }}</div>
-</template>
-```
-
-:::
-
-每次点击切换组件，页面会在下面状态中依次改变：
-
-::: swiper
-
-![1](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-03-16-51-29.png)
-
-![2](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-03-16-51-44.png)
-
-![3](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-03-16-51-29.png)
-
-![4](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-03-16-52-09.png)
-
-:::
-
-如果不加 `timeout="0"`，`Loading...` 只会在首次加载的时候出现，后续 A B 之间的切换都不会出现。
-
-| `timeout` 值 | 后续更新有异步依赖时的行为 |
-| --- | --- |
-| 未设置（内部为 `-1`） | 继续显示旧内容，等新内容 resolve 后再切换，不显示 fallback |
-| `0` | 立即切换到 fallback |
-| `> 0`（如 `10`） | 等待 N 毫秒后切换到 fallback |
-
-## 17. 💻 demos.6 - `default` 和 `fallback` 插槽的切换逻辑 - 持续触发异步，但只有首次触发 `fallback`
-
-::: code-group
-
-```html [App.vue]
-<script setup>
-  import AsyncComp from './AsyncComp.vue'
-</script>
-
-<template>
-  <!--
-    首次渲染：AsyncComp 的 async setup 被 Suspense 追踪，
-    suspense.deps > 0，展示 fallback，等 setup resolve 后切换到 default。
-
-    后续点击按钮：根节点始终是 AsyncComp，类型不变，
-    走 isSameVNodeType 为 true 的普通 patch 分支。
-    registerDep 中 isInPendingSuspense 为 false（pendingBranch 已清空），
-    即使 watch 内部触发了新的异步操作，Suspense 也不会感知，不会回退到 fallback。
-  -->
-  <Suspense>
-    <template #default>
-      <AsyncComp />
-    </template>
-    <template #fallback>
-      <p style="padding: 20px; color: gray; font-size: 24px;">Loading…</p>
-    </template>
-  </Suspense>
-</template>
-```
-
-```html [AsyncComp.vue]
-<script setup>
-  import { ref, watch } from 'vue'
-
-  const count = ref(0)
-  const watchResult = ref('')
-  const pending = ref(false)
-
-  // async setup → 被 Suspense 追踪，只有这一次会触发 fallback
-  const data = await new Promise(resolve => {
-    setTimeout(() => resolve('setup 就绪'), 1000)
-  })
-
-  // watch 中的异步操作 → 不被 Suspense 追踪
-  // Suspense 只追踪 setup 阶段注册的 Promise，watch 是运行时行为
-  watch(count, async (newVal) => {
-    pending.value = true
-    watchResult.value = ''
-    const result = await new Promise(resolve => {
-      setTimeout(() => resolve(`watch 异步完成：count = ${newVal}`), 1000)
-    })
-    watchResult.value = result
-    pending.value = false
-  })
-</script>
-
-<template>
-  <div style="padding: 20px;">
-    <p style="font-size: 24px;">{{ data }}</p>
-    <button @click="count++">count: {{ count }}</button>
-    <!-- pending 状态由组件内部自行管理，与 Suspense 无关 -->
-    <p v-if="pending" style="color: gray;">watch 异步中…</p>
-    <p v-else style="color: green;">{{ watchResult }}</p>
-  </div>
-</template>
-```
-
-:::
-
-![gif](./assets/1.gif)
-
-## 18. 🔗 引用
+## 12. 🔗 引用
 
 - [Vue.js 官方文档 - Suspense][1]
 - [Vue.js 官方文档 - `<Suspense>` API][2]
