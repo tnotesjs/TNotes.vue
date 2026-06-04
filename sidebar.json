@@ -286,6 +286,46 @@
         "link": "/notes/0106. TS 与组合式 API/README"
       },
       {
+        "text": "✅ 0011. 为组件的 props 标注类型",
+        "link": "/notes/0011. 为组件的 props 标注类型/README"
+      },
+      {
+        "text": "✅ 0012. 为组件的 emits 标注类型",
+        "link": "/notes/0012. 为组件的 emits 标注类型/README"
+      },
+      {
+        "text": "⏰ 0016. 为 ref() 标注类型",
+        "link": "/notes/0016. 为 ref() 标注类型/README"
+      },
+      {
+        "text": "⏰ 0021. 为 reactive() 标注类型",
+        "link": "/notes/0021. 为 reactive() 标注类型/README"
+      },
+      {
+        "text": "⏰ 0022. 为 computed() 标注类型",
+        "link": "/notes/0022. 为 computed() 标注类型/README"
+      },
+      {
+        "text": "⏰ 0026. 为事件处理函数标注类型",
+        "link": "/notes/0026. 为事件处理函数标注类型/README"
+      },
+      {
+        "text": "⏰ 0031. 为 provide、inject 标注类型",
+        "link": "/notes/0031. 为 provide、inject 标注类型/README"
+      },
+      {
+        "text": "⏰ 0035. 为模板引用标注类型",
+        "link": "/notes/0035. 为模板引用标注类型/README"
+      },
+      {
+        "text": "⏰ 0036. 为组件模板引用标注类型",
+        "link": "/notes/0036. 为组件模板引用标注类型/README"
+      },
+      {
+        "text": "⏰ 0040. 为自定义全局指令标注类型",
+        "link": "/notes/0040. 为自定义全局指令标注类型/README"
+      },
+      {
         "text": "⏰ 0107. TS 与选项式 API",
         "link": "/notes/0107. TS 与选项式 API/README"
       }

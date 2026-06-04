@@ -57,9 +57,23 @@ Vue 3.3+ 推荐使用这种更简洁的写法：
     close: []
   }>()
 
+  // 旧版（Vue 3.3 之前）等效写法：
+  // const emit = defineEmits<{
+  //   (e: 'change', id: number): void
+  //   (e: 'update', value: string): void
+  //   (e: 'close'): void
+  // }>()
+
+  // emit 的使用都是一样的：
   emit('change', 1)
   emit('update', 'hello')
   emit('close')
+
+  // 新旧两种写法的对比：
+  // 旧的函数重载写法更贴近 TypeScript 的函数签名模型。
+  // 新的对象映射写法更像是在声明组件的事件表，通常更简洁、更易读，更适合表达 Vue 组件的事件 API。
+  // key：表示事件名称
+  // val：表示参数列表
 </script>
 ```
 
