@@ -24,7 +24,10 @@
 
 ## 1. 🎯 本节内容
 
-- todo
+- 类型声明
+- 运行时声明
+- `defineEmits<Emits>()`
+- 元组写法
 
 ## 2. 🫧 评价
 
@@ -72,16 +75,16 @@ close 事件不需要参数
 
 ```ts
 emit('change', '1')
-// 报错：change 的参数应该是 number
+// ❌ 报错：change 的参数应该是 number
 
 emit('update', 123)
-// 报错：update 的参数应该是 string
+// ❌ 报错：update 的参数应该是 string
 
 emit('close', 'abc')
-// 报错：close 不需要参数
+// ❌ 报错：close 不需要参数
 
 emit('submit')
-// 报错：submit 不是已声明事件
+// ❌ 报错：submit 不是已声明事件
 ```
 
 ### 3.2. 多个参数的事件
@@ -94,24 +97,10 @@ const emit = defineEmits<{
 }>()
 
 emit('select', 1, 'Vue')
-```
 
-这里：
-
-```ts
-select: [id: number, name: string]
-```
-
-表示触发方式是：
-
-```ts
-emit('select', id, name)
-```
-
-而不是：
-
-```ts
-emit('select', [id, name])
+// select: [id: number, name: string]
+// 表示触发方式是：emit('select', id, name)
+// 而不是：emit('select', [id, name])
 ```
 
 ### 3.3. 可选参数
@@ -243,7 +232,7 @@ emit('close')
 
 这种写法本质上是在给 `emit` 函数声明多个调用签名。
 
-现在更推荐 Vue 3.3+ 的元组写法：
+在 Vue 3.3+ 中支持元组写法：
 
 ```ts
 const emit = defineEmits<{
@@ -253,7 +242,7 @@ const emit = defineEmits<{
 }>()
 ```
 
-可读性更好。
+这种写法更加简洁。
 
 ### 3.8. 运行时声明 emits
 
@@ -312,39 +301,15 @@ const emit = defineEmits<{
 change: (id: number) => {
   return typeof id === 'number'
 }
+// 返回：true，表示校验通过。
+// 返回：false，表示校验失败，开发环境下 Vue 会给出警告。
 ```
-
-返回：
-
-```ts
-true
-```
-
-表示校验通过。
-
-返回：
-
-```ts
-false
-```
-
-表示校验失败，开发环境下 Vue 会给出警告。
 
 第二，在 `lang="ts"` 下，函数参数上的类型标注也可以帮助 TypeScript 推导 `emit` 的参数类型。
 
-不过要注意：
+不过要注意：`id: number` 这个类型标注本身只属于 TypeScript，运行时会被擦除。
 
-```ts
-id: number
-```
-
-这个类型标注本身只属于 TypeScript，运行时会被擦除。
-
-真正的运行时校验来自：
-
-```ts
-typeof id === 'number'
-```
+真正的运行时校验来自：`typeof id === 'number'`。
 
 ### 3.9. 类型声明和运行时声明不能混用
 
@@ -374,7 +339,14 @@ const emit = defineEmits<{
 
 ### 3.10. 类型声明和运行时声明的区别
 
-| 对比 | 运行时声明 | 类型声明 | | | | | | 写法 | `defineEmits([...])` 或 `defineEmits({...})` | `defineEmits<Emits>()` | | 是否强依赖 TS | 不强依赖 | 强依赖 | | 是否需要 `lang="ts"` | 不一定 | 需要 | | 是否能做运行时校验 | 可以，尤其是对象写法 | 不能校验 payload | | 参数类型体验 | 较弱，或依赖 validator 参数标注 | 最强 | | 推荐场景 | 需要运行时校验时 | TS 项目中常规推荐 |
+| 对比 | 运行时声明 | 类型声明 |
+| --- | --- | --- |
+| 写法 | `defineEmits([...])` 或 `defineEmits({...})` | `defineEmits<Emits>()` |
+| 是否强依赖 TS | 不强依赖 | 强依赖 |
+| 是否需要 `lang="ts"` | 不一定 | 需要 |
+| 是否能做运行时校验 | 可以，尤其是对象写法 | 不能校验 payload |
+| 参数类型体验 | 较弱，或依赖 validator 参数标注 | 最强 |
+| 推荐场景 | 需要运行时校验时 | TS 项目中常规推荐 |
 
 ### 3.11. 实际项目推荐写法
 
@@ -442,10 +414,10 @@ const emit = defineEmits<{
 
 记住几个点：
 
-1. `defineEmits<Emits>()` 是类型声明，强依赖 TS。
-2. Vue 3.3+ 推荐使用对象 + 元组写法。
-3. 没有参数的事件写成 `close: []`。
-4. 多参数事件写成 `select: [id: number, name: string]`。
-5. `v-model` 事件写成 `'update:modelValue': [value: string]`。
-6. 运行时声明可以不依赖 TS，但参数类型控制较弱。
-7. 类型声明和运行时声明不能同时使用。
+- `defineEmits<Emits>()` 是类型声明，强依赖 TS
+- Vue 3.3+ 推荐使用对象 + 元组写法
+- 没有参数的事件写成 `close: []`
+- 多参数事件写成 `select: [id: number, name: string]`
+- `v-model` 事件写成 `'update:modelValue': [value: string]`
+- 运行时声明可以不依赖 TS，但参数类型控制较弱
+- 类型声明和运行时声明不能同时使用
