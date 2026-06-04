@@ -2,10 +2,10 @@
   "bilibili": [],
   "tnotes": [],
   "yuque": [],
-  "done": false,
-  "enableDiscussions": false,
-  "description": "",
+  "done": true,
+  "enableDiscussions": true,
+  "description": "defineProps<Props>() 是 TS 项目里最常用的用于为组件的 Props 标注类型的写法。如果需要默认值，可以考虑使用 withDefaults 或者 Vue 3.5+ 支持的 Props 解构默认值语法。",
   "id": "4f8055fe-4dca-402e-a225-c354935d906d",
   "created_at": 1780551712821,
-  "updated_at": 1780551712821
+  "updated_at": 1780557713410
 }
