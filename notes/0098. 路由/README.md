@@ -99,27 +99,27 @@
 - 根据当前 hash 映射组件
 - 用动态组件渲染
 
-```vue
+```html
 <script setup>
-import { computed, ref } from 'vue'
-import About from './About.vue'
-import Home from './Home.vue'
-import NotFound from './NotFound.vue'
+  import { computed, ref } from 'vue'
+  import About from './About.vue'
+  import Home from './Home.vue'
+  import NotFound from './NotFound.vue'
 
-const routes = {
-  '/': Home,
-  '/about': About,
-}
+  const routes = {
+    '/': Home,
+    '/about': About,
+  }
 
-const currentPath = ref(window.location.hash)
+  const currentPath = ref(window.location.hash)
 
-window.addEventListener('hashchange', () => {
-  currentPath.value = window.location.hash
-})
+  window.addEventListener('hashchange', () => {
+    currentPath.value = window.location.hash
+  })
 
-const currentView = computed(() => {
-  return routes[currentPath.value.slice(1) || '/'] || NotFound
-})
+  const currentView = computed(() => {
+    return routes[currentPath.value.slice(1) || '/'] || NotFound
+  })
 </script>
 
 <template>

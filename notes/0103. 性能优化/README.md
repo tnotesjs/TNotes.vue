@@ -135,7 +135,7 @@ const Foo = defineAsyncComponent(() => import('./Foo.vue'))
 - 不要把 `activeId` 直接传给每一项
 - 更好的做法是在父组件里算出 `active` 再传下去
 
-```vue
+```html
 <ListItem v-for="item in list" :id="item.id" :active="item.id === activeId" />
 ```
 

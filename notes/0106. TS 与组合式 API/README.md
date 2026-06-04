@@ -62,25 +62,25 @@ Vue 官方明确推荐：如果你使用 TypeScript，更推荐搭配组合式 A
 
 运行时声明：
 
-```vue
+```html
 <script setup lang="ts">
-const props = defineProps({
-  foo: { type: String, required: true },
-  bar: Number,
-})
+  const props = defineProps({
+    foo: { type: String, required: true },
+    bar: Number,
+  })
 </script>
 ```
 
 基于类型的声明：
 
-```vue
+```html
 <script setup lang="ts">
-interface Props {
-  foo: string
-  bar?: number
-}
+  interface Props {
+    foo: string
+    bar?: number
+  }
 
-const props = defineProps<Props>()
+  const props = defineProps<Props>()
 </script>
 ```
 

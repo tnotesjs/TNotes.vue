@@ -45,19 +45,19 @@
 
 如果元素本身不会进入或离开 DOM，而只是某个状态变化后需要抖动、闪烁、强调，那么没必要强行上 `Transition`。直接通过类名切换配合 CSS 动画即可。
 
-```vue
+```html
 <script setup>
-import { ref } from 'vue'
+  import { ref } from 'vue'
 
-const disabled = ref(false)
+  const disabled = ref(false)
 
-function warnDisabled() {
-  disabled.value = true
+  function warnDisabled() {
+    disabled.value = true
 
-  setTimeout(() => {
-    disabled.value = false
-  }, 1500)
-}
+    setTimeout(() => {
+      disabled.value = false
+    }, 1500)
+  }
 </script>
 
 <template>
@@ -68,32 +68,32 @@ function warnDisabled() {
 </template>
 
 <style scoped>
-.shake {
-  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-}
-
-@keyframes shake {
-  10%,
-  90% {
-    transform: translate3d(-1px, 0, 0);
+  .shake {
+    animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
   }
 
-  20%,
-  80% {
-    transform: translate3d(2px, 0, 0);
-  }
+  @keyframes shake {
+    10%,
+    90% {
+      transform: translate3d(-1px, 0, 0);
+    }
 
-  30%,
-  50%,
-  70% {
-    transform: translate3d(-4px, 0, 0);
-  }
+    20%,
+    80% {
+      transform: translate3d(2px, 0, 0);
+    }
 
-  40%,
-  60% {
-    transform: translate3d(4px, 0, 0);
+    30%,
+    50%,
+    70% {
+      transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+      transform: translate3d(4px, 0, 0);
+    }
   }
-}
 </style>
 ```
 
@@ -103,15 +103,15 @@ function warnDisabled() {
 
 状态驱动动画的思路是：不是直接“操作动画”，而是修改响应式状态，让样式绑定自然插值。
 
-```vue
+```html
 <script setup>
-import { ref } from 'vue'
+  import { ref } from 'vue'
 
-const x = ref(0)
+  const x = ref(0)
 
-function onMousemove(event) {
-  x.value = event.clientX
-}
+  function onMousemove(event) {
+    x.value = event.clientX
+  }
 </script>
 
 <template>
@@ -126,9 +126,9 @@ function onMousemove(event) {
 </template>
 
 <style scoped>
-.movearea {
-  transition: 0.3s background-color ease;
-}
+  .movearea {
+    transition: 0.3s background-color ease;
+  }
 </style>
 ```
 
@@ -158,22 +158,22 @@ function onMousemove(event) {
 
 那么就可以用 `watch()` 监听响应式状态，再把变化交给 GSAP 之类的库。
 
-```vue
+```html
 <script setup>
-import { reactive, ref, watch } from 'vue'
-import gsap from 'gsap'
+  import { reactive, ref, watch } from 'vue'
+  import gsap from 'gsap'
 
-const number = ref(0)
-const tweened = reactive({
-  number: 0,
-})
-
-watch(number, (nextValue) => {
-  gsap.to(tweened, {
-    duration: 0.5,
-    number: Number(nextValue) || 0,
+  const number = ref(0)
+  const tweened = reactive({
+    number: 0,
   })
-})
+
+  watch(number, (nextValue) => {
+    gsap.to(tweened, {
+      duration: 0.5,
+      number: Number(nextValue) || 0,
+    })
+  })
 </script>
 
 <template>

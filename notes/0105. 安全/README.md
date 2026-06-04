@@ -60,7 +60,7 @@ Vue 默认会做两类非常重要的自动转义。
 
 ### 4.1. HTML 内容转义
 
-```vue
+```html
 <h1>{{ userProvidedString }}</h1>
 ```
 
@@ -68,7 +68,7 @@ Vue 默认会做两类非常重要的自动转义。
 
 ### 4.2. Attribute 绑定转义
 
-```vue
+```html
 <h1 :title="userProvidedString">hello</h1>
 ```
 
@@ -87,7 +87,7 @@ Vue 默认会做两类非常重要的自动转义。
 
 ### 5.1. `v-html`
 
-```vue
+```html
 <div v-html="userProvidedHtml"></div>
 ```
 
@@ -103,7 +103,7 @@ Vue 默认会做两类非常重要的自动转义。
 
 ### 6.1. URL 注入
 
-```vue
+```html
 <a :href="userProvidedUrl">click me</a>
 ```
 
@@ -113,7 +113,7 @@ Vue 默认会做两类非常重要的自动转义。
 
 ### 6.2. 样式注入
 
-```vue
+```html
 <a :href="sanitizedUrl" :style="userProvidedStyles">click me</a>
 ```
 
@@ -124,7 +124,7 @@ Vue 默认会做两类非常重要的自动转义。
 - 尽量不要允许用户自由控制整段 CSS
 - 真要开放样式能力，优先使用对象语法，只暴露可控字段
 
-```vue
+```html
 <a
   :href="sanitizedUrl"
   :style="{

@@ -77,9 +77,9 @@ export const store = reactive({
 
 然后在不同组件中直接导入：
 
-```vue
+```html
 <script setup>
-import { store } from './store.js'
+  import { store } from './store.js'
 </script>
 
 <template>
@@ -120,7 +120,7 @@ export function useCount() {
 
 如果任意组件都可以直接写：
 
-```vue
+```html
 <button @click="store.count++">+1</button>
 ```
 
@@ -145,10 +145,8 @@ export const store = reactive({
 
 调用时这样写：
 
-```vue
-<button @click="store.increment()">
-  {{ store.count }}
-</button>
+```html
+<button @click="store.increment()">{{ store.count }}</button>
 ```
 
 这样做的意义是：状态和修改意图都集中起来了。后面如果你要做日志、权限、调试、重构，都会更容易。

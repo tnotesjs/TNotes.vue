@@ -57,7 +57,7 @@ Web 无障碍访问（a11y）指的是让网站能够被更多人正常使用，
 
 官方首先建议在页面顶部添加“跳过链接”，让键盘用户可以直接跳到主内容区：
 
-```vue
+```html
 <span ref="backToTop" tabindex="-1" />
 <ul class="skip-links">
   <li>
@@ -68,20 +68,20 @@ Web 无障碍访问（a11y）指的是让网站能够被更多人正常使用，
 
 在使用 `vue-router` 时，还应在路由变化后把焦点移回页面顶部锚点：
 
-```vue
+```html
 <script setup>
-import { ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+  import { ref, watch } from 'vue'
+  import { useRoute } from 'vue-router'
 
-const route = useRoute()
-const backToTop = ref()
+  const route = useRoute()
+  const backToTop = ref()
 
-watch(
-  () => route.path,
-  () => {
-    backToTop.value.focus()
-  },
-)
+  watch(
+    () => route.path,
+    () => {
+      backToTop.value.focus()
+    },
+  )
 </script>
 ```
 
@@ -97,7 +97,7 @@ watch(
 - 不要只靠样式把普通文本伪装成标题
 - 不要在同一章节里跳级
 
-```vue
+```html
 <main role="main" aria-labelledby="main-title">
   <h1 id="main-title">Main title</h1>
 
@@ -131,7 +131,7 @@ watch(
 
 最基础的做法就是显式关联 `label` 和 `id`：
 
-```vue
+```html
 <label for="name">Name:</label>
 <input id="name" name="name" type="text" v-model="name" />
 ```
@@ -142,7 +142,7 @@ watch(
 - `aria-labelledby`：引用页面上已有可见文本作为名称
 - `aria-describedby`：补充说明文字
 
-```vue
+```html
 <input
   id="name"
   v-model="name"
@@ -192,16 +192,15 @@ watch(
 
 在表单里写按钮时要显式声明 `type`，避免意外触发表单提交：
 
-```vue
-<button type="button">Cancel</button>
-<button type="submit">Submit</button>
+```html
+<button type="button">Cancel</button> <button type="submit">Submit</button>
 ```
 
 ### 7.4. 图标按钮要有可访问名称
 
 如果按钮主要靠图标表达意义，图标本身可以 `aria-hidden="true"`，但按钮还要提供可读文本：
 
-```vue
+```html
 <button type="submit">
   <i class="fas fa-search" aria-hidden="true"></i>
   <span class="hidden-visually">Search</span>

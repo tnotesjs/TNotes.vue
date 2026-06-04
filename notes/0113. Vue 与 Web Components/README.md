@@ -68,7 +68,7 @@ export default {
 
 Vue 3 会先通过 `in` 检查元素实例上是否存在对应属性，如果存在，就优先按 DOM property 设置。个别场景下如果检查失败，可以强制使用 `.prop`：
 
-```vue
+```html
 <my-element :user.prop="{ name: 'jack' }"></my-element>
 ```
 
