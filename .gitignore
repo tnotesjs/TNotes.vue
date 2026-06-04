@@ -96,3 +96,6 @@ results
 
 # todo
 todo
+
+# 合并笔记脚本 scripts/merge-notes.js 的输出产物
+MERGE_NOTES_OUTPUT.md
