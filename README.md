@@ -74,7 +74,7 @@
 
 ## 7. 内置组件
 
-- [ ] [0081. 内置组件](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0081.%20%E5%86%85%E7%BD%AE%E7%BB%84%E4%BB%B6/README.md)
+- [x] [0081. 内置组件](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0081.%20%E5%86%85%E7%BD%AE%E7%BB%84%E4%BB%B6/README.md)
 - [x] [0095. Transition](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0095.%20Transition/README.md)
 - [x] [0094. TransitionGroup](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0094.%20TransitionGroup/README.md)
 - [x] [0093. KeepAlive 和 component](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0093.%20KeepAlive%20%E5%92%8C%20component/README.md)
