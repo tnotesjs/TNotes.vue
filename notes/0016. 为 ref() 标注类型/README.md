@@ -1,4 +1,4 @@
-# [0016. 为 ref() 标注类型](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0016.%20%E4%B8%BA%20ref()%20%E6%A0%87%E6%B3%A8%E7%B1%BB%E5%9E%8B)
+# [0016. 为 ref() 标注类型](<https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0016.%20%E4%B8%BA%20ref()%20%E6%A0%87%E6%B3%A8%E7%B1%BB%E5%9E%8B>)
 
 <!-- region:toc -->
 
@@ -9,7 +9,7 @@
   - [3.2. 使用泛型参数标注 ref 类型](#32-使用泛型参数标注-ref-类型)
   - [3.3. 初始值是 null 的情况](#33-初始值是-null-的情况)
   - [3.4. 没有初始值的情况](#34-没有初始值的情况)
-  - [3.5. 使用 `Ref<T>` 显式标注变量类型](#35-使用-reft-显式标注变量类型)
+  - [3.5. 不依赖类型推导：直接使用 `Ref<T>` 显式标注变量类型](#35-不依赖类型推导直接使用-reft-显式标注变量类型)
   - [3.6. 数组类型 ref](#36-数组类型-ref)
   - [3.7. 对象类型 ref](#37-对象类型-ref)
   - [3.8. 字面量联合类型 ref](#38-字面量联合类型-ref)
@@ -27,7 +27,8 @@
 
 ## 1. 🎯 本节内容
 
-- todo
+- `Ref<T>`
+- `ref<T>()`
 
 ## 2. 🫧 评价
 
@@ -49,35 +50,20 @@
 import { ref } from 'vue'
 
 const count = ref(0)
-```
 
-此时：
+// 对应的类型信息：
+// count // Ref<number>
+// count.value // number
 
-```ts
-count // Ref<number>
-count.value // number
-```
+count.value = 1 // ✅ 正确
 
-所以：
-
-```ts
-count.value = 1 // 正确
-
-count.value = '1'
+count.value = '1' // ❌ 报错
 // TS 报错：Type 'string' is not assignable to type 'number'
-```
 
-再比如：
-
-```ts
-const name = ref('Tom')
-// Ref<string>
-
-const visible = ref(false)
-// Ref<boolean>
-
-const list = ref<string[]>([])
-// Ref<string[]>
+// 其它类型也是类似的，可以自行完成推导：
+const name = ref('Tom') // Ref<string>
+const visible = ref(false) // Ref<boolean>
+const list = ref<string[]>([]) // Ref<string[]>
 ```
 
 ### 3.2. 使用泛型参数标注 ref 类型
@@ -90,15 +76,10 @@ const list = ref<string[]>([])
 import { ref } from 'vue'
 
 const year = ref<string | number>('2020')
+// 此时 year 的类型是 Ref<string | number>
 
-year.value = '2024'
-year.value = 2024
-```
-
-此时：
-
-```ts
-year // Ref<string | number>
+year.value = '2024' // ok
+year.value = 2024 // ok
 ```
 
 ### 3.3. 初始值是 null 的情况
@@ -193,28 +174,20 @@ const count = ref<number>(0)
 Ref<number>
 ```
 
-### 3.5. 使用 `Ref<T>` 显式标注变量类型
-
-也可以这样写：
+### 3.5. 不依赖类型推导：直接使用 `Ref<T>` 显式标注变量类型
 
 ```ts
 import { ref } from 'vue'
 import type { Ref } from 'vue'
 
+// 直接使用 Ref<T> 显式标注变量类型
 const year: Ref<string | number> = ref('2020')
+// 不过实际开发中更常见的是直接给 ref() 传泛型：
+// const year = ref<string | number>('2020')
+// 因为这种写法更加简洁一些。
 
 year.value = 2024
 ```
-
-这种写法也是可以的。
-
-不过实际开发中更常见的是直接给 `ref()` 传泛型：
-
-```ts
-const year = ref<string | number>('2020')
-```
-
-因为更简洁。
 
 ### 3.6. 数组类型 ref
 
@@ -392,9 +365,9 @@ const user = ref<User | null>(null)
 
 核心规则：
 
-1. 有明确初始值时，优先让 TS 自动推导。
-2. 初始值是 `null` 时，用 `ref<T | null>(null)`。
-3. 初始值是空数组时，用 `ref<T[]>([])`。
-4. 没有初始值时，结果会是 `Ref<T | undefined>`。
-5. 需要联合类型时，用 `ref<A | B>()`。
-6. `Ref<T>` 可以用，但通常 `ref<T>()` 更简洁。
+- 有明确初始值时，优先让 TS 自动推导。
+- 初始值是 `null` 时，用 `ref<T | null>(null)`。
+- 初始值是空数组时，用 `ref<T[]>([])`。
+- 没有初始值时，结果会是 `Ref<T | undefined>`。
+- 需要联合类型时，用 `ref<A | B>()`。
+- `Ref<T>` 可以用，但通常 `ref<T>()` 更简洁。
