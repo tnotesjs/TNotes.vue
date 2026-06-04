@@ -2,9 +2,9 @@
   "bilibili": [],
   "tnotes": [],
   "yuque": [],
-  "done": false,
-  "enableDiscussions": false,
-  "description": "",
+  "done": true,
+  "enableDiscussions": true,
+  "description": "ref() 的类型通常不需要手动显式标注，由 TS 自动完成类型推导即可，如果推导结果不是你想要的，再考虑进一步通过 ref<T>() 泛型 T 来明确具体的类型信息。",
   "id": "b79cba8e-b3d9-446c-b8fa-fe417a7c6202",
   "created_at": 1780551712827,
   "updated_at": 1780551712827
