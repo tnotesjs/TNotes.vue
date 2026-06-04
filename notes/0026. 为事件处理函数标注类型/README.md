@@ -40,7 +40,7 @@
 
 ```html
 <script setup lang="ts">
-  function handleClick(event: MouseEvent): void {
+  function handleClick(event: PointerEvent): void {
     console.log(event.clientX, event.clientY)
   }
 </script>
@@ -55,7 +55,7 @@
 ### 3.1. 基本写法
 
 ```ts
-function handleClick(event: MouseEvent) {
+function handleClick(event: PointerEvent) {
   console.log(event.clientX)
 }
 ```
@@ -63,7 +63,7 @@ function handleClick(event: MouseEvent) {
 或者箭头函数：
 
 ```ts
-const handleClick = (event: MouseEvent): void => {
+const handleClick = (event: PointerEvent): void => {
   console.log(event.clientY)
 }
 ```
@@ -92,11 +92,11 @@ const handleClick = (event: MouseEvent): void => {
 
 | 事件                                     | 推荐类型                 |
 | ---------------------------------------- | ------------------------ |
-| `@click`                                 | `MouseEvent`             |
+| `@click`                                 | `PointerEvent`           |
 | `@dblclick`                              | `MouseEvent`             |
 | `@mousedown` / `@mouseup` / `@mousemove` | `MouseEvent`             |
 | `@keydown` / `@keyup`                    | `KeyboardEvent`          |
-| `@input`                                 | `Event`                  |
+| `@input`                                 | `InputEvent`             |
 | `@change`                                | `Event`                  |
 | `@submit`                                | `SubmitEvent` 或 `Event` |
 | `@focus` / `@blur`                       | `FocusEvent`             |
@@ -111,7 +111,7 @@ const handleClick = (event: MouseEvent): void => {
 
 ```html
 <script setup lang="ts">
-  function handleClick(event: MouseEvent): void {
+  function handleClick(event: PointerEvent): void {
     console.log(event.clientX)
     console.log(event.clientY)
   }
@@ -126,7 +126,7 @@ const handleClick = (event: MouseEvent): void => {
 
 ```html
 <script setup lang="ts">
-  function handleDelete(id: number, event: MouseEvent): void {
+  function handleDelete(id: number, event: PointerEvent): void {
     console.log(id)
     console.log(event.clientX)
   }
@@ -139,7 +139,7 @@ const handleClick = (event: MouseEvent): void => {
 
 ### 3.4. 输入框事件
 
-`@input`、`@change` 通常标注为 `Event`。
+`@input` 通常标注为 `InputEvent`，`@change` 通常标注为 `Event`。
 
 ```html
 <script setup lang="ts">
@@ -147,7 +147,7 @@ const handleClick = (event: MouseEvent): void => {
 
   const keyword = ref('')
 
-  function handleInput(event: Event): void {
+  function handleInput(event: InputEvent): void {
     const input = event.target as HTMLInputElement
     keyword.value = input.value
   }
@@ -380,7 +380,7 @@ event.currentTarget // button
 所以如果你想拿绑定事件的那个元素，可以用：
 
 ```ts
-function handleClick(event: MouseEvent): void {
+function handleClick(event: PointerEvent): void {
   const button = event.currentTarget as HTMLButtonElement
   console.log(button.disabled)
 }
@@ -471,13 +471,13 @@ event: Event
 #### 点击事件
 
 ```ts
-function handleClick(event: MouseEvent): void {}
+function handleClick(event: PointerEvent): void {}
 ```
 
 #### 输入事件
 
 ```ts
-function handleInput(event: Event): void {
+function handleInput(event: InputEvent): void {
   const input = event.target as HTMLInputElement
   console.log(input.value)
 }
@@ -504,8 +504,8 @@ function handleSelect(user: User): void {}
 ### 3.15. 核心记住
 
 1. 原生 DOM 事件参数标注为对应的 DOM Event 类型。
-2. `@click` 通常是 `MouseEvent`。
-3. `@input`、`@change` 通常是 `Event`。
+2. `@click` 通常是 `PointerEvent`。
+3. `@input` 通常是 `InputEvent`，`@change` 通常是 `Event`。
 4. 访问 `event.target.value` 时，需要断言具体元素类型。
 5. 自定义组件事件的参数类型取决于子组件 `emit` 出来的 payload。
 6. 不用事件对象时，函数可以不写参数。

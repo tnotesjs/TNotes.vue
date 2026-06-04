@@ -248,7 +248,7 @@ const child = useTemplateRef<FooType>('child')
 
 ### 7.2. 全局自定义指令
 
-要给 `app.directive()` 注册的全局指令补类型，可以扩展 `ComponentCustomProperties`：
+要给 `app.directive()` 注册的全局指令补类型，可以扩展 `GlobalDirectives`：
 
 ```ts
 import type { Directive } from 'vue'
@@ -256,7 +256,7 @@ import type { Directive } from 'vue'
 export type HighlightDirective = Directive<HTMLElement, string>
 
 declare module 'vue' {
-  interface ComponentCustomProperties {
+  interface GlobalDirectives {
     vHighlight: HighlightDirective
   }
 }
