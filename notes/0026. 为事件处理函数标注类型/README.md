@@ -85,22 +85,129 @@ const handleClick = (event: PointerEvent): void => {
 
 ### 3.2. 常见 DOM 事件类型
 
-| 事件                                     | 推荐类型                 |
-| ---------------------------------------- | ------------------------ |
-| `@click`                                 | `PointerEvent`           |
-| `@dblclick`                              | `MouseEvent`             |
-| `@mousedown` / `@mouseup` / `@mousemove` | `MouseEvent`             |
-| `@keydown` / `@keyup`                    | `KeyboardEvent`          |
-| `@input`                                 | `InputEvent`             |
-| `@change`                                | `Event`                  |
-| `@submit`                                | `SubmitEvent` 或 `Event` |
-| `@focus` / `@blur`                       | `FocusEvent`             |
-| `@scroll`                                | `Event`                  |
-| `@wheel`                                 | `WheelEvent`             |
-| `@pointerdown` / `@pointermove`          | `PointerEvent`           |
-| `@dragstart` / `@drop`                   | `DragEvent`              |
-| `@copy` / `@paste` / `@cut`              | `ClipboardEvent`         |
-| `@touchstart` / `@touchmove`             | `TouchEvent`             |
+| 事件                                     | 推荐类型         |
+| ---------------------------------------- | ---------------- |
+| `@click`                                 | `PointerEvent`   |
+| `@dblclick`                              | `MouseEvent`     |
+| `@mousedown` / `@mouseup` / `@mousemove` | `MouseEvent`     |
+| `@keydown` / `@keyup`                    | `KeyboardEvent`  |
+| `@input`                                 | `InputEvent`     |
+| `@change`                                | `Event`          |
+| `@submit`                                | `SubmitEvent`    |
+| `@focus` / `@blur`                       | `FocusEvent`     |
+| `@scroll`                                | `Event`          |
+| `@wheel`                                 | `WheelEvent`     |
+| `@pointerdown` / `@pointermove`          | `PointerEvent`   |
+| `@dragstart` / `@drop`                   | `DragEvent`      |
+| `@copy` / `@paste` / `@cut`              | `ClipboardEvent` |
+| `@touchstart` / `@touchmove`             | `TouchEvent`     |
+
+::: tip
+
+具体的类型参数，可以点进对应事件的类型声明文件查看。
+
+这里是从 `node_modules\.pnpm\@vue+runtime-dom@3.5.35\node_modules\@vue\runtime-dom\dist\runtime-dom.d.ts` 中 copy 的内容：
+
+```ts
+export interface Events {
+  onCopy: ClipboardEvent
+  onCut: ClipboardEvent
+  onPaste: ClipboardEvent
+  onCompositionend: CompositionEvent
+  onCompositionstart: CompositionEvent
+  onCompositionupdate: CompositionEvent
+  onDrag: DragEvent
+  onDragend: DragEvent
+  onDragenter: DragEvent
+  onDragexit: DragEvent
+  onDragleave: DragEvent
+  onDragover: DragEvent
+  onDragstart: DragEvent
+  onDrop: DragEvent
+  onFocus: FocusEvent
+  onFocusin: FocusEvent
+  onFocusout: FocusEvent
+  onBlur: FocusEvent
+  onChange: Event
+  onBeforeinput: InputEvent
+  onFormdata: FormDataEvent
+  onInput: InputEvent
+  onReset: Event
+  onSubmit: SubmitEvent
+  onInvalid: Event
+  onFullscreenchange: Event
+  onFullscreenerror: Event
+  onLoad: Event
+  onError: Event
+  onKeydown: KeyboardEvent
+  onKeypress: KeyboardEvent
+  onKeyup: KeyboardEvent
+  onDblclick: MouseEvent
+  onMousedown: MouseEvent
+  onMouseenter: MouseEvent
+  onMouseleave: MouseEvent
+  onMousemove: MouseEvent
+  onMouseout: MouseEvent
+  onMouseover: MouseEvent
+  onMouseup: MouseEvent
+  onAbort: UIEvent
+  onCanplay: Event
+  onCanplaythrough: Event
+  onDurationchange: Event
+  onEmptied: Event
+  onEncrypted: MediaEncryptedEvent
+  onEnded: Event
+  onLoadeddata: Event
+  onLoadedmetadata: Event
+  onLoadstart: Event
+  onPause: Event
+  onPlay: Event
+  onPlaying: Event
+  onProgress: ProgressEvent
+  onRatechange: Event
+  onSeeked: Event
+  onSeeking: Event
+  onStalled: Event
+  onSuspend: Event
+  onTimeupdate: Event
+  onVolumechange: Event
+  onWaiting: Event
+  onSelect: Event
+  onScroll: Event
+  onScrollend: Event
+  onTouchcancel: TouchEvent
+  onTouchend: TouchEvent
+  onTouchmove: TouchEvent
+  onTouchstart: TouchEvent
+  onAuxclick: PointerEvent
+  onClick: PointerEvent
+  onContextmenu: PointerEvent
+  onGotpointercapture: PointerEvent
+  onLostpointercapture: PointerEvent
+  onPointerdown: PointerEvent
+  onPointermove: PointerEvent
+  onPointerup: PointerEvent
+  onPointercancel: PointerEvent
+  onPointerenter: PointerEvent
+  onPointerleave: PointerEvent
+  onPointerover: PointerEvent
+  onPointerout: PointerEvent
+  onBeforetoggle: ToggleEvent
+  onToggle: ToggleEvent
+  onWheel: WheelEvent
+  onAnimationcancel: AnimationEvent
+  onAnimationstart: AnimationEvent
+  onAnimationend: AnimationEvent
+  onAnimationiteration: AnimationEvent
+  onSecuritypolicyviolation: SecurityPolicyViolationEvent
+  onTransitioncancel: TransitionEvent
+  onTransitionend: TransitionEvent
+  onTransitionrun: TransitionEvent
+  onTransitionstart: TransitionEvent
+}
+```
+
+:::
 
 ### 3.3. 点击事件
 
