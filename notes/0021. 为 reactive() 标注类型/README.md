@@ -19,12 +19,21 @@
     - [简单对象：自动推导](#简单对象自动推导)
     - [复杂对象：接口标注变量类型](#复杂对象接口标注变量类型)
     - [小对象：字段断言](#小对象字段断言)
+- [4. 🤔 官方提到的 `reactive()` 标注类型时的深层次 ref 解包问题是什么？](#4--官方提到的-reactive-标注类型时的深层次-ref-解包问题是什么)
+  - [4.1. 官方文档原文内容](#41-官方文档原文内容)
+  - [4.2. 问题](#42-问题)
+  - [4.3. 示例](#43-示例)
+    - [为什么 `reactive<Book>({ price })` 会报错](#为什么-reactivebook-price--会报错)
+      - [写法 1：变量类型标注（不报错）](#写法-1变量类型标注不报错)
+      - [写法 2：泛型参数（报错）](#写法-2泛型参数报错)
+      - [总结](#总结)
 
 <!-- endregion:toc -->
 
 ## 1. 🎯 本节内容
 
-- todo
+- `reactive<T>()`
+- `ref` 类型的深层解包问题
 
 ## 2. 🫧 评价
 
@@ -449,3 +458,143 @@ const state = reactive({
 - 不推荐优先使用 `reactive<T>()`。
 - `reactive()` 会自动解包对象属性中的 `ref`。
 - 如果需要整体替换对象，考虑使用 `ref<State>()`。
+
+## 4. 🤔 官方提到的 `reactive()` 标注类型时的深层次 ref 解包问题是什么？
+
+### 4.1. 官方文档原文内容
+
+`reactive()` 也会隐式地从它的参数中推导类型：
+
+```ts
+import { reactive } from 'vue'
+
+// 推导得到的类型：{ title: string }
+const book = reactive({ title: 'Vue 3 指引' })
+```
+
+要显式地标注一个 `reactive` 变量的类型，我们可以使用接口：
+
+```ts
+import { reactive } from 'vue'
+
+interface Book {
+  title: string
+  year?: number
+}
+
+const book: Book = reactive({ title: 'Vue 3 指引' })
+```
+
+::: tip
+
+不推荐使用 `reactive()` 的泛型参数，因为处理了深层次 ref 解包的返回值与泛型参数的类型不同。
+
+:::
+
+### 4.2. 问题
+
+“不推荐使用 `reactive()` 的泛型参数，因为处理了深层次 ref 解包的返回值与泛型参数的类型不同。”
+
+这句话是什么意思？
+
+### 4.3. 示例
+
+```html
+<template>
+  <div>
+    <p>book1.price: {{ book1.price }}</p>
+    <p>book2.price: {{ book2.price }}</p>
+  </div>
+</template>
+
+<script setup lang="ts">
+  import { reactive, ref } from 'vue'
+
+  interface Book {
+    title: string
+    price: number
+  }
+
+  const price = ref(99)
+
+  /**
+   * 写法 1：
+   * Book 标注的是 reactive 返回后的 book1 变量类型。
+   *
+   * reactive 返回后，price 会从 Ref<number> 解包成 number，
+   * 所以可以赋值给 Book。
+   */
+  const book1: Book = reactive({
+    title: '变量类型标注',
+    price,
+  })
+
+  /**
+   * 写法 2：
+   * Book 作为 reactive<Book>() 的泛型参数。
+   *
+   * 这里 Book 会约束传给 reactive 的原始对象。
+   * 但是 Book.price 要求 number，
+   * 你实际传进去的是 Ref<number>，
+   * 所以 vue-tsc 应该报错。
+   */
+  const book2 = reactive<Book>({
+    title: '泛型参数标注',
+    price,
+    // ^ 这里会报错：Type 'Ref<number, number>' is not assignable to type 'number'.
+  })
+</script>
+```
+
+VS Code 中的报错截图如下：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-05-08-17-05.png)
+
+#### 为什么 `reactive<Book>({ price })` 会报错
+
+关键在于 Vue 的 `reactive()` 泛型参数和变量类型标注的约束时机不同。
+
+##### 写法 1：变量类型标注（不报错）
+
+```ts
+// 这里的 Book 约束的是 reactive 的输出
+// 也就是 reactive 的返回值
+// 是解包之后的 price 也就是 number
+const book1: Book = reactive({
+  title: '变量类型标注',
+  price, // 此时 price 是 Ref<number>，但是返回值会被解包，也就是 number 类型
+})
+```
+
+TypeScript 的处理顺序：
+
+1. 先推导 `reactive({...})` 的返回值类型 => Vue 的类型声明会让 `reactive` 自动解包 `Ref`，所以 `price` 在返回值中变成 `number`
+2. 再检查返回值是否可赋值给 `Book` => `{ title: string; price: number }` ✅
+
+##### 写法 2：泛型参数（报错）
+
+```ts
+// Book 约束的是 reactive 的输入（原始对象）
+// 此时 price ref 还没被解包
+// price 的类型还是 Ref<number>
+const book2 = reactive<Book>({
+  title: '泛型参数标注',
+  price, // 此时 price 是 Ref<number>，和泛型参数要求的 number 类型不一致，这里就报错了！
+})
+```
+
+当 `reactive` 带上泛型参数 `<Book>` 时，TypeScript 的处理顺序：
+
+1. 用 `Book` 去约束传给 `reactive` 的输入对象（原始对象字面量）
+2. 原始对象中 `price` 的类型是 `Ref<number>`（因为 `ref(99)` 的类型就是 `Ref<number>`）
+3. 而 `Book.price` 要求 `number`
+4. `Ref<number>` 不能赋值给 `number` ❌
+
+##### 总结
+
+| 写法                         | 约束时机 | 解包是否生效 |
+| ---------------------------- | -------- | ------------ |
+| `const x: T = reactive(...)` | 约束输出 | ✅ 已解包    |
+| `reactive<T>(...)`           | 约束输入 | ❌ 尚未解包  |
+
+所以 `reactive<Book>({ price })` 中，TypeScript 期望你传入的原始对象里 `price` 就是 `number`，而不是 `Ref<number>`。

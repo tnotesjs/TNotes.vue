@@ -2,10 +2,10 @@
   "bilibili": [],
   "tnotes": [],
   "yuque": [],
-  "done": false,
-  "enableDiscussions": false,
-  "description": "",
+  "done": true,
+  "enableDiscussions": true,
+  "description": "reactive() 只需简单了解即可，遵循 ref() 优先原则！官方确实明确推荐把 ref() 作为声明响应式状态的主要 API。整个项目主要甚至全部使用 ref() 没有问题，而且在 TS 项目里很常见。",
   "id": "2b9dc768-df5b-4f61-a2dd-79894707db2a",
   "created_at": 1780551712832,
-  "updated_at": 1780551712832
+  "updated_at": 1780619061967
 }

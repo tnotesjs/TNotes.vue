@@ -106,7 +106,7 @@
 - [x] [0011. 为组件的 props 标注类型](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0011.%20%E4%B8%BA%E7%BB%84%E4%BB%B6%E7%9A%84%20props%20%E6%A0%87%E6%B3%A8%E7%B1%BB%E5%9E%8B/README.md)
 - [x] [0012. 为组件的 emits 标注类型](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0012.%20%E4%B8%BA%E7%BB%84%E4%BB%B6%E7%9A%84%20emits%20%E6%A0%87%E6%B3%A8%E7%B1%BB%E5%9E%8B/README.md)
 - [x] [0016. 为 ref() 标注类型](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0016.%20%E4%B8%BA%20ref()%20%E6%A0%87%E6%B3%A8%E7%B1%BB%E5%9E%8B/README.md)
-- [ ] [0021. 为 reactive() 标注类型](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0021.%20%E4%B8%BA%20reactive()%20%E6%A0%87%E6%B3%A8%E7%B1%BB%E5%9E%8B/README.md)
+- [x] [0021. 为 reactive() 标注类型](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0021.%20%E4%B8%BA%20reactive()%20%E6%A0%87%E6%B3%A8%E7%B1%BB%E5%9E%8B/README.md)
 - [ ] [0022. 为 computed() 标注类型](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0022.%20%E4%B8%BA%20computed()%20%E6%A0%87%E6%B3%A8%E7%B1%BB%E5%9E%8B/README.md)
 - [ ] [0026. 为事件处理函数标注类型](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0026.%20%E4%B8%BA%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E5%87%BD%E6%95%B0%E6%A0%87%E6%B3%A8%E7%B1%BB%E5%9E%8B/README.md)
 - [ ] [0031. 为 provide、inject 标注类型](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0031.%20%E4%B8%BA%20provide%E3%80%81inject%20%E6%A0%87%E6%B3%A8%E7%B1%BB%E5%9E%8B/README.md)
