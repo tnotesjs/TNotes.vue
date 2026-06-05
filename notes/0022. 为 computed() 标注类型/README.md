@@ -25,7 +25,10 @@
 
 ## 1. 🎯 本节内容
 
-- todo
+- `ComputedRef<T>`（readonly）
+- `WritableComputedRef<T>`（writable）
+- `computed<T>()`
+- 无 setter 的 computed 默认 readonly
 
 ## 2. 🫧 评价
 
@@ -279,8 +282,9 @@ const double = computed<number>(() => {
 ```ts
 const double = computed(() => count.value * 2)
 
-double.value = 10
-// 报错
+double.value = 10 // 报错
+// 无 setter 的 computed 是 ComputedRef 类型
+// ComputedRef 类型是制度的
 ```
 
 如果需要可写 computed，要传入 `get` 和 `set`：
@@ -296,23 +300,12 @@ const double = computed<number>({
     count.value = value / 2
   },
 })
-```
 
-使用：
-
-```ts
-double.value = 10
-
+// 使用：
+double.value = 10 // ok
 console.log(count.value) // 5
+// count.value 是 number 类型
 ```
-
-这里：
-
-```ts
-value
-```
-
-会被推导为 `number`。
 
 ### 3.9. 可写 computed 配合 v-model
 
@@ -391,17 +384,10 @@ const model = computed<string>({
 #### 错误 1：把 computed 标注成普通值
 
 ```ts
-const double: number = computed(() => count.value * 2)
-// 错误
+const double: number = computed(() => count.value * 2) // ❌
 ```
 
-因为 `computed()` 返回的是：
-
-```ts
-ComputedRef<number>
-```
-
-不是 `number`。
+因为 `computed()` 返回的是：`ComputedRef<number>`，不是 `number`。
 
 正确写法：
 
@@ -517,8 +503,8 @@ const model = computed<string>({
 
 核心记住：
 
-- 简单场景让 TS 自动推导。
-- 需要约束返回值时用 `computed<T>()`。
-- `computed()` 返回的是 `ComputedRef<T>`，访问值要用 `.value`。
-- 可写 computed 使用 `{ get, set }`。
-- `ComputedRef<T>`、`WritableComputedRef<T>` 可以显式标注，但通常不如泛型写法简洁。
+- 简单场景让 TS 自动推导
+- 需要约束返回值时用 `computed<T>()`
+- `computed()` 返回的是 `ComputedRef<T>`，访问值要用 `.value`
+- 可写 computed 使用 `{ get, set }`
+- `ComputedRef<T>`、`WritableComputedRef<T>` 可以显式标注，但通常不如泛型写法简洁

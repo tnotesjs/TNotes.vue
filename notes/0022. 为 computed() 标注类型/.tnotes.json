@@ -2,9 +2,9 @@
   "bilibili": [],
   "tnotes": [],
   "yuque": [],
-  "done": false,
-  "enableDiscussions": false,
-  "description": "",
+  "done": true,
+  "enableDiscussions": true,
+  "description": "重点留意 ComputedRef<T> 和 WritableComputedRef<T>，前者是默认的 computed（只有 gettter，只读），后者是带有 setter 的 computed（可写）。",
   "id": "7e80794e-a79b-48b9-8687-bae66c06d873",
   "created_at": 1780551712835,
   "updated_at": 1780551712835
