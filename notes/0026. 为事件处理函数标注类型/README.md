@@ -68,23 +68,18 @@ const handleClick = (event: PointerEvent): void => {
 }
 ```
 
-模板中：
+模板中使用：
 
 ```html
 <button @click="handleClick">点击</button>
-```
 
-如果你写成：
-
-```html
+<!-- 如果你写成： -->
 <button @click="handleClick()">点击</button>
-```
+<!-- 这种写法会报错
+因为上述定义的 handleClick 的 event 参数是必填的
+如果不传递参数，就会抛出错误 -->
 
-则不会自动传入事件对象。
-
-如果需要显式传入：
-
-```html
+<!-- 如果想要显式传入事件参数，可以这么写： -->
 <button @click="handleClick($event)">点击</button>
 ```
 
