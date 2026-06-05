@@ -101,7 +101,7 @@
 
 ## 10. 搭配 TypeScript
 
-- [ ] [0068. 搭配 TypeScript](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0068.%20%E6%90%AD%E9%85%8D%20TypeScript/README.md)
+- [x] [0068. 搭配 TypeScript](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0068.%20%E6%90%AD%E9%85%8D%20TypeScript/README.md)
 - [ ] [0106. TS 与组合式 API](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0106.%20TS%20%E4%B8%8E%E7%BB%84%E5%90%88%E5%BC%8F%20API/README.md)
 - [x] [0011. 为组件的 props 标注类型](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0011.%20%E4%B8%BA%E7%BB%84%E4%BB%B6%E7%9A%84%20props%20%E6%A0%87%E6%B3%A8%E7%B1%BB%E5%9E%8B/README.md)
 - [x] [0012. 为组件的 emits 标注类型](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0012.%20%E4%B8%BA%E7%BB%84%E4%BB%B6%E7%9A%84%20emits%20%E6%A0%87%E6%B3%A8%E7%B1%BB%E5%9E%8B/README.md)

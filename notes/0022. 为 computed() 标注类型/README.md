@@ -4,7 +4,7 @@
 
 - [1. 🎯 本节内容](#1--本节内容)
 - [2. 🫧 评价](#2--评价)
-- [3. 🤔 如何为 computed() 标注类型？](#3--如何为-computed-标注类型)
+- [3. 🤔 如何为 `computed()` 标注类型？](#3--如何为-computed-标注类型)
   - [3.1. 自动推导类型](#31-自动推导类型)
   - [3.2. 使用泛型标注 computed 类型](#32-使用泛型标注-computed-类型)
   - [3.3. 标注字符串、布尔值、联合类型](#33-标注字符串布尔值联合类型)
@@ -37,7 +37,7 @@
 
 最常用的是前两种。
 
-## 3. 🤔 如何为 computed() 标注类型？
+## 3. 🤔 如何为 `computed()` 标注类型？
 
 ### 3.1. 自动推导类型
 
@@ -49,18 +49,11 @@ import { ref, computed } from 'vue'
 const count = ref(1)
 
 const double = computed(() => count.value * 2)
-```
+// 推导结果：
+// double // ComputedRef<number>
+// double.value // number
 
-此时：
-
-```ts
-double // ComputedRef<number>
-double.value // number
-```
-
-所以：
-
-```ts
+// 使用：
 double.value.toFixed(2) // 正确
 
 double.value = 10
