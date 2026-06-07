@@ -32,22 +32,22 @@
 
 ## 1. 🎯 本节内容
 
-- todo
+- `InjectionKey<T>`
+- 非空断言
+- 封装注入函数解决 `inject()` 的 `undefined` 问题
 
 ## 2. 🫧 评价
 
-- todo
-
-## 3. 🤔 如何为 provide、inject 标注类型？
-
 在 Vue 3 + TypeScript + Composition API 中，`provide / inject` 最推荐的类型标注方式是：
 
-> 使用 `InjectionKey<T>`。
+使用 `InjectionKey<T>`。
 
 它可以同时约束：
 
 1. `provide()` 提供的值类型
 2. `inject()` 注入出来的值类型
+
+## 3. 🤔 如何为 provide、inject 标注类型？
 
 ### 3.1. 推荐写法：使用 `InjectionKey<T>`
 
@@ -87,19 +87,13 @@ export const userKey = Symbol('user') as InjectionKey<User>
   import { userKey } from './injectionKeys'
 
   const user = inject(userKey)
+  // 注意：这里的 user 被推到为 User | undefined 而不是 User
+  // inject 接口定义：
+  // node_modules/@vue/runtime-core/dist/runtime-core.d.ts
+  // export declare function inject<T>(key: InjectionKey<T> | string): T | undefined;
+  // 因为可能没有上层组件提供这个值，所以 inject() 默认返回：T | undefined
+  // 所以这里 user 的类型是：User | undefined
 </script>
-```
-
-此时：
-
-```ts
-user // User | undefined
-```
-
-因为可能没有上层组件提供这个值，所以 `inject()` 默认返回：
-
-```ts
-T | undefined
 ```
 
 ### 3.2. `provide()` 也会被类型检查
@@ -107,32 +101,22 @@ T | undefined
 如果你使用了 `InjectionKey<T>`，`provide()` 的值会被 TypeScript 检查。
 
 ```ts
+// 正确：
 provide(userKey, {
   id: 1,
   name: 'Tom',
 })
-```
 
-正确。
-
-如果写错：
-
-```ts
+// 错误：
 provide(userKey, {
-  id: '1',
+  id: '1', // id 应该是 number 类型，这里是 string 类型
   name: 'Tom',
 })
-```
 
-会报错，因为 `id` 应该是 `number`。
-
-再比如：
-
-```ts
+// 错误：
 provide(userKey, 'hello')
+// userKey 对应的类型是 User，不是 string
 ```
-
-也会报错，因为 `userKey` 对应的类型是 `User`，不是 `string`。
 
 ### 3.3. 处理 `inject()` 的 `undefined`
 
@@ -160,27 +144,17 @@ if (user) {
 const user = inject(userKey, {
   id: 0,
   name: 'Guest',
-})
+} as User)
+// 此时 user 被推断为 User 类型
+// 而非 User | undefined 类型
 ```
-
-此时：
-
-```ts
-user // User
-```
-
-因为有默认值，所以不再是 `undefined`。
 
 #### 方式三：确定一定存在时使用非空断言
 
 ```ts
 const user = inject(userKey)!
-```
-
-此时：
-
-```ts
-user // User
+// 此时 user 被推断为 User 类型
+// 而非 User | undefined 类型
 ```
 
 但是这种写法要谨慎。
@@ -214,12 +188,8 @@ import { injectStrict } from './injectStrict'
 import { userKey } from './injectionKeys'
 
 const user = injectStrict(userKey)
-```
-
-此时：
-
-```ts
-user // User
+// 此时 user 被推断为 User 类型
+// 而非 User | undefined 类型
 ```
 
 这样既不用到处写 `!`，又能在运行时发现问题。
