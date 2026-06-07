@@ -31,7 +31,7 @@
     - [组件 ref](#组件-ref)
     - [组件只暴露指定方法](#组件只暴露指定方法)
     - [`v-for` ref](#v-for-ref)
-  - [3.14. 核心记住](#314-核心记住)
+  - [3.14. 核心要点](#314-核心要点)
 
 <!-- endregion:toc -->
 
@@ -619,13 +619,13 @@ const modalRef = useTemplateRef<ModalExpose>('modalRef')
 const itemRefs = useTemplateRef<HTMLLIElement[]>('itemRefs')
 ```
 
-### 3.14. 核心记住
+### 3.14. 核心要点
 
-1. Vue 3.5+ 推荐使用 `useTemplateRef<T>()`。
-2. Vue 3.4 及以下使用 `ref<T | null>(null)`。
-3. DOM 引用类型写具体元素类型，比如 `HTMLInputElement`、`HTMLDivElement`。
-4. 模板引用初始值是 `null`，访问时用可选链或类型守卫。
-5. 组件引用使用 `InstanceType<typeof Component>`。
-6. `<script setup>` 子组件要通过 `defineExpose()` 暴露给父组件访问。
-7. `v-for` 中的模板引用通常是数组类型。
-8. 在 `<script setup>` 中访问模板引用需要 `.value`。
+- Vue 3.5+ 推荐使用 `useTemplateRef<T>()`
+- Vue 3.4 及以下使用 `ref<T | null>(null)`
+- DOM 引用类型写具体元素类型，比如 `HTMLInputElement`、`HTMLDivElement`
+- 模板引用初始值是 `null`，访问时用可选链或类型守卫
+- 组件引用使用 `InstanceType<typeof Component>`
+- `<script setup>` 子组件要通过 `defineExpose()` 暴露给父组件访问
+- `v-for` 中的模板引用通常是数组类型
+- 在 `<script setup>` 中访问模板引用需要 `.value`
