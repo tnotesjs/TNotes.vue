@@ -6,7 +6,6 @@
 - [2. 🫧 评价](#2--评价)
 - [3. 🤔 如何为模板引用标注类型？](#3--如何为模板引用标注类型)
   - [3.1. Vue 3.5+ 推荐：`useTemplateRef()`](#31-vue-35-推荐usetemplateref)
-    - [DOM 元素引用](#dom-元素引用)
   - [3.2. Vue 3.4 及以下：使用 `ref<T | null>(null)`](#32-vue-34-及以下使用-reft--nullnull)
   - [3.3. 常见 DOM 元素类型](#33-常见-dom-元素类型)
   - [3.4. Vue 3.5+ 可以自动推导](#34-vue-35-可以自动推导)
@@ -37,40 +36,34 @@
 
 ## 1. 🎯 本节内容
 
-- todo
+- `useTemplateRef<T>()`
+- `ref<T | null>(null)`
 
 ## 2. 🫧 评价
 
-在 Vue 3 + TypeScript + Composition API 中，模板引用，也就是 template ref，常见类型标注分为两类：
+模板引用，也就是 template ref，常见类型标注分为两类：DOM 元素引用、组件实例引用。
 
-1. DOM 元素引用
-2. 组件实例引用
-
-如果你使用的是 Vue 3.5+，推荐使用：
-
-```ts
-useTemplateRef<T>()
-```
-
-如果是 Vue 3.4 及以下，通常使用：
-
-```ts
-ref<T | null>(null)
-```
+- 如果你使用的是 Vue 3.5+，推荐使用：`useTemplateRef<T>()`
+- 如果是 Vue 3.4 及以下，通常使用：`ref<T | null>(null)`
 
 ## 3. 🤔 如何为模板引用标注类型？
 
 ### 3.1. Vue 3.5+ 推荐：`useTemplateRef()`
 
-#### DOM 元素引用
-
 ```html
 <script setup lang="ts">
   import { useTemplateRef, onMounted } from 'vue'
 
+  // DOM 元素引用示例：
   const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
+  // 类型推断结果：
+  // const inputRef: Readonly<ShallowRef<HTMLInputElement | null>>
+  // 模板引用在组件挂载前是 null
+  // 如果元素被 v-if 卸载，也可能再次变成 null
 
   onMounted(() => {
+    // 访问时要注意 null
+    // 可以使用 ?.
     inputRef.value?.focus()
   })
 </script>
@@ -79,20 +72,6 @@ ref<T | null>(null)
   <input ref="inputRef" />
 </template>
 ```
-
-这里：
-
-```ts
-inputRef.value // HTMLInputElement | null
-```
-
-所以访问时要处理 `null`：
-
-```ts
-inputRef.value?.focus()
-```
-
-因为模板引用在组件挂载前是 `null`，如果元素被 `v-if` 卸载，也可能再次变成 `null`。
 
 ### 3.2. Vue 3.4 及以下：使用 `ref<T | null>(null)`
 
@@ -100,7 +79,12 @@ inputRef.value?.focus()
 <script setup lang="ts">
   import { ref, onMounted } from 'vue'
 
+  // 这种写法现在依旧可以使用
   const inputRef = ref<HTMLInputElement | null>(null)
+  // 注意初始值 null
+  // 如果不写联合类型 HTMLInputElement | null
+  // 直接写成下面这样，是会报错的
+  // const inputRef = ref<HTMLInputElement>(null)
 
   onMounted(() => {
     inputRef.value?.focus()
@@ -111,22 +95,6 @@ inputRef.value?.focus()
   <input ref="inputRef" />
 </template>
 ```
-
-这种写法到现在仍然可以用。
-
-核心是：
-
-```ts
-ref<HTMLInputElement | null>(null)
-```
-
-而不是：
-
-```ts
-ref<HTMLInputElement>(null)
-```
-
-因为初始值确实是 `null`。
 
 ### 3.3. 常见 DOM 元素类型
 
