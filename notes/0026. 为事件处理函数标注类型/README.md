@@ -24,13 +24,19 @@
     - [键盘事件](#键盘事件)
     - [表单提交](#表单提交)
     - [自定义组件事件](#自定义组件事件)
-  - [3.15. 核心记住](#315-核心记住)
+- [4. 🤔 在哪查看原生 DOM 都有哪些事件？](#4--在哪查看原生-dom-都有哪些事件)
+- [5. 🔗 引用](#5--引用)
 
 <!-- endregion:toc -->
 
 ## 1. 🎯 本节内容
 
-- todo
+- DOM 事件类型
+- `event.target`
+- `event.currentTarget`
+- `$event`
+- 类型断言
+- 类型守卫
 
 ## 2. 🫧 评价
 
@@ -249,10 +255,20 @@ export interface Events {
 
   const keyword = ref('')
 
+  // ✅ 正确写法：
   function handleInput(event: InputEvent): void {
     const input = event.target as HTMLInputElement
+    // 注意：这里 event.target 的类型是 EventTarget | null 类型
+    // 加上断言：event.target as HTMLInputElement
+    // 明确告知 TS 这个事件一定来自 <input>
+    // 确保后续可以安全访问 input.value
     keyword.value = input.value
   }
+
+  // ❌ 错误写法：
+  // function handleInput(event: InputEvent): void {
+  //   keyword.value = event.target.value
+  // }
 </script>
 
 <template>
@@ -260,41 +276,7 @@ export interface Events {
 </template>
 ```
 
-这里为什么要写：
-
-```ts
-event.target as HTMLInputElement
-```
-
-因为 TypeScript 只知道：
-
-```ts
-event.target // EventTarget | null
-```
-
-它不知道这个事件一定来自 `<input>`，所以不能直接访问：
-
-```ts
-event.target.value
-```
-
-下面这样会报错：
-
-```ts
-function handleInput(event: Event) {
-  console.log(event.target.value)
-  // 报错：Property 'value' does not exist on type 'EventTarget'
-}
-```
-
-正确写法：
-
-```ts
-function handleInput(event: Event): void {
-  const target = event.target as HTMLInputElement
-  console.log(target.value)
-}
-```
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-07-19-22-39.png)
 
 ### 3.5. 更安全的写法：使用类型守卫
 
@@ -452,17 +434,8 @@ function handleSubmit(event: Event): void {
 
 ### 3.11. `target` 和 `currentTarget` 的区别
 
-```ts
-event.target
-```
-
-表示真正触发事件的元素。
-
-```ts
-event.currentTarget
-```
-
-表示绑定事件监听器的元素。
+- `event.target` 表示真正触发事件的元素
+- `event.currentTarget` 表示绑定事件监听器的元素
 
 例如：
 
@@ -603,12 +576,16 @@ function handleSubmit(event: SubmitEvent): void {}
 function handleSelect(user: User): void {}
 ```
 
-### 3.15. 核心记住
+## 4. 🤔 在哪查看原生 DOM 都有哪些事件？
 
-1. 原生 DOM 事件参数标注为对应的 DOM Event 类型。
-2. `@click` 通常是 `PointerEvent`。
-3. `@input` 通常是 `InputEvent`，`@change` 通常是 `Event`。
-4. 访问 `event.target.value` 时，需要断言具体元素类型。
-5. 自定义组件事件的参数类型取决于子组件 `emit` 出来的 payload。
-6. 不用事件对象时，函数可以不写参数。
-7. `@click="handler"` 会自动传事件，`@click="handler()"` 不会自动传事件。
+可以直接在 MDN 上查阅相关接口：[MDN - Web APIs Event][1]
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-07-19-48-53.png)
+
+需要用到哪个事件就点开哪个去查阅详情项目即可。
+
+## 5. 🔗 引用
+
+- [MDN - Web APIs Event][1]
+
+[1]: https://developer.mozilla.org/en-US/docs/Web/API/Event
