@@ -12,10 +12,10 @@
     - [方式二：提供默认值](#方式二提供默认值)
     - [方式三：确定一定存在时使用非空断言](#方式三确定一定存在时使用非空断言)
     - [方式四：封装一个严格注入函数](#方式四封装一个严格注入函数)
-  - [3.4. 为 `ref` 类型的 provide / inject 标注类型](#34-为-ref-类型的-provide--inject-标注类型)
-  - [3.5. 如果不希望子组件修改 ref](#35-如果不希望子组件修改-ref)
+  - [3.4. 为 `ref` 类型的 `provide` / `inject` 标注类型](#34-为-ref-类型的-provide--inject-标注类型)
+  - [3.5. 如果不希望子组件修改 `ref`](#35-如果不希望子组件修改-ref)
   - [3.6. 提供一个上下文对象：实际项目最常见](#36-提供一个上下文对象实际项目最常见)
-  - [3.7. 为 `reactive` 类型的 provide / inject 标注类型](#37-为-reactive-类型的-provide--inject-标注类型)
+  - [3.7. 为 `reactive` 类型的 `provide` / `inject` 标注类型](#37-为-reactive-类型的-provide--inject-标注类型)
   - [3.8. 使用字符串 key 的写法](#38-使用字符串-key-的写法)
   - [3.9. 默认值的类型](#39-默认值的类型)
   - [3.10. 默认值使用工厂函数](#310-默认值使用工厂函数)
@@ -38,14 +38,10 @@
 
 ## 2. 🫧 评价
 
-在 Vue 3 + TypeScript + Composition API 中，`provide / inject` 最推荐的类型标注方式是：
+在 Vue 3 + TypeScript + Composition API 中，`provide / inject` 最推荐的类型标注方式是：使用 `InjectionKey<T>`。它可以同时约束：
 
-使用 `InjectionKey<T>`。
-
-它可以同时约束：
-
-1. `provide()` 提供的值类型
-2. `inject()` 注入出来的值类型
+- `provide()` 提供的值类型
+- `inject()` 注入得到的值的类型
 
 ## 3. 🤔 如何为 provide、inject 标注类型？
 
@@ -194,7 +190,7 @@ const user = injectStrict(userKey)
 
 这样既不用到处写 `!`，又能在运行时发现问题。
 
-### 3.4. 为 `ref` 类型的 provide / inject 标注类型
+### 3.4. 为 `ref` 类型的 `provide` / `inject` 标注类型
 
 如果你提供的是 `ref`，key 应该写成 `InjectionKey<Ref<T>>`。
 
@@ -240,7 +236,7 @@ count.value // number
 
 注意：`inject()` 出来的 `ref` 不会在 `<script setup>` 中自动解包，仍然需要 `.value`。
 
-### 3.5. 如果不希望子组件修改 ref
+### 3.5. 如果不希望子组件修改 `ref`
 
 可以提供只读状态和修改函数。
 
@@ -385,7 +381,7 @@ provide(themeKey, {
 })
 ```
 
-### 3.7. 为 `reactive` 类型的 provide / inject 标注类型
+### 3.7. 为 `reactive` 类型的 `provide` / `inject` 标注类型
 
 如果提供的是 `reactive` 对象：
 
@@ -481,9 +477,7 @@ TypeScript 不知道这个 `'user'` 应该对应 `User` 类型，所以它不会
 const user = inject<User>('user')
 ```
 
-只是告诉 TS：
-
-> 我认为注入出来的是 User。
+只是告诉 TS：我认为注入得到的是 User。
 
 但它无法保证 `provide('user', value)` 的 value 真的是 `User`。
 
@@ -493,11 +487,7 @@ const user = inject<User>('user')
 const userKey = Symbol('user') as InjectionKey<User>
 ```
 
-而不是：
-
-```ts
-'user'
-```
+而不是直接使用字符串 `'user'` 的写法。
 
 ### 3.9. 默认值的类型
 
@@ -518,14 +508,16 @@ const appConfigKey = Symbol('appConfig') as InjectionKey<AppConfig>
 const config = inject(appConfigKey, {
   pageSize: 20,
   theme: 'light',
-})
+} as AppConfig)
 ```
 
-此时：
+此时 config 的类型是 AppConfig：
 
-```ts
-config // AppConfig
-```
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-07-21-43-27.png)
+
+如果不加 `as AppConfig` 断言，那么 config 将被推断为：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-07-21-42-55.png)
 
 如果默认值不符合类型，会报错：
 
@@ -533,9 +525,59 @@ config // AppConfig
 const config = inject(appConfigKey, {
   pageSize: '20',
   theme: 'light',
-})
-// 报错：pageSize 应该是 number
+} as AppConfig)
+// 会报错：pageSize 应该是 number
 ```
+
+::: tip
+
+上述的截图是 TS 语言服务给的提示，至于加不加断言，感觉并没有啥影响，因为在书写默认值的时候，都能正常检测类型异常的行为，及时给予警告，区别在于 TS 语言服务检测到的错误原因不一样罢了。
+
+```ts
+const config = inject(appConfigKey, {
+  pageSize: 20,
+  theme: 'light',
+})
+// 推断为：
+// const config: {
+//   pageSize: number
+//   theme: string
+// }
+
+const config = inject(appConfigKey, {
+  pageSize: 20,
+  theme: 'light',
+} as AppConfig)
+// 推断为：AppConfig
+
+// -- 测试错误的默认值类型 --
+
+const config = inject(appConfigKey, {
+  pageSize: '20',
+  theme: 'light',
+})
+// 会报错：
+// 不能将类型“string”分配给类型“number”。ts-plugin(2322)
+
+const config = inject(appConfigKey, {
+  pageSize: '20',
+  theme: 'light',
+} as AppConfig)
+// 会报错：
+// 类型 "{ pageSize: string; theme: "light"; }" 到类型 "AppConfig" 的转换可能是错误的，因为两种类型不能充分重叠。如果这是有意的，请先将表达式转换为 "unknown"。
+//   属性“pageSize”的类型不兼容。
+//     类型“string”不可与类型“number”进行比较。ts-plugin(2352)
+```
+
+2322 错误：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-07-21-51-33.png)
+
+2352 错误：
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-07-21-51-42.png)
+
+:::
 
 ### 3.10. 默认值使用工厂函数
 
@@ -552,13 +594,7 @@ const config = inject(
 )
 ```
 
-第三个参数：
-
-```ts
-true
-```
-
-表示把第二个参数当成默认值工厂函数执行。
+第三个参数：`true`，表示把第二个参数当成默认值工厂函数执行。
 
 如果你注入的值本身就是函数，就不要随便加第三个参数。
 
@@ -641,9 +677,9 @@ app.mount('#app')
 
 ```ts
 const config = inject(appConfigKey)!
+// 类型仍然有效：
+// const config: AppConfig
 ```
-
-类型仍然有效。
 
 ### 3.13. 常见坑
 
@@ -721,13 +757,11 @@ count++
 const user = inject(userKey)!
 ```
 
-这只是告诉 TypeScript：
-
-> 我确定它不是 undefined。
+这只是告诉 TypeScript：我确定它不是 undefined。
 
 但如果运行时真的没有 provider，仍然会出问题。
 
-更稳妥的是封装：
+更稳妥的是封装：注入函数，在注入函数中完成类型守卫工作。
 
 ```ts
 const user = injectStrict(userKey)
@@ -769,13 +803,13 @@ const user = inject(userKey)
 user // User | undefined
 ```
 
-核心记住：
+核心要点：
 
-1. TS 项目中优先使用 `InjectionKey<T>`。
-2. 不推荐只用字符串 key，因为 provider 和 injector 类型无法强关联。
-3. `inject()` 默认返回 `T | undefined`。
-4. 可以用默认值、判断、非空断言或 `injectStrict()` 处理。
-5. 提供 `ref` 时，key 写成 `InjectionKey<Ref<T>>`。
-6. 提供 `reactive` 时，key 写成 `InjectionKey<State>`。
-7. 如果不希望子组件修改状态，提供 `readonly(state)` 加修改函数。
-8. `Symbol` key 必须从同一个文件导出复用，不能各自创建。
+- TS 项目中优先使用 `InjectionKey<T>`
+- 不推荐只用字符串 `key`，因为 `provider` 和 `injector` 类型无法强关联
+- `inject()` 默认返回 `T | undefined`
+- 可以用默认值、判断、非空断言或 `injectStrict()` 处理
+- 提供 `ref` 时，`key` 写成 `InjectionKey<Ref<T>>`
+- 提供 `reactive` 时，`key` 写成 `InjectionKey<State>`
+- 如果不希望子组件修改状态，提供 `readonly(state)` 加修改函数
+- `Symbol key` 必须从同一个文件导出复用，不能各自创建

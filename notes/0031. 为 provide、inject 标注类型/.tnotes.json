@@ -2,10 +2,10 @@
   "bilibili": [],
   "tnotes": [],
   "yuque": [],
-  "done": false,
-  "enableDiscussions": false,
-  "description": "",
+  "done": true,
+  "enableDiscussions": true,
+  "description": "provide / inject 最推荐的类型标注方式是：使用 InjectionKey<T>。可以同时约束 provide 提供值的类型和 inject 注入得到的值的类型。",
   "id": "abeb2e9c-1539-4e8b-a4e5-6a0fc642579b",
   "created_at": 1780551712843,
-  "updated_at": 1780551712843
+  "updated_at": 1780840965026
 }
