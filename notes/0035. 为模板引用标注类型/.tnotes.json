@@ -2,10 +2,10 @@
   "bilibili": [],
   "tnotes": [],
   "yuque": [],
-  "done": false,
-  "enableDiscussions": false,
-  "description": "",
+  "done": true,
+  "enableDiscussions": true,
+  "description": "Vue 3.5+ 中，template ref 推荐使用：useTemplateRef<T>() 来标注类型，如果是 3.4 及以下，则继续使用 ref<T | null>(null) 来标注。",
   "id": "2c385b06-a3e8-475f-81df-5cbd4bb7facb",
   "created_at": 1780551712848,
-  "updated_at": 1780551712848
+  "updated_at": 1780986195706
 }

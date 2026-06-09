@@ -110,7 +110,7 @@
 - [x] [0022. 为 computed() 标注类型](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0022.%20%E4%B8%BA%20computed()%20%E6%A0%87%E6%B3%A8%E7%B1%BB%E5%9E%8B/README.md)
 - [x] [0026. 为事件处理函数标注类型](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0026.%20%E4%B8%BA%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E5%87%BD%E6%95%B0%E6%A0%87%E6%B3%A8%E7%B1%BB%E5%9E%8B/README.md)
 - [x] [0031. 为 provide、inject 标注类型](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0031.%20%E4%B8%BA%20provide%E3%80%81inject%20%E6%A0%87%E6%B3%A8%E7%B1%BB%E5%9E%8B/README.md)
-- [ ] [0035. 为模板引用标注类型](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0035.%20%E4%B8%BA%E6%A8%A1%E6%9D%BF%E5%BC%95%E7%94%A8%E6%A0%87%E6%B3%A8%E7%B1%BB%E5%9E%8B/README.md)
+- [x] [0035. 为模板引用标注类型](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0035.%20%E4%B8%BA%E6%A8%A1%E6%9D%BF%E5%BC%95%E7%94%A8%E6%A0%87%E6%B3%A8%E7%B1%BB%E5%9E%8B/README.md)
 - [ ] [0036. 为组件模板引用标注类型](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0036.%20%E4%B8%BA%E7%BB%84%E4%BB%B6%E6%A8%A1%E6%9D%BF%E5%BC%95%E7%94%A8%E6%A0%87%E6%B3%A8%E7%B1%BB%E5%9E%8B/README.md)
 - [ ] [0040. 为自定义全局指令标注类型](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0040.%20%E4%B8%BA%E8%87%AA%E5%AE%9A%E4%B9%89%E5%85%A8%E5%B1%80%E6%8C%87%E4%BB%A4%E6%A0%87%E6%B3%A8%E7%B1%BB%E5%9E%8B/README.md)
 - [ ] [0107. TS 与选项式 API](https://github.com/tnotesjs/TNotes.vue/tree/main/notes/0107.%20TS%20%E4%B8%8E%E9%80%89%E9%A1%B9%E5%BC%8F%20API/README.md)

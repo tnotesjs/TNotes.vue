@@ -9,27 +9,35 @@
 - [5. 常见 DOM 元素类型](#5-常见-dom-元素类型)
 - [6. 如果你不确定具体元素类型，也可以使用更宽泛的：`HTMLElement`](#6-如果你不确定具体元素类型也可以使用更宽泛的htmlelement)
 - [7. Vue 3.5+ 可以自动推导](#7-vue-35-可以自动推导)
-- [8. 组件模板引用的类型](#8-组件模板引用的类型)
-- [9. `<script setup>` 子组件需要 `defineExpose`](#9-script-setup-子组件需要-defineexpose)
-    - [子组件 ChildInput.vue](#子组件-childinputvue)
-    - [父组件](#父组件)
-- [10. 也可以手动定义组件暴露类型](#10-也可以手动定义组件暴露类型)
-    - [子组件](#子组件)
-    - [父组件](#父组件)
-- [11. 如果不关心具体组件类型](#11-如果不关心具体组件类型)
-- [12. 动态组件引用](#12-动态组件引用)
+- [8. 组件模板引用的类型 `InstanceType<typeof Child>`](#8-组件模板引用的类型-instancetypetypeof-child)
+- [9. `<script setup>` 封闭子组件需要 `defineExpose` 显示暴露需要被外部消费的成员](#9-script-setup-封闭子组件需要-defineexpose-显示暴露需要被外部消费的成员)
+- [10. 可以只标注组件暴露出来的公开接口](#10-可以只标注组件暴露出来的公开接口)
+- [11. 如果只需要通用组件实例类型，可以使用 `ComponentPublicInstance`](#11-如果只需要通用组件实例类型可以使用-componentpublicinstance)
+  - [11.1. `ComponentPublicInstance`](#111-componentpublicinstance)
+  - [11.2. 示例](#112-示例)
+  - [11.3. 适用场景](#113-适用场景)
+  - [11.4. 小结](#114-小结)
+- [12. 动态组件引用的类型标注](#12-动态组件引用的类型标注)
+  - [12.1. 先给结论](#121-先给结论)
+  - [12.2. 动态组件引用](#122-动态组件引用)
+    - [示例：只需要通用组件实例的能力 `ComponentPublicInstance`](#示例只需要通用组件实例的能力-componentpublicinstance)
+    - [示例；通过类型守卫访问自定义方法](#示例通过类型守卫访问自定义方法)
+    - [示例：联合类型](#示例联合类型)
+    - [示例：约定统一接口](#示例约定统一接口)
 - [13. `v-for` 中的模板引用](#13-v-for-中的模板引用)
-- [14. `v-if` 下的模板引用](#14-v-if-下的模板引用)
+  - [13.1. 示例](#131-示例)
+  - [13.2. 注意：收集到的模板引用列表顺序不可靠](#132-注意收集到的模板引用列表顺序不可靠)
+- [14. `v-if` 会让模板引用在运行过程中重新变成 `null`](#14-v-if-会让模板引用在运行过程中重新变成-null)
 - [15. 常见错误](#15-常见错误)
-    - [错误 1：忘记处理 null](#错误-1忘记处理-null)
-    - [错误 2：把模板引用标成普通元素类型](#错误-2把模板引用标成普通元素类型)
-    - [错误 3：组件引用忘记使用组件实例类型](#错误-3组件引用忘记使用组件实例类型)
+  - [15.1. 错误 1：忘记处理 null](#151-错误-1忘记处理-null)
+  - [15.2. 错误 2：把模板引用标成普通元素类型](#152-错误-2把模板引用标成普通元素类型)
+  - [15.3. 错误 3：组件引用忘记使用组件实例类型](#153-错误-3组件引用忘记使用组件实例类型)
 - [16. 推荐写法总结](#16-推荐写法总结)
-    - [Vue 3.5+ DOM ref](#vue-35-dom-ref)
-    - [Vue 3.4 及以下 DOM ref](#vue-34-及以下-dom-ref)
-    - [组件 ref](#组件-ref)
-    - [组件只暴露指定方法](#组件只暴露指定方法)
-    - [`v-for` ref](#v-for-ref)
+  - [16.1. Vue 3.5+ DOM ref](#161-vue-35-dom-ref)
+  - [16.2. Vue 3.4 及以下 DOM ref](#162-vue-34-及以下-dom-ref)
+  - [16.3. 组件 ref](#163-组件-ref)
+  - [16.4. 组件只暴露指定方法](#164-组件只暴露指定方法)
+  - [16.5. `v-for` ref](#165-v-for-ref)
 - [17. 核心要点](#17-核心要点)
 
 <!-- endregion:toc -->
@@ -156,6 +164,9 @@ const elRef = useTemplateRef<HTMLElement>('elRef')
 <script setup lang="ts">
   import { useTemplateRef, onMounted } from 'vue'
 
+  // 写法1：显式声明类型，类型更明确
+  // const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
+  // 写法2：等效，交给工具自行推导类型
   const inputRef = useTemplateRef('inputRef')
 
   onMounted(() => {
@@ -174,88 +185,58 @@ const elRef = useTemplateRef<HTMLElement>('elRef')
 inputRef.value // HTMLInputElement | null
 ```
 
-不过实际项目里，如果你希望类型更明确，仍然可以手动写：
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-09-13-39-56.png)
 
-```ts
-const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
-```
+## 8. 组件模板引用的类型 `InstanceType<typeof Child>`
 
-## 8. 组件模板引用的类型
+::: code-group
 
-如果引用的是组件：
-
-```html
-<Child ref="childRef" />
-```
-
-可以使用：
-
-```ts
-InstanceType<typeof Child>
-```
-
-示例：
-
-```html
+```html [App.vue]
 <script setup lang="ts">
   import { useTemplateRef, onMounted } from 'vue'
   import Child from './Child.vue'
 
+  // 如果引用的是组件：<Child ref="childRef" />
+  // 可以使用：InstanceType<typeof Child> 来获取 Child 组件类型
   const childRef = useTemplateRef<InstanceType<typeof Child>>('childRef')
 
   onMounted(() => {
     childRef.value?.someMethod()
+    // childRef.value 的类型：
+    // InstanceType<typeof Child> | null
+    // 访问 someMethod 时需要使用 ?.
   })
 </script>
 
 <template>
+  <!-- childRef 引用 Child 组件 -->
   <Child ref="childRef" />
 </template>
 ```
 
-这里：
+```html [Child.vue]
+<template>
+  <h1>Child</h1>
+</template>
 
-```ts
-childRef.value // InstanceType<typeof Child> | null
-```
-
-所以也要使用：
-
-```ts
-childRef.value?.someMethod()
-```
-
-## 9. `<script setup>` 子组件需要 `defineExpose`
-
-如果子组件使用的是 `<script setup>`，它默认是“封闭”的。
-
-也就是说，父组件通过模板引用不能随便访问子组件内部变量或方法，子组件需要显式暴露。
-
-#### 子组件 ChildInput.vue
-
-```html
 <script setup lang="ts">
-  import { ref } from 'vue'
-
-  const inputRef = ref<HTMLInputElement | null>(null)
-
-  function focus() {
-    inputRef.value?.focus()
+  const someMethod = () => {
+    console.log('some methods...')
   }
 
   defineExpose({
-    focus,
+    someMethod,
   })
 </script>
-
-<template>
-  <input ref="inputRef" />
-</template>
 ```
 
-#### 父组件
+:::
 
-```html
+## 9. `<script setup>` 封闭子组件需要 `defineExpose` 显示暴露需要被外部消费的成员
+
+::: code-group
+
+```html [App.vue]
 <script setup lang="ts">
   import { useTemplateRef, onMounted } from 'vue'
   import ChildInput from './ChildInput.vue'
@@ -267,48 +248,93 @@ childRef.value?.someMethod()
     childInputRef.value?.focus()
   })
 </script>
-
 <template>
   <ChildInput ref="childInputRef" />
 </template>
 ```
 
-如果没有 `defineExpose()`，父组件就不能通过模板引用访问 `focus()`。
-
-## 10. 也可以手动定义组件暴露类型
-
-有时候你不想依赖整个组件实例类型，只关心它暴露出来的方法，可以自己定义一个类型。
-
-#### 子组件
-
-```html
+```html [ChildInput.vue]
 <script setup lang="ts">
+  // 如果子组件使用的是 <script setup>，它默认是“封闭”的。
+  // 也就是说，父组件通过模板引用不能随便访问子组件内部变量或方法，子组件需要显式暴露。
+  import { ref } from 'vue'
+
+  const inputRef = ref<HTMLInputElement | null>(null)
+
+  function focus() {
+    inputRef.value?.focus()
+  }
+
+  // 可以通过 defineExpose() 来显示暴露需要被外部消费的内容
+  // 如果没有 defineExpose()，父组件就不能通过模板引用访问 focus()。
+  defineExpose({
+    focus,
+  })
+</script>
+<template>
+  <input ref="inputRef" />
+</template>
+```
+
+:::
+
+## 10. 可以只标注组件暴露出来的公开接口
+
+如果父组件只需要调用子组件暴露出来的少量方法，不想依赖整个组件实例类型，可以手动定义一个公开接口类型。
+
+适用场景：这种写法适合弹窗、抽屉、表单、编辑器等有内部状态或 DOM 行为的组件。
+
+注意边界：如果逻辑本身不依赖组件模板或 Vue 状态，就不应该通过组件 ref 暴露，直接封装工具函数或 composable 更合适。
+
+示例：
+
+::: code-group
+
+```ts [Modal.types.ts]
+export interface ModalExpose {
+  open: () => void
+  close: () => void
+}
+```
+
+```html [Modal.vue]
+<script setup lang="ts">
+  import { ref } from 'vue'
+  import type { ModalExpose } from './Modal.types'
+
+  const visible = ref(false)
+
   function open() {
-    console.log('open')
+    visible.value = true
   }
 
   function close() {
-    console.log('close')
+    visible.value = false
   }
 
-  defineExpose({
+  // 这种写法也很常见
+  // 优点：
+  // 1. 类型更简洁
+  // 2. 符合最小必要导出原则
+  defineExpose<ModalExpose>({
     open,
     close,
   })
 </script>
+
+<template>
+  <div v-if="visible">
+    <button @click="close">关闭</button>
+    <slot />
+  </div>
+</template>
 ```
 
-#### 父组件
-
-```html
+```html [App.vue]
 <script setup lang="ts">
   import { useTemplateRef } from 'vue'
   import Modal from './Modal.vue'
-
-  interface ModalExpose {
-    open: () => void
-    close: () => void
-  }
+  import type { ModalExpose } from './Modal.types'
 
   const modalRef = useTemplateRef<ModalExpose>('modalRef')
 
@@ -318,16 +344,22 @@ childRef.value?.someMethod()
 </script>
 
 <template>
-  <Modal ref="modalRef" />
+  <Modal ref="modalRef">内容</Modal>
   <button @click="handleOpen">打开</button>
 </template>
 ```
 
-这种写法也很常见，优点是类型更简洁。
+:::
 
-## 11. 如果不关心具体组件类型
+## 11. 如果只需要通用组件实例类型，可以使用 `ComponentPublicInstance`
 
-可以使用 Vue 提供的 `ComponentPublicInstance`。
+### 11.1. `ComponentPublicInstance`
+
+如果父组件不关心子组件的具体类型，也不需要访问子组件自定义暴露的方法，只想把模板引用标注为“某个 Vue 组件实例”，可以使用 `ComponentPublicInstance`。
+
+这种写法常用于动态组件、组件库内部实现，或者只需要访问 `$el` 等通用实例属性的场景。普通业务代码中，如果需要调用子组件的自定义方法，更推荐使用 `InstanceType<typeof Component>` 或手动定义暴露接口。
+
+### 11.2. 示例
 
 ```ts
 import type { ComponentPublicInstance } from 'vue'
@@ -344,6 +376,10 @@ const childRef = useTemplateRef<ComponentPublicInstance>('childRef')
   import Child from './Child.vue'
 
   const childRef = useTemplateRef<ComponentPublicInstance>('childRef')
+
+  function logRootEl() {
+    console.log(childRef.value?.$el)
+  }
 </script>
 
 <template>
@@ -353,13 +389,87 @@ const childRef = useTemplateRef<ComponentPublicInstance>('childRef')
 
 这种方式只能拿到比较通用的组件实例能力，不适合访问具体的自定义方法。
 
-## 12. 动态组件引用
+### 11.3. 适用场景
 
-如果是动态组件：
+你只想把这个模板引用标成“某个 Vue 组件实例”，但你不关心它具体是哪一个组件，也不打算访问它自定义暴露的方法。
+
+- 动态组件类型不确定，只需要保存一个“组件实例引用”。
+- 只访问 Vue 组件实例的通用能力，比如 `$el`、`$props`、`$attrs`、`$emit`、`$forceUpdate()` 等。
+- 写一些偏底层的组件库、容器组件、动态渲染器时，不关心具体业务组件类型。
+- 临时兜底：暂时不知道组件精确类型，但又不想写成 `any`。
+
+### 11.4. 小结
+
+```ts
+// 引用 DOM
+useTemplateRef<HTMLInputElement>('inputRef')
+
+// 引用明确的组件
+useTemplateRef<InstanceType<typeof Child>>('childRef')
+
+// 只关心组件暴露的几个方法
+useTemplateRef<ModalExpose>('modalRef')
+
+// 不关心具体组件，只要一个通用组件实例
+useTemplateRef<ComponentPublicInstance>('childRef')
+```
+
+## 12. 动态组件引用的类型标注
+
+### 12.1. 先给结论
+
+- 只访问 `$el`、`$attrs`、`$props` 这类通用实例能力：用 `ComponentPublicInstance`。
+- 多个动态组件暴露同一套方法：更推荐定义统一接口，比如 `validate()`、`reset()`。
+- 多个动态组件暴露不同方法，并且父组件确实要区分：用联合类型或 `ComponentPublicInstance + 类型守卫`。
+- 组件来源不固定，比如低代码渲染器、插件系统：用 `ComponentPublicInstance`。
+
+### 12.2. 动态组件引用
 
 ```html
 <component :is="currentComponent" ref="componentRef" />
 ```
+
+#### 示例：只需要通用组件实例的能力 `ComponentPublicInstance`
+
+```ts
+import type { ComponentPublicInstance } from 'vue'
+
+const componentRef = useTemplateRef<ComponentPublicInstance>('componentRef')
+
+console.log(componentRef.value?.$el)
+```
+
+动态组件引用可以使用 `ComponentPublicInstance` 作为通用兜底类型。
+
+如果父组件需要访问动态子组件暴露的自定义方法，更推荐根据场景使用统一暴露接口、联合类型，或配合类型守卫进一步收窄类型。
+
+#### 示例；通过类型守卫访问自定义方法
+
+```ts
+import type { ComponentPublicInstance } from 'vue'
+
+interface StepExpose {
+  validate: () => boolean | Promise<boolean>
+}
+
+function hasValidate(
+  instance: ComponentPublicInstance | null,
+): instance is ComponentPublicInstance & StepExpose {
+  return (
+    typeof (instance as Partial<StepExpose> | null)?.validate === 'function'
+  )
+}
+```
+
+使用：
+
+```ts
+if (hasValidate(componentRef.value)) {
+  await componentRef.value.validate()
+}
+```
+
+#### 示例：联合类型
 
 可以使用联合类型：
 
@@ -381,18 +491,23 @@ if (componentRef.value) {
 }
 ```
 
-如果两个组件都暴露了相同方法，也可以定义统一接口：
+如果要精确定位具体的类型，可以再利用类型守卫进一步细分。
+
+#### 示例：约定统一接口
+
+如果你的动态组件本来就约定都要提供 `validate()`，那直接写成统一接口更清晰：
 
 ```ts
-interface DialogExpose {
-  open: () => void
-  close: () => void
+interface StepExpose {
+  validate: () => boolean | Promise<boolean>
 }
 
-const dialogRef = useTemplateRef<DialogExpose>('dialogRef')
+const stepRef = useTemplateRef<StepExpose>('stepRef')
 ```
 
 ## 13. `v-for` 中的模板引用
+
+### 13.1. 示例
 
 如果一个 `ref` 出现在 `v-for` 中，拿到的会是一组元素。
 
@@ -440,39 +555,108 @@ Vue 3.4 及以下：
 </template>
 ```
 
-注意：`v-for` 中的 ref 数组顺序不一定总是和源数组完全一致，复杂场景不要过度依赖索引对应关系。
+### 13.2. 注意：收集到的模板引用列表顺序不可靠
 
-## 14. `v-if` 下的模板引用
+`v-for` 中的模板引用会收集成数组，但这个数组只表示“收集到的元素集合”，不应该把 `itemRefs.value[index]` 直接当成 `items.value[index]` 对应的元素。列表发生排序、插入、删除、移动时，二者的索引关系不一定可靠。
 
 ```html
 <script setup lang="ts">
-  import { ref, useTemplateRef } from 'vue'
+  import { ref, useTemplateRef, onMounted, nextTick } from 'vue'
 
-  const visible = ref(false)
-  const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
+  interface Item {
+    id: number
+    text: string
+  }
 
-  function focusInput() {
-    inputRef.value?.focus()
+  const items = ref<Item[]>([
+    { id: 1, text: 'A' },
+    { id: 2, text: 'B' },
+    { id: 3, text: 'C' },
+  ])
+
+  const itemRefs = useTemplateRef<HTMLLIElement[]>('itemRefs')
+
+  function logOrder(label: string) {
+    console.log(label)
+    console.log('items 顺序：', items.value.map((item) => item.id).join(' -> '))
+    console.log(
+      'ref 顺序：',
+      itemRefs.value?.map((el) => el.dataset.id).join(' -> '),
+    )
+  }
+
+  onMounted(() => {
+    logOrder('初始渲染后')
+  })
+
+  async function reverseList() {
+    items.value = [...items.value].reverse()
+
+    await nextTick()
+
+    logOrder('反转列表后')
   }
 </script>
 
 <template>
-  <input v-if="visible" ref="inputRef" />
-  <button @click="focusInput">聚焦</button>
+  <button @click="reverseList">反转列表</button>
+
+  <ul>
+    <li v-for="item in items" :key="item.id" ref="itemRefs" :data-id="item.id">
+      {{ item.text }}
+    </li>
+  </ul>
 </template>
 ```
 
-因为有 `v-if`，元素可能不存在，所以：
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-09-14-13-12.png)
 
-```ts
-inputRef.value // HTMLInputElement | null
+页面上列表已经变成 `3 -> 2 -> 1`，但 `itemRefs.value` 里收集到的 DOM 引用顺序可能仍然是之前的 `1 -> 2 -> 3`。
+
+## 14. `v-if` 会让模板引用在运行过程中重新变成 `null`
+
+不要在组件已挂载后把模板 `ref` 当成永久存在，尤其是它受 `v-if`、动态组件、条件插槽控制时。
+
+```html
+<script setup lang="ts">
+  import { ref, useTemplateRef, nextTick } from 'vue'
+
+  const visible = ref(false)
+  const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
+
+  async function showAndFocus() {
+    visible.value = true
+
+    await nextTick()
+
+    inputRef.value?.focus()
+  }
+
+  async function hideAndCheck() {
+    visible.value = false
+
+    await nextTick()
+
+    console.log(inputRef.value) // null
+  }
+</script>
+
+<template>
+  <button @click="showAndFocus">显示并聚焦</button>
+  <button @click="hideAndCheck">隐藏并检查</button>
+
+  <input v-if="visible" ref="inputRef" />
+</template>
 ```
 
-必须处理 `null`。
+对比 `v-show`：
+
+- `v-if`：元素会被创建 / 销毁，ref 会在 `HTMLElement` 和 `null` 之间变化。
+- `v-show`：元素一直存在，只是切换 `display`，ref 通常不会因为显示隐藏变成 `null`。
 
 ## 15. 常见错误
 
-#### 错误 1：忘记处理 null
+### 15.1. 错误 1：忘记处理 null
 
 ```ts
 const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
@@ -495,7 +679,7 @@ if (inputRef.value) {
 }
 ```
 
-#### 错误 2：把模板引用标成普通元素类型
+### 15.2. 错误 2：把模板引用标成普通元素类型
 
 ```ts
 const inputRef: HTMLInputElement = ref(null)
@@ -526,7 +710,7 @@ const inputRef = ref<HTMLInputElement | null>(null)
 const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
 ```
 
-#### 错误 3：组件引用忘记使用组件实例类型
+### 15.3. 错误 3：组件引用忘记使用组件实例类型
 
 ```ts
 const childRef = useTemplateRef<Child>('childRef')
@@ -543,7 +727,7 @@ const childRef = useTemplateRef<InstanceType<typeof Child>>('childRef')
 
 ## 16. 推荐写法总结
 
-#### Vue 3.5+ DOM ref
+### 16.1. Vue 3.5+ DOM ref
 
 ```ts
 const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
@@ -553,7 +737,7 @@ const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
 <input ref="inputRef" />
 ```
 
-#### Vue 3.4 及以下 DOM ref
+### 16.2. Vue 3.4 及以下 DOM ref
 
 ```ts
 const inputRef = ref<HTMLInputElement | null>(null)
@@ -563,7 +747,7 @@ const inputRef = ref<HTMLInputElement | null>(null)
 <input ref="inputRef" />
 ```
 
-#### 组件 ref
+### 16.3. 组件 ref
 
 ```ts
 import Child from './Child.vue'
@@ -575,7 +759,7 @@ const childRef = useTemplateRef<InstanceType<typeof Child>>('childRef')
 <Child ref="childRef" />
 ```
 
-#### 组件只暴露指定方法
+### 16.4. 组件只暴露指定方法
 
 ```ts
 interface ModalExpose {
@@ -586,7 +770,7 @@ interface ModalExpose {
 const modalRef = useTemplateRef<ModalExpose>('modalRef')
 ```
 
-#### `v-for` ref
+### 16.5. `v-for` ref
 
 ```ts
 const itemRefs = useTemplateRef<HTMLLIElement[]>('itemRefs')
