@@ -4,22 +4,21 @@
 
 - [1. 本节内容](#1-本节内容)
 - [2. 评价](#2-评价)
-- [3. 如何为 `computed()` 标注类型？](#3-如何为-computed-标注类型)
-  - [3.1. 自动推导类型](#31-自动推导类型)
-  - [3.2. 使用泛型标注 computed 类型](#32-使用泛型标注-computed-类型)
-  - [3.3. 标注字符串、布尔值、联合类型](#33-标注字符串布尔值联合类型)
-  - [3.4. 对象类型 computed](#34-对象类型-computed)
-  - [3.5. 数组类型 computed](#35-数组类型-computed)
-  - [3.6. `null` / `undefined` 场景](#36-null--undefined-场景)
-  - [3.7. 使用 `ComputedRef<T>` 显式标注变量类型](#37-使用-computedreft-显式标注变量类型)
-  - [3.8. 可写 computed 的类型标注](#38-可写-computed-的类型标注)
-  - [3.9. 可写 computed 配合 v-model](#39-可写-computed-配合-v-model)
-  - [3.10. 使用 `WritableComputedRef<T>` 标注](#310-使用-writablecomputedreft-标注)
-  - [3.11. 常见错误](#311-常见错误)
-    - [错误 1：把 computed 标注成普通值](#错误-1把-computed-标注成普通值)
-    - [错误 2：忘记 `.value`](#错误-2忘记-value)
-    - [错误 3：异步 computed 的误解](#错误-3异步-computed-的误解)
-  - [3.12. 总结](#312-总结)
+- [3. 自动推导类型](#3-自动推导类型)
+- [4. 使用泛型标注 computed 类型](#4-使用泛型标注-computed-类型)
+- [5. 标注字符串、布尔值、联合类型](#5-标注字符串布尔值联合类型)
+- [6. 对象类型 computed](#6-对象类型-computed)
+- [7. 数组类型 computed](#7-数组类型-computed)
+- [8. `null` / `undefined` 场景](#8-null--undefined-场景)
+- [9. 使用 `ComputedRef<T>` 显式标注变量类型](#9-使用-computedreft-显式标注变量类型)
+- [10. 可写 computed 的类型标注](#10-可写-computed-的类型标注)
+- [11. 可写 computed 配合 v-model](#11-可写-computed-配合-v-model)
+- [12. 使用 `WritableComputedRef<T>` 标注](#12-使用-writablecomputedreft-标注)
+- [13. 常见错误](#13-常见错误)
+  - [13.1. 错误 1：把 computed 标注成普通值](#131-错误-1把-computed-标注成普通值)
+  - [13.2. 错误 2：忘记 `.value`](#132-错误-2忘记-value)
+  - [13.3. 错误 3：异步 computed 的误解](#133-错误-3异步-computed-的误解)
+- [14. 总结](#14-总结)
 
 <!-- endregion:toc -->
 
@@ -40,9 +39,7 @@
 
 最常用的是前两种。
 
-## 3. 如何为 `computed()` 标注类型？
-
-### 3.1. 自动推导类型
+## 3. 自动推导类型
 
 大多数情况下不用手动标注，TS 会根据 getter 的返回值自动推导。
 
@@ -77,7 +74,7 @@ console.log(double.value)
 </template>
 ```
 
-### 3.2. 使用泛型标注 computed 类型
+## 4. 使用泛型标注 computed 类型
 
 如果想明确指定返回类型，可以这样写：
 
@@ -98,7 +95,7 @@ const double = computed<number>(() => {
 
 这是最常用的手动标注方式。
 
-### 3.3. 标注字符串、布尔值、联合类型
+## 5. 标注字符串、布尔值、联合类型
 
 ```ts
 const keyword = ref('')
@@ -129,7 +126,7 @@ const status = computed<Status>(() => {
 status.value // 'idle' | 'loading' | 'success' | 'error'
 ```
 
-### 3.4. 对象类型 computed
+## 6. 对象类型 computed
 
 ```ts
 interface User {
@@ -175,7 +172,7 @@ const displayUser = computed<DisplayUser>(() => {
 })
 ```
 
-### 3.5. 数组类型 computed
+## 7. 数组类型 computed
 
 ```ts
 interface User {
@@ -207,7 +204,7 @@ const emptyUsers = computed<User[]>(() => [])
 
 否则可能会被推导成不理想的类型，比如 `never[]`。
 
-### 3.6. `null` / `undefined` 场景
+## 8. `null` / `undefined` 场景
 
 比如根据 id 查找用户：
 
@@ -252,7 +249,7 @@ if (selectedUser.value) {
 }
 ```
 
-### 3.7. 使用 `ComputedRef<T>` 显式标注变量类型
+## 9. 使用 `ComputedRef<T>` 显式标注变量类型
 
 也可以从 `vue` 中导入 `ComputedRef`：
 
@@ -275,7 +272,7 @@ const double = computed<number>(() => {
 
 因为更简洁。
 
-### 3.8. 可写 computed 的类型标注
+## 10. 可写 computed 的类型标注
 
 普通 `computed()` 是只读的：
 
@@ -307,7 +304,7 @@ console.log(count.value) // 5
 // count.value 是 number 类型
 ```
 
-### 3.9. 可写 computed 配合 v-model
+## 11. 可写 computed 配合 v-model
 
 比较常见的场景是封装 `v-model`：
 
@@ -348,7 +345,7 @@ model.value // string
 model.value = 'hello' // 会触发 emit
 ```
 
-### 3.10. 使用 `WritableComputedRef<T>` 标注
+## 12. 使用 `WritableComputedRef<T>` 标注
 
 如果你需要显式声明变量类型，可以使用：
 
@@ -379,9 +376,9 @@ const model = computed<string>({
 })
 ```
 
-### 3.11. 常见错误
+## 13. 常见错误
 
-#### 错误 1：把 computed 标注成普通值
+### 13.1. 错误 1：把 computed 标注成普通值
 
 ```ts
 const double: number = computed(() => count.value * 2) // ❌
@@ -397,7 +394,7 @@ const double = computed<number>(() => count.value * 2)
 double.value // number
 ```
 
-#### 错误 2：忘记 `.value`
+### 13.2. 错误 2：忘记 `.value`
 
 ```ts
 const double = computed(() => count.value * 2)
@@ -420,7 +417,7 @@ console.log(double.value + 1)
 </template>
 ```
 
-#### 错误 3：异步 computed 的误解
+### 13.3. 错误 3：异步 computed 的误解
 
 如果这样写：
 
@@ -458,7 +455,7 @@ const loading = ref(false)
 
 然后配合 `watch`、`watchEffect` 或请求函数处理。
 
-### 3.12. 总结
+## 14. 总结
 
 `computed()` 标注类型最常用的是：
 

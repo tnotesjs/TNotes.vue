@@ -4,21 +4,20 @@
 
 - [1. 本节内容](#1-本节内容)
 - [2. 评价](#2-评价)
-- [3. 如何为组件的 props 标注类型？](#3-如何为组件的-props-标注类型)
-  - [3.1. 推荐写法：基于类型声明 props](#31-推荐写法基于类型声明-props)
-  - [3.2. 使用 interface 标注 props](#32-使用-interface-标注-props)
-  - [3.3. 从外部文件导入 Props 类型](#33-从外部文件导入-props-类型)
-  - [3.4. 给 props 设置默认值](#34-给-props-设置默认值)
-    - [Vue 3.5+：使用解构默认值](#vue-35使用解构默认值)
-    - [使用 withDefaults 设置默认值（个人更倾向使用这种写法）](#使用-withdefaults-设置默认值个人更倾向使用这种写法)
-  - [3.5. 复杂类型 props](#35-复杂类型-props)
-  - [3.6. 数组类型 props](#36-数组类型-props)
-  - [3.7. 联合类型 props](#37-联合类型-props)
-  - [3.8. 运行时声明 props](#38-运行时声明-props)
-  - [3.9. 运行时声明中的复杂类型](#39-运行时声明中的复杂类型)
-  - [3.10. 不能同时使用运行时声明和类型声明](#310-不能同时使用运行时声明和类型声明)
-  - [3.11. 最常用的标准写法](#311-最常用的标准写法)
-  - [3.12. 总结](#312-总结)
+- [3. 推荐写法：基于类型声明 props](#3-推荐写法基于类型声明-props)
+- [4. 使用 interface 标注 props](#4-使用-interface-标注-props)
+- [5. 从外部文件导入 Props 类型](#5-从外部文件导入-props-类型)
+- [6. 给 props 设置默认值](#6-给-props-设置默认值)
+  - [6.1. Vue 3.5+：使用解构默认值](#61-vue-35使用解构默认值)
+  - [6.2. 使用 withDefaults 设置默认值（个人更倾向使用这种写法）](#62-使用-withdefaults-设置默认值个人更倾向使用这种写法)
+- [7. 复杂类型 props](#7-复杂类型-props)
+- [8. 数组类型 props](#8-数组类型-props)
+- [9. 联合类型 props](#9-联合类型-props)
+- [10. 运行时声明 props](#10-运行时声明-props)
+- [11. 运行时声明中的复杂类型](#11-运行时声明中的复杂类型)
+- [12. 不能同时使用运行时声明和类型声明](#12-不能同时使用运行时声明和类型声明)
+- [13. 最常用的标准写法](#13-最常用的标准写法)
+- [14. 总结](#14-总结)
 
 <!-- endregion:toc -->
 
@@ -41,9 +40,7 @@
 
 实际开发中，使用 TS 时更推荐第二种：基于类型的声明。
 
-## 3. 如何为组件的 props 标注类型？
-
-### 3.1. 推荐写法：基于类型声明 props
+## 3. 推荐写法：基于类型声明 props
 
 ```html
 <script setup lang="ts">
@@ -67,7 +64,7 @@ props.count // number | undefined
 - `count?: number` 是可选 prop
 - 可选 prop 的类型会包含 `undefined`
 
-### 3.2. 使用 interface 标注 props
+## 4. 使用 interface 标注 props
 
 如果 props 比较多，更推荐用 `interface`：
 
@@ -85,7 +82,7 @@ props.count // number | undefined
 
 这样可读性更好，也方便复用。
 
-### 3.3. 从外部文件导入 Props 类型
+## 5. 从外部文件导入 Props 类型
 
 可以把 props 类型单独放到一个文件里。
 
@@ -110,7 +107,7 @@ export interface UserCardProps {
 
 注意使用 `import type`，因为这里只导入类型。
 
-### 3.4. 给 props 设置默认值
+## 6. 给 props 设置默认值
 
 如果使用基于类型的声明：
 
@@ -129,7 +126,7 @@ interface Props {
 
 需要注意：设置了默认值的 prop，通常应该在类型中写成可选属性，因为父组件可以不传。
 
-#### Vue 3.5+：使用解构默认值
+### 6.1. Vue 3.5+：使用解构默认值
 
 ```html
 <script setup lang="ts">
@@ -167,7 +164,7 @@ const { tags = ['Vue', 'TypeScript'] } = defineProps<Props>()
 
 这里不需要写成函数，因为默认值表达式会在每个组件实例执行 `setup` 时重新创建。
 
-#### 使用 withDefaults 设置默认值（个人更倾向使用这种写法）
+### 6.2. 使用 withDefaults 设置默认值（个人更倾向使用这种写法）
 
 ```html
 <script setup lang="ts">
@@ -234,7 +231,7 @@ tags: ['Vue', 'TypeScript']
 
 :::
 
-### 3.5. 复杂类型 props
+## 7. 复杂类型 props
 
 比如一个组件接收一本书：
 
@@ -272,7 +269,7 @@ const props = defineProps<{
 }>()
 ```
 
-### 3.6. 数组类型 props
+## 8. 数组类型 props
 
 ```html
 <script setup lang="ts">
@@ -295,7 +292,7 @@ const props = defineProps<{
 </script>
 ```
 
-### 3.7. 联合类型 props
+## 9. 联合类型 props
 
 ```html
 <script setup lang="ts">
@@ -322,7 +319,7 @@ const props = defineProps<{
 
 TypeScript 会报错，因为 `'big'` 不在允许范围内。
 
-### 3.8. 运行时声明 props
+## 10. 运行时声明 props
 
 也可以这样写：
 
@@ -357,7 +354,7 @@ props.count // number | undefined
 
 :::
 
-### 3.9. 运行时声明中的复杂类型
+## 11. 运行时声明中的复杂类型
 
 如果你用运行时声明，并且 prop 是复杂对象类型，需要用 `PropType`：
 
@@ -390,7 +387,7 @@ const props = defineProps<{
 }>()
 ```
 
-### 3.10. 不能同时使用运行时声明和类型声明
+## 12. 不能同时使用运行时声明和类型声明
 
 下面这种写法是错误的：
 
@@ -420,7 +417,7 @@ const props = defineProps<{
 }>()
 ```
 
-### 3.11. 最常用的标准写法
+## 13. 最常用的标准写法
 
 实际项目中我会推荐这样写：
 
@@ -454,7 +451,7 @@ const props = defineProps<{
 </script>
 ```
 
-### 3.12. 总结
+## 14. 总结
 
 在 TS + Composition API 中，给 props 标注类型最推荐：
 
