@@ -2,25 +2,25 @@
 
 <!-- region:toc -->
 
-- [1. 🎯 本节内容](#1--本节内容)
-- [2. 🫧 评价](#2--评价)
-- [3. 🤔 Vue 项目的测试工具如何选型？Vitest 和 Jest 有什么区别？](#3--vue-项目的测试工具如何选型vitest-和-jest-有什么区别)
-- [4. 🤔 如何测试 Vue 组件的渲染和交互？](#4--如何测试-vue-组件的渲染和交互)
-- [5. 🤔 如何测试 Vue 的组合式函数（Composables）？](#5--如何测试-vue-的组合式函数composables)
+- [1. 本节内容](#1-本节内容)
+- [2. 评价](#2-评价)
+- [3. Vue 项目的测试工具如何选型？Vitest 和 Jest 有什么区别？](#3-vue-项目的测试工具如何选型vitest-和-jest-有什么区别)
+- [4. 如何测试 Vue 组件的渲染和交互？](#4-如何测试-vue-组件的渲染和交互)
+- [5. 如何测试 Vue 的组合式函数（Composables）？](#5-如何测试-vue-的组合式函数composables)
 
 <!-- endregion:toc -->
 
-## 1. 🎯 本节内容
+## 1. 本节内容
 
 - 测试工具选型（Vitest、Jest）
 - 测试组件的渲染与交互
 - 测试组合式函数
 
-## 2. 🫧 评价
+## 2. 评价
 
 - todo
 
-## 3. 🤔 Vue 项目的测试工具如何选型？Vitest 和 Jest 有什么区别？
+## 3. Vue 项目的测试工具如何选型？Vitest 和 Jest 有什么区别？
 
 Vue 项目的单元测试工具主要有 Vitest 和 Jest 两种选择，两者都需要配合 @vue/test-utils（Vue 官方测试工具库）来测试 Vue 组件。
 
@@ -106,7 +106,7 @@ describe('Counter', () => {
 
 选择建议：如果项目使用 Vite 构建，强烈推荐 Vitest——零配置、速度快、生态一致。如果项目使用 webpack（Vue CLI），Jest 是更稳妥的选择。两者的测试 API 几乎一致，核心差异在于底层运行环境和配置复杂度。
 
-## 4. 🤔 如何测试 Vue 组件的渲染和交互？
+## 4. 如何测试 Vue 组件的渲染和交互？
 
 @vue/test-utils 提供了 mount 和 shallowMount 两个函数来挂载组件进行测试。mount 会完整渲染子组件，shallowMount 会将子组件替换为存根（stub），只渲染当前组件。
 
@@ -265,7 +265,7 @@ describe('NavBar', () => {
 })
 ```
 
-## 5. 🤔 如何测试 Vue 的组合式函数（Composables）？
+## 5. 如何测试 Vue 的组合式函数（Composables）？
 
 组合式函数是纯 JavaScript/TypeScript 函数，测试它们比测试组件更简单。但由于 Composables 通常使用 Vue 的响应式 API 和生命周期钩子，测试时需要提供 Vue 的上下文环境。
 

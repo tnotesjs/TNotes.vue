@@ -2,27 +2,27 @@
 
 <!-- region:toc -->
 
-- [1. 🎯 本节内容](#1--本节内容)
-- [2. 🫧 评价](#2--评价)
-- [3. 🤔 CSR、SSR 和 SSG 分别是什么？有什么区别？](#3--csrssr-和-ssg-分别是什么有什么区别)
-- [4. 🤔 Vue SSR 的原理是什么？有哪些需要注意的挑战？](#4--vue-ssr-的原理是什么有哪些需要注意的挑战)
-- [5. 🤔 Vue Router 在 SSR 中如何使用？](#5--vue-router-在-ssr-中如何使用)
-- [6. 🤔 SSR 中的状态管理如何处理注水和脱水？](#6--ssr-中的状态管理如何处理注水和脱水)
+- [1. 本节内容](#1-本节内容)
+- [2. 评价](#2-评价)
+- [3. CSR、SSR 和 SSG 分别是什么？有什么区别？](#3-csrssr-和-ssg-分别是什么有什么区别)
+- [4. Vue SSR 的原理是什么？有哪些需要注意的挑战？](#4-vue-ssr-的原理是什么有哪些需要注意的挑战)
+- [5. Vue Router 在 SSR 中如何使用？](#5-vue-router-在-ssr-中如何使用)
+- [6. SSR 中的状态管理如何处理注水和脱水？](#6-ssr-中的状态管理如何处理注水和脱水)
 
 <!-- endregion:toc -->
 
-## 1. 🎯 本节内容
+## 1. 本节内容
 
 - CSR vs SSR vs SSG
 - Vue 的 SSR 原理与挑战
 - 使用 Vue Router 进行 SSR
 - 状态管理在 SSR 中的处理（store 注水与脱水）
 
-## 2. 🫧 评价
+## 2. 评价
 
 - todo
 
-## 3. 🤔 CSR、SSR 和 SSG 分别是什么？有什么区别？
+## 3. CSR、SSR 和 SSG 分别是什么？有什么区别？
 
 CSR（Client-Side Rendering，客户端渲染）、SSR（Server-Side Rendering，服务端渲染）和 SSG（Static Site Generation，静态站点生成）是三种不同的页面渲染策略。
 
@@ -86,7 +86,7 @@ SSG 的优点：加载最快（CDN 直接返回）、SEO 友好、不需要 Node
 
 选择建议：博客、文档站点用 SSG；需要 SEO 的动态内容站点（电商、新闻）用 SSR；管理后台、内部系统用 CSR。
 
-## 4. 🤔 Vue SSR 的原理是什么？有哪些需要注意的挑战？
+## 4. Vue SSR 的原理是什么？有哪些需要注意的挑战？
 
 Vue SSR 的核心原理是：同一套 Vue 组件代码在服务端和客户端各执行一次。服务端执行渲染生成 HTML 字符串（用于首屏显示），客户端执行注水（hydration，将静态 HTML "激活"为可交互的 Vue 应用）。
 
@@ -189,7 +189,7 @@ if (typeof window !== 'undefined') {
 
 第四，数据预取。SSR 需要在服务端获取数据后再渲染，而不是像 CSR 那样先渲染再请求数据。
 
-## 5. 🤔 Vue Router 在 SSR 中如何使用？
+## 5. Vue Router 在 SSR 中如何使用？
 
 Vue Router 在 SSR 环境中需要使用 createMemoryHistory（服务端没有浏览器 URL 栏），而客户端使用 createWebHistory。
 
@@ -290,7 +290,7 @@ app.get('*', async (req, res) => {
 })
 ```
 
-## 6. 🤔 SSR 中的状态管理如何处理注水和脱水？
+## 6. SSR 中的状态管理如何处理注水和脱水？
 
 在 SSR 中，服务端和客户端都会执行应用代码。服务端获取的数据需要传递给客户端，避免客户端重复请求。这个过程叫做"脱水"（dehydration，服务端序列化状态）和"注水"（hydration，客户端恢复状态）。
 

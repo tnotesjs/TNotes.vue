@@ -2,25 +2,25 @@
 
 <!-- region:toc -->
 
-- [1. 🎯 本节内容](#1--本节内容)
-- [2. 🫧 评价](#2--评价)
-- [3. 🤔 Vue 3 为什么使用 monorepo 管理？各个包的职责是什么？](#3--vue-3-为什么使用-monorepo-管理各个包的职责是什么)
-- [4. 🤔 Vue 3 响应式系统的源码实现原理是什么？](#4--vue-3-响应式系统的源码实现原理是什么)
-- [5. 🤔 渲染器的设计思路是什么？runtime-core 和 runtime-dom 如何分工？](#5--渲染器的设计思路是什么runtime-core-和-runtime-dom-如何分工)
+- [1. 本节内容](#1-本节内容)
+- [2. 评价](#2-评价)
+- [3. Vue 3 为什么使用 monorepo 管理？各个包的职责是什么？](#3-vue-3-为什么使用-monorepo-管理各个包的职责是什么)
+- [4. Vue 3 响应式系统的源码实现原理是什么？](#4-vue-3-响应式系统的源码实现原理是什么)
+- [5. 渲染器的设计思路是什么？runtime-core 和 runtime-dom 如何分工？](#5-渲染器的设计思路是什么runtime-core-和-runtime-dom-如何分工)
 
 <!-- endregion:toc -->
 
-## 1. 🎯 本节内容
+## 1. 本节内容
 
 - Vue 3 的 monorepo 管理
 - 响应式系统的源码实现
 - 渲染器的设计（runtime-core vs runtime-dom）
 
-## 2. 🫧 评价
+## 2. 评价
 
 - todo
 
-## 3. 🤔 Vue 3 为什么使用 monorepo 管理？各个包的职责是什么？
+## 3. Vue 3 为什么使用 monorepo 管理？各个包的职责是什么？
 
 Vue 3 源码采用 monorepo 架构，使用 pnpm workspace 管理多个包，所有包都在 packages/ 目录下。这种架构使得各模块职责清晰、可独立使用、便于维护和测试。
 
@@ -130,7 +130,7 @@ export const createApp = renderer.createApp
 
 monorepo 的优势：reactivity 包可以被 React、Svelte 等其他框架使用；runtime-core 可以被自定义渲染器复用；编译器和运行时分离后，生产环境可以预编译模板，打包时不包含编译器代码（减小约 30% 体积）。
 
-## 4. 🤔 Vue 3 响应式系统的源码实现原理是什么？
+## 4. Vue 3 响应式系统的源码实现原理是什么？
 
 Vue 3 的响应式系统基于 ES6 的 Proxy 实现（Vue 2 用的是 Object.defineProperty）。核心包含三个概念：effect（副作用函数）、track（依赖收集）、trigger（触发更新）。
 
@@ -309,7 +309,7 @@ class RefImpl {
 
 Vue 3 使用 Proxy 相比 Vue 2 的 Object.defineProperty 的优势：能够拦截属性的添加和删除（不再需要 Vue.set）、能够拦截数组的索引赋值和 length 修改、性能更好（不需要递归遍历所有属性做劫持，而是惰性代理）。
 
-## 5. 🤔 渲染器的设计思路是什么？runtime-core 和 runtime-dom 如何分工？
+## 5. 渲染器的设计思路是什么？runtime-core 和 runtime-dom 如何分工？
 
 Vue 3 的渲染器采用了"核心逻辑与平台操作分离"的设计思想。runtime-core 定义了平台无关的渲染管线（VNode 创建、Diff、组件管理），runtime-dom 提供了浏览器 DOM 平台的具体操作实现。
 

@@ -2,28 +2,28 @@
 
 <!-- region:toc -->
 
-- [1. 🎯 本节内容](#1--本节内容)
-- [2. 🫧 评价](#2--评价)
-- [3. 🤔 什么是 Vue 插件？](#3--什么是-vue-插件)
-- [4. 🤔 插件通常用来做什么？](#4--插件通常用来做什么)
-- [5. 🤔 插件的基本结构是？](#5--插件的基本结构是)
+- [1. 本节内容](#1-本节内容)
+- [2. 评价](#2-评价)
+- [3. 什么是 Vue 插件？](#3-什么是-vue-插件)
+- [4. 插件通常用来做什么？](#4-插件通常用来做什么)
+- [5. 插件的基本结构是？](#5-插件的基本结构是)
   - [5.1. 对象式写法](#51-对象式写法)
   - [5.2. 函数式写法](#52-函数式写法)
   - [5.3. 简化版 `i18n` 插件示例](#53-简化版-i18n-插件示例)
-- [6. 🤔 插件里的 Provide / Inject 应该怎么配合？](#6--插件里的-provide--inject-应该怎么配合)
-- [7. 🤔 为什么要谨慎往 globalProperties 上挂东西？](#7--为什么要谨慎往-globalproperties-上挂东西)
-- [8. 🤔 什么场景适合写成插件，什么场景不适合？](#8--什么场景适合写成插件什么场景不适合)
-- [9. 🤔 如果要发布给别人用，还要注意什么？](#9--如果要发布给别人用还要注意什么)
-- [10. 🤔 Vue 有插件市场吗？](#10--vue-有插件市场吗)
-- [11. 💻 demos.1 - 插件的两种基本形式与 install 参数](#11--demos1---插件的两种基本形式与-install-参数)
-- [12. 💻 demos.2 - globalProperties 挂载全局方法（i18n 插件示例）](#12--demos2---globalproperties-挂载全局方法i18n-插件示例)
-- [13. 💻 demos.3 - 插件中使用 provide/inject 注入全局资源](#13--demos3---插件中使用-provideinject-注入全局资源)
-- [14. 💻 demos.4 - globalProperties 与 provide/inject 的选择差异](#14--demos4---globalproperties-与-provideinject-的选择差异)
-- [15. 🔗 引用](#15--引用)
+- [6. 插件里的 Provide / Inject 应该怎么配合？](#6-插件里的-provide--inject-应该怎么配合)
+- [7. 为什么要谨慎往 globalProperties 上挂东西？](#7-为什么要谨慎往-globalproperties-上挂东西)
+- [8. 什么场景适合写成插件，什么场景不适合？](#8-什么场景适合写成插件什么场景不适合)
+- [9. 如果要发布给别人用，还要注意什么？](#9-如果要发布给别人用还要注意什么)
+- [10. Vue 有插件市场吗？](#10-vue-有插件市场吗)
+- [11. demos.1 - 插件的两种基本形式与 install 参数](#11-demos1---插件的两种基本形式与-install-参数)
+- [12. demos.2 - globalProperties 挂载全局方法（i18n 插件示例）](#12-demos2---globalproperties-挂载全局方法i18n-插件示例)
+- [13. demos.3 - 插件中使用 provide/inject 注入全局资源](#13-demos3---插件中使用-provideinject-注入全局资源)
+- [14. demos.4 - globalProperties 与 provide/inject 的选择差异](#14-demos4---globalproperties-与-provideinject-的选择差异)
+- [15. 引用](#15-引用)
 
 <!-- endregion:toc -->
 
-## 1. 🎯 本节内容
+## 1. 本节内容
 
 - 插件定义
 - app.use
@@ -35,7 +35,7 @@
 - 打包发布
 - 插件市场
 
-## 2. 🫧 评价
+## 2. 评价
 
 插件本身不是高频业务知识点，但你一旦接触路由、状态管理、国际化，就一定会碰到它。你需要重点理解的是“插件是应用级扩展”，别把只在单个页面里使用的小能力也硬做成插件。
 
@@ -45,7 +45,7 @@
 
 :::
 
-## 3. 🤔 什么是 Vue 插件？
+## 3. 什么是 Vue 插件？
 
 插件（Plugin）可以理解成“给整个 Vue 应用安装一组全局能力的代码”，是 Vue 提供的一种应用级功能扩展机制。当某些功能需要作用于整个应用（而不是单个组件）时，就适合封装成插件。它允许你以模块化的方式为 Vue 应用添加全局方法、组件、指令、依赖注入等功能。
 
@@ -74,7 +74,7 @@ app.mount('#app')
 
 所以本质上，插件不是某种神秘特殊语法，它只是遵守了 Vue 约定的“安装接口”。
 
-## 4. 🤔 插件通常用来做什么？
+## 4. 插件通常用来做什么？
 
 官方总结了几个最常见的用途：
 
@@ -87,7 +87,7 @@ app.mount('#app')
 
 你可以把插件理解成“应用启动时安装的能力包”。它更适合处理跨页面、跨组件、全项目都要统一接入的能力。
 
-## 5. 🤔 插件的基本结构是？
+## 5. 插件的基本结构是？
 
 一个标准的 Vue 3 插件必须是一个包含 install 方法的对象，或者直接是一个函数。
 
@@ -165,7 +165,7 @@ app.use(i18nPlugin, {
 
 这个例子很好地说明了插件的特点：它不是给某个组件单独服务，而是给整个应用提供统一入口。
 
-## 6. 🤔 插件里的 Provide / Inject 应该怎么配合？
+## 6. 插件里的 Provide / Inject 应该怎么配合？
 
 除了挂全局属性，插件还可以通过 `provide / inject` 把资源注入到整个应用。
 
@@ -202,7 +202,7 @@ export default {
 
 如果插件提供的是配置对象、服务实例、客户端 SDK，这类场景通常更适合 `provide / inject`。
 
-## 7. 🤔 为什么要谨慎往 globalProperties 上挂东西？
+## 7. 为什么要谨慎往 globalProperties 上挂东西？
 
 因为它虽然方便，但很容易把项目变成“全局魔法现场”。
 
@@ -225,7 +225,7 @@ app.config.globalProperties.$track = track
 - 面向依赖注入的服务或配置时，优先 `provide / inject`
 - 只在局部使用的逻辑，不要做成全局属性
 
-## 8. 🤔 什么场景适合写成插件，什么场景不适合？
+## 8. 什么场景适合写成插件，什么场景不适合？
 
 核心结论：如果一个能力离开“应用实例”仍然可以单独工作，那它未必需要插件化。
 
@@ -251,7 +251,7 @@ app.config.globalProperties.$track = track
 - 只是一个普通工具函数
 - 只是一个组合式函数就能解决的事情
 
-## 9. 🤔 如果要发布给别人用，还要注意什么？
+## 9. 如果要发布给别人用，还要注意什么？
 
 如果插件只在你自己的项目里使用，写到这里通常就够了。
 
@@ -267,7 +267,7 @@ app.config.globalProperties.$track = track
 
 也就是说，Vue 插件的核心不是“怎么发包”，而是先把安装接口、全局能力和使用边界设计清楚，再谈发布。
 
-## 10. 🤔 Vue 有插件市场吗？
+## 10. Vue 有插件市场吗？
 
 你可以在 [Vue.js 官方提供的插件社区][5] 中查找 Vue 的相关插件。
 
@@ -275,7 +275,7 @@ app.config.globalProperties.$track = track
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-29-22-32-51.png)
 
-## 11. 💻 demos.1 - 插件的两种基本形式与 install 参数
+## 11. demos.1 - 插件的两种基本形式与 install 参数
 
 插件有两种写法：对象式（含 `install` 方法）和函数式（直接导出函数）。`app.use()` 会调用插件的 `install`，并将 `app` 实例和可选的 `options` 传入。
 
@@ -333,7 +333,7 @@ app.mount('#app')
 [函数式插件] 已安装，options: { mode: 'function' }
 ```
 
-## 12. 💻 demos.2 - globalProperties 挂载全局方法（i18n 插件示例）
+## 12. demos.2 - globalProperties 挂载全局方法（i18n 插件示例）
 
 通过 `app.config.globalProperties` 挂载的方法可在模板中以 `$xxx` 形式直接调用，无需 import。这是插件最经典的用法之一。
 
@@ -388,7 +388,7 @@ app.mount('#app')
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-30-13-38-00.png)
 
-## 13. 💻 demos.3 - 插件中使用 provide/inject 注入全局资源
+## 13. demos.3 - 插件中使用 provide/inject 注入全局资源
 
 插件可通过 `app.provide()` 向整个应用注入资源，后代组件通过 `inject()` 显式获取。相比 `globalProperties`，这种方式支持响应式且依赖声明更清晰。
 
@@ -462,7 +462,7 @@ app.mount('#app')
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-30-13-40-49.png)
 
-## 14. 💻 demos.4 - globalProperties 与 provide/inject 的选择差异
+## 14. demos.4 - globalProperties 与 provide/inject 的选择差异
 
 同一个插件同时用两种方式注入数据，点击按钮可直观观察到：`provide/inject`（reactive）支持响应式更新，`globalProperties` 上的值修改后视图不会自动刷新。
 
@@ -541,7 +541,7 @@ app.mount('#app')
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-30-13-45-44.png)
 
-## 15. 🔗 引用
+## 15. 引用
 
 - [Vue.js 官方文档 - 插件][1]
 - [Vue.js 官方文档 - 依赖注入][2]

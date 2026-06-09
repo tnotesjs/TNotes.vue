@@ -2,25 +2,25 @@
 
 <!-- region:toc -->
 
-- [1. 🎯 本节内容](#1--本节内容)
-- [2. 🫧 评价](#2--评价)
-- [3. 🤔 Vue 项目如何进行生产环境构建与优化？](#3--vue-项目如何进行生产环境构建与优化)
-- [4. 🤔 路由模式对部署有什么影响？history 模式如何配置后端？](#4--路由模式对部署有什么影响history-模式如何配置后端)
-- [5. 🤔 如何将 Vue 应用部署到 Nginx、Netlify 和 Vercel？](#5--如何将-vue-应用部署到-nginxnetlify-和-vercel)
+- [1. 本节内容](#1-本节内容)
+- [2. 评价](#2-评价)
+- [3. Vue 项目如何进行生产环境构建与优化？](#3-vue-项目如何进行生产环境构建与优化)
+- [4. 路由模式对部署有什么影响？history 模式如何配置后端？](#4-路由模式对部署有什么影响history-模式如何配置后端)
+- [5. 如何将 Vue 应用部署到 Nginx、Netlify 和 Vercel？](#5-如何将-vue-应用部署到-nginxnetlify-和-vercel)
 
 <!-- endregion:toc -->
 
-## 1. 🎯 本节内容
+## 1. 本节内容
 
 - 生产环境构建与优化
 - 路由模式与部署配置（history 模式的后端配置）
 - 部署到 Nginx、Netlify、Vercel
 
-## 2. 🫧 评价
+## 2. 评价
 
 - todo
 
-## 3. 🤔 Vue 项目如何进行生产环境构建与优化？
+## 3. Vue 项目如何进行生产环境构建与优化？
 
 生产环境构建的目标是生成体积小、加载快、性能好的静态文件。Vite 和 Vue CLI 都提供了丰富的构建优化手段。
 
@@ -184,7 +184,7 @@ export default defineConfig({
 
 构建后使用 `npx vite preview` 可以本地预览生产构建结果。
 
-## 4. 🤔 路由模式对部署有什么影响？history 模式如何配置后端？
+## 4. 路由模式对部署有什么影响？history 模式如何配置后端？
 
 Vue Router 提供了两种路由模式：hash 模式和 history 模式。路由模式的选择直接影响部署配置。
 
@@ -293,7 +293,7 @@ const routes = [
 ]
 ```
 
-## 5. 🤔 如何将 Vue 应用部署到 Nginx、Netlify 和 Vercel？
+## 5. 如何将 Vue 应用部署到 Nginx、Netlify 和 Vercel？
 
 三种部署方式从传统服务器到现代云平台各有特点。
 

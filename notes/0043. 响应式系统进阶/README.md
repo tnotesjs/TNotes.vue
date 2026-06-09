@@ -2,27 +2,27 @@
 
 <!-- region:toc -->
 
-- [1. 🎯 本节内容](#1--本节内容)
-- [2. 🫧 评价](#2--评价)
-- [3. 🤔 shallowRef 和 triggerRef 的作用和使用场景是什么？](#3--shallowref-和-triggerref-的作用和使用场景是什么)
-- [4. 🤔 如何使用 customRef 创建自定义 ref？](#4--如何使用-customref-创建自定义-ref)
-- [5. 🤔 readonly 的作用是什么？如何用来保护数据？](#5--readonly-的作用是什么如何用来保护数据)
-- [6. 🤔 toRefs 和 toRef 如何解决响应式解构的问题？](#6--torefs-和-toref-如何解决响应式解构的问题)
+- [1. 本节内容](#1-本节内容)
+- [2. 评价](#2-评价)
+- [3. shallowRef 和 triggerRef 的作用和使用场景是什么？](#3-shallowref-和-triggerref-的作用和使用场景是什么)
+- [4. 如何使用 customRef 创建自定义 ref？](#4-如何使用-customref-创建自定义-ref)
+- [5. readonly 的作用是什么？如何用来保护数据？](#5-readonly-的作用是什么如何用来保护数据)
+- [6. toRefs 和 toRef 如何解决响应式解构的问题？](#6-torefs-和-toref-如何解决响应式解构的问题)
 
 <!-- endregion:toc -->
 
-## 1. 🎯 本节内容
+## 1. 本节内容
 
 - shallowRef 与 triggerRef
 - customRef 创建自定义 ref
 - readonly 与 isReadonly
 - toRefs 与 toRef 的解构响应式
 
-## 2. 🫧 评价
+## 2. 评价
 
 - todo
 
-## 3. 🤔 shallowRef 和 triggerRef 的作用和使用场景是什么？
+## 3. shallowRef 和 triggerRef 的作用和使用场景是什么？
 
 shallowRef 是 ref 的浅层版本。普通的 ref 如果包装的是对象，会通过 reactive 对其进行深层响应式转换；而 shallowRef 只有 .value 本身的赋值操作是响应式的，内部属性的修改不会触发更新。
 
@@ -94,7 +94,7 @@ triggerRef(state) // 只触发一次更新，而不是三次
 
 triggerRef 的典型使用模式是"批量修改 + 一次性触发"，可以避免中间状态的渲染开销。但要注意，如果过度使用 triggerRef，代码会变得难以维护，因为响应式的追踪变得不透明。大多数情况下，优先考虑整体替换 .value 而不是手动触发。
 
-## 4. 🤔 如何使用 customRef 创建自定义 ref？
+## 4. 如何使用 customRef 创建自定义 ref？
 
 customRef 允许你创建一个自定义的 ref，可以精确控制依赖追踪和更新触发的时机。它接收一个工厂函数，该函数接收 track 和 trigger 两个参数，返回一个包含 get 和 set 的对象。
 
@@ -258,7 +258,7 @@ theme.value = 'dark' // 自动同步到 localStorage
 
 customRef 的关键点在于：track() 必须在 get 中调用来建立依赖追踪，trigger() 在你想让依赖方重新执行时调用。你可以完全控制在 set 中何时调用 trigger()，甚至可以选择不调用（忽略某些更新）。
 
-## 5. 🤔 readonly 的作用是什么？如何用来保护数据？
+## 5. readonly 的作用是什么？如何用来保护数据？
 
 readonly 接收一个响应式对象（reactive 或 ref）或普通对象，返回一个只读的代理。尝试修改只读代理的属性会在开发环境得到警告，在生产环境中静默失败。
 
@@ -355,7 +355,7 @@ shallowRo.nested = {} // 警告：第一层只读
 shallowRo.nested.count = 1 // 正常工作：嵌套对象不受限
 ```
 
-## 6. 🤔 toRefs 和 toRef 如何解决响应式解构的问题？
+## 6. toRefs 和 toRef 如何解决响应式解构的问题？
 
 当你从 reactive 对象中解构属性时，解构出来的变量会失去响应式链接。这是因为解构操作本质上是值的拷贝，基本类型的值被拷贝后就与原始对象断开了连接。toRefs 和 toRef 就是为了解决这个问题。
 

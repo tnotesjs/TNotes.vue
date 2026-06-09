@@ -2,35 +2,35 @@
 
 <!-- region:toc -->
 
-- [1. 🎯 本节内容](#1--本节内容)
-- [2. 🫧 评价](#2--评价)
-- [3. 🤔 `provide` / `inject` 主要解决什么问题？](#3--provide--inject-主要解决什么问题)
-- [4. 🤔 如何在组件中 `provide` 和 `inject`？](#4--如何在组件中-provide-和-inject)
+- [1. 本节内容](#1-本节内容)
+- [2. 评价](#2-评价)
+- [3. `provide` / `inject` 主要解决什么问题？](#3-provide--inject-主要解决什么问题)
+- [4. 如何在组件中 `provide` 和 `inject`？](#4-如何在组件中-provide-和-inject)
   - [4.1. 示例](#41-示例)
   - [4.2. 对比 props 逐级传递](#42-对比-props-逐级传递)
   - [4.3. 一些注意事项](#43-一些注意事项)
-- [5. 🤔 什么是应用层 Provide？](#5--什么是应用层-provide)
-- [6. 🤔 注入不到值时怎么办？默认值怎么写？](#6--注入不到值时怎么办默认值怎么写)
-- [7. 🤔 `provide` / `inject` 和响应式数据应该如何配合？实际开发时的最佳实践是？](#7--provide--inject-和响应式数据应该如何配合实际开发时的最佳实践是)
+- [5. 什么是应用层 Provide？](#5-什么是应用层-provide)
+- [6. 注入不到值时怎么办？默认值怎么写？](#6-注入不到值时怎么办默认值怎么写)
+- [7. `provide` / `inject` 和响应式数据应该如何配合？实际开发时的最佳实践是？](#7-provide--inject-和响应式数据应该如何配合实际开发时的最佳实践是)
   - [7.1. 最佳实践](#71-最佳实践)
-- [8. 🤔 为什么推荐用 `Symbol` 作为注入名？](#8--为什么推荐用-symbol-作为注入名)
-- [9. 💻 demos.1 - provide/inject 基本用法（跨层级共享）](#9--demos1---provideinject-基本用法跨层级共享)
-- [10. 💻 demos.2 - 响应式共享与最佳实践（readonly + setter）](#10--demos2---响应式共享与最佳实践readonly--setter)
-- [11. 💻 demos.3 - inject 默认值](#11--demos3---inject-默认值)
-- [12. 💻 demos.4 - Symbol 作为注入名](#12--demos4---symbol-作为注入名)
-- [13. 💻 demos.5 - 应用层 Provide](#13--demos5---应用层-provide)
-- [14. 🤔 为什么 provide 和 inject 需要同步调用？【深入原理】](#14--为什么-provide-和-inject-需要同步调用深入原理)
+- [8. 为什么推荐用 `Symbol` 作为注入名？](#8-为什么推荐用-symbol-作为注入名)
+- [9. demos.1 - provide/inject 基本用法（跨层级共享）](#9-demos1---provideinject-基本用法跨层级共享)
+- [10. demos.2 - 响应式共享与最佳实践（readonly + setter）](#10-demos2---响应式共享与最佳实践readonly--setter)
+- [11. demos.3 - inject 默认值](#11-demos3---inject-默认值)
+- [12. demos.4 - Symbol 作为注入名](#12-demos4---symbol-作为注入名)
+- [13. demos.5 - 应用层 Provide](#13-demos5---应用层-provide)
+- [14. 为什么 provide 和 inject 需要同步调用？【深入原理】](#14-为什么-provide-和-inject-需要同步调用深入原理)
   - [14.1. 前置知识：`provide` 如何使用 `currentInstance`](#141-前置知识provide-如何使用-currentinstance)
   - [14.2. 前置知识：`inject` 如何使用 `currentInstance`](#142-前置知识inject-如何使用-currentinstance)
   - [14.3. 前置知识：`currentInstance` 的生命周期](#143-前置知识currentinstance-的生命周期)
   - [14.4. 为什么异步调用会失败](#144-为什么异步调用会失败)
     - [时序图](#时序图)
   - [14.5. 示例](#145-示例)
-- [15. 🔗 引用](#15--引用)
+- [15. 引用](#15-引用)
 
 <!-- endregion:toc -->
 
-## 1. 🎯 本节内容
+## 1. 本节内容
 
 - 逐级透传
 - Provide
@@ -39,11 +39,11 @@
 - 响应式共享
 - Symbol 键
 
-## 2. 🫧 评价
+## 2. 评价
 
 `provide` / `inject` 主要解决跨层传值的问题。在使用的时候需要注意不能丢到异步回调里，否则会导致无法正常工作。
 
-## 3. 🤔 `provide` / `inject` 主要解决什么问题？
+## 3. `provide` / `inject` 主要解决什么问题？
 
 当一个较深层的后代组件需要祖先组件里的数据时，如果只靠 props 往下一级一级传，就会出现典型的 prop 逐级透传问题。也就是说：
 
@@ -60,7 +60,7 @@
 
 所以它本质上是一种跨层级依赖共享机制，不需要中间组件层层转手。
 
-## 4. 🤔 如何在组件中 `provide` 和 `inject`？
+## 4. 如何在组件中 `provide` 和 `inject`？
 
 在 Vue 3 里，最常见的写法是直接在 `<script setup>` 中使用 `provide()` 和 `inject()`。
 
@@ -120,7 +120,7 @@ inject() 会沿着父组件链向上查找，取最近的那个提供者
 - 如果没有使用 `<script setup>`，`provide()` 和 `inject()` 也都应该在 `setup()` 里同步调用，不要放到异步回调里。
 - 如果提供的是一个 ref，注入方拿到的仍然是这个 ref 对象，而不会自动解包。这样做的好处是，供给方和注入方之间可以保持响应式连接。
 
-## 5. 🤔 什么是应用层 Provide？
+## 5. 什么是应用层 Provide？
 
 除了在具体组件里 provide 之外，你还可以直接在应用实例上提供依赖：
 
@@ -145,7 +145,7 @@ app.mount('#app')
 
 换句话说，组件级 provide 更像「某棵子树内共享」，应用级 provide 更像「整个应用作用域内共享」。
 
-## 6. 🤔 注入不到值时怎么办？默认值怎么写？
+## 6. 注入不到值时怎么办？默认值怎么写？
 
 默认情况下，如果你 `inject()` 的 key 没有被任何祖先提供，Vue 会给出运行时警告。
 
@@ -168,7 +168,7 @@ const service = inject('service', () => createService(), true)
 - 简单值，直接传
 - 昂贵对象或类实例，用工厂函数
 
-## 7. 🤔 `provide` / `inject` 和响应式数据应该如何配合？实际开发时的最佳实践是？
+## 7. `provide` / `inject` 和响应式数据应该如何配合？实际开发时的最佳实践是？
 
 依赖注入最常见的真实用法，不是传一个普通字符串，而是传一份响应式状态。
 
@@ -228,7 +228,7 @@ const service = inject('service', () => createService(), true)
 </template>
 ```
 
-## 8. 🤔 为什么推荐用 `Symbol` 作为注入名？
+## 8. 为什么推荐用 `Symbol` 作为注入名？
 
 小项目里用字符串 key 没什么问题：
 
@@ -264,7 +264,7 @@ const theme = inject(themeKey)
 
 这样做的主要价值不是「写法更高级」，而是避免 key 冲突，让依赖关系更稳定、更适合复用和跨文件维护。
 
-## 9. 💻 demos.1 - provide/inject 基本用法（跨层级共享）
+## 9. demos.1 - provide/inject 基本用法（跨层级共享）
 
 ::: code-group
 
@@ -317,7 +317,7 @@ const theme = inject(themeKey)
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-16-23-22-14.png)
 
-## 10. 💻 demos.2 - 响应式共享与最佳实践（readonly + setter）
+## 10. demos.2 - 响应式共享与最佳实践（readonly + setter）
 
 ::: code-group
 
@@ -372,7 +372,7 @@ const theme = inject(themeKey)
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-17-08-56-36.png)
 
-## 11. 💻 demos.3 - inject 默认值
+## 11. demos.3 - inject 默认值
 
 ::: code-group
 
@@ -419,7 +419,7 @@ const theme = inject(themeKey)
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-17-08-59-13.png)
 
-## 12. 💻 demos.4 - Symbol 作为注入名
+## 12. demos.4 - Symbol 作为注入名
 
 ::: code-group
 
@@ -468,7 +468,7 @@ export const LocaleKey = Symbol('locale')
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-17-09-00-26.png)
 
-## 13. 💻 demos.5 - 应用层 Provide
+## 13. demos.5 - 应用层 Provide
 
 ::: code-group
 
@@ -519,7 +519,7 @@ app.mount('#app')
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-17-09-03-12.png)
 
-## 14. 🤔 为什么 provide 和 inject 需要同步调用？【深入原理】
+## 14. 为什么 provide 和 inject 需要同步调用？【深入原理】
 
 一句话解释：根本原因是 `provide` 和 `inject` 都依赖一个「模块级全局变量」 `currentInstance`，而这个变量只在 `setup()` 同步执行期间被设置为当前组件实例。
 
@@ -668,7 +668,7 @@ sequenceDiagram
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-17-09-12-35.png)
 
-## 15. 🔗 引用
+## 15. 引用
 
 - [Vue.js 官方文档 - 依赖注入][1]
 

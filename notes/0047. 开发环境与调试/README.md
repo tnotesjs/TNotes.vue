@@ -2,25 +2,25 @@
 
 <!-- region:toc -->
 
-- [1. 🎯 本节内容](#1--本节内容)
-- [2. 🫧 评价](#2--评价)
-- [3. 🤔 Vue Devtools 有哪些核心功能？如何高效使用？](#3--vue-devtools-有哪些核心功能如何高效使用)
-- [4. 🤔 如何在 Vue 项目中配置 ESLint 和 Prettier？](#4--如何在-vue-项目中配置-eslint-和-prettier)
-- [5. 🤔 Vue 项目中的环境变量和模式是如何工作的？](#5--vue-项目中的环境变量和模式是如何工作的)
+- [1. 本节内容](#1-本节内容)
+- [2. 评价](#2-评价)
+- [3. Vue Devtools 有哪些核心功能？如何高效使用？](#3-vue-devtools-有哪些核心功能如何高效使用)
+- [4. 如何在 Vue 项目中配置 ESLint 和 Prettier？](#4-如何在-vue-项目中配置-eslint-和-prettier)
+- [5. Vue 项目中的环境变量和模式是如何工作的？](#5-vue-项目中的环境变量和模式是如何工作的)
 
 <!-- endregion:toc -->
 
-## 1. 🎯 本节内容
+## 1. 本节内容
 
 - Vue Devtools 的使用
 - 配置 ESLint 与 Prettier
 - 环境变量与模式（development、production）
 
-## 2. 🫧 评价
+## 2. 评价
 
 - todo
 
-## 3. 🤔 Vue Devtools 有哪些核心功能？如何高效使用？
+## 3. Vue Devtools 有哪些核心功能？如何高效使用？
 
 Vue Devtools 是 Vue 官方提供的浏览器开发者工具扩展，支持 Chrome、Firefox 和 Edge。它是 Vue 开发中最重要的调试工具，提供了深入观察 Vue 应用运行时状态的能力。
 
@@ -91,7 +91,7 @@ function handleClick() {
 }
 ```
 
-## 4. 🤔 如何在 Vue 项目中配置 ESLint 和 Prettier？
+## 4. 如何在 Vue 项目中配置 ESLint 和 Prettier？
 
 ESLint 负责检查代码质量和潜在错误，Prettier 负责格式化代码风格。两者配合使用可以保证团队代码的一致性。
 
@@ -197,7 +197,7 @@ VS Code 集成配置（.vscode/settings.json）：
 
 ESLint 和 Prettier 冲突的解决方案：使用 @vue/eslint-config-prettier 的 skip-formatting 配置，让 ESLint 不处理格式化相关的规则，格式化完全交给 Prettier 处理。这样两者各司其职，不会产生冲突。
 
-## 5. 🤔 Vue 项目中的环境变量和模式是如何工作的？
+## 5. Vue 项目中的环境变量和模式是如何工作的？
 
 Vue 项目（无论是 Vite 还是 Vue CLI）都支持通过 .env 文件来管理环境变量，不同的模式（mode）会加载不同的环境变量文件。
 

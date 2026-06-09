@@ -2,27 +2,27 @@
 
 <!-- region:toc -->
 
-- [1. 🎯 本节内容](#1--本节内容)
-- [2. 🫧 评价](#2--评价)
-- [3. 🤔 Vue 3 在性能方面做了哪些提升？](#3--vue-3-在性能方面做了哪些提升)
-- [4. 🤔 组合式 API 和选项式 API 有什么区别？如何选择？](#4--组合式-api-和选项式-api-有什么区别如何选择)
-- [5. 🤔 Vue 3 的 TypeScript 支持改进了什么？](#5--vue-3-的-typescript-支持改进了什么)
-- [6. 🤔 Fragment、Teleport 和 Suspense 分别解决什么问题？](#6--fragmentteleport-和-suspense-分别解决什么问题)
+- [1. 本节内容](#1-本节内容)
+- [2. 评价](#2-评价)
+- [3. Vue 3 在性能方面做了哪些提升？](#3-vue-3-在性能方面做了哪些提升)
+- [4. 组合式 API 和选项式 API 有什么区别？如何选择？](#4-组合式-api-和选项式-api-有什么区别如何选择)
+- [5. Vue 3 的 TypeScript 支持改进了什么？](#5-vue-3-的-typescript-支持改进了什么)
+- [6. Fragment、Teleport 和 Suspense 分别解决什么问题？](#6-fragmentteleport-和-suspense-分别解决什么问题)
 
 <!-- endregion:toc -->
 
-## 1. 🎯 本节内容
+## 1. 本节内容
 
 - Vue 3 的性能提升（Proxy、重写虚拟 DOM）
 - 组合式 API（Composition API）vs 选项式 API（Options API）
 - 更好的 TypeScript 支持
 - 新组件：Fragment、Teleport、Suspense
 
-## 2. 🫧 评价
+## 2. 评价
 
 - todo
 
-## 3. 🤔 Vue 3 在性能方面做了哪些提升？
+## 3. Vue 3 在性能方面做了哪些提升？
 
 Vue 3 相比 Vue 2 在性能方面做了全面的重构和优化，主要体现在响应式系统、虚拟 DOM、编译器优化和 Tree-shaking 四个维度。
 
@@ -89,7 +89,7 @@ nextTick(() => {})
 
 这意味着如果你没用到 Transition、KeepAlive 等内置组件，它们的代码不会出现在最终的打包产物中。Vue 3 的最小包体积约 10KB（gzip），而 Vue 2 约 23KB。
 
-## 4. 🤔 组合式 API 和选项式 API 有什么区别？如何选择？
+## 4. 组合式 API 和选项式 API 有什么区别？如何选择？
 
 选项式 API（Options API）是 Vue 2 以来的经典写法，通过 data、methods、computed、watch 等选项来组织代码。组合式 API（Composition API）是 Vue 3 引入的新范式，通过 setup 函数和响应式 API 来组织代码。
 
@@ -195,7 +195,7 @@ const { x, y } = useMouse()
 
 如何选择：如果项目简单、团队中有 Vue 2 经验丰富的成员，选项式 API 依然可以使用。如果项目复杂、需要逻辑复用、使用 TypeScript，推荐使用组合式 API。Vue 3 官方的态度是两者并存，但更推荐组合式 API。
 
-## 5. 🤔 Vue 3 的 TypeScript 支持改进了什么？
+## 5. Vue 3 的 TypeScript 支持改进了什么？
 
 Vue 3 从源码层面使用 TypeScript 重写，为开发者提供了更好的类型支持体验。
 
@@ -321,7 +321,7 @@ export default defineComponent({
 </script>
 ```
 
-## 6. 🤔 Fragment、Teleport 和 Suspense 分别解决什么问题？
+## 6. Fragment、Teleport 和 Suspense 分别解决什么问题？
 
 这三个是 Vue 3 新增的内置功能，分别解决模板结构限制、DOM 渲染位置和异步组件加载的问题。
 

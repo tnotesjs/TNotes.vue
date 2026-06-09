@@ -2,17 +2,17 @@
 
 <!-- region:toc -->
 
-- [1. 🎯 本节内容](#1--本节内容)
-- [2. 🫧 评价](#2--评价)
-- [3. 🤔 setup 函数和 script setup 语法糖有什么区别？](#3--setup-函数和-script-setup-语法糖有什么区别)
-- [4. 🤔 ref 和 reactive 有什么区别？什么场景用哪个？](#4--ref-和-reactive-有什么区别什么场景用哪个)
-- [5. 🤔 watch 和 watchEffect 有什么区别？](#5--watch-和-watcheffect-有什么区别)
-- [6. 🤔 组合式 API 中的生命周期钩子如何使用？](#6--组合式-api-中的生命周期钩子如何使用)
-- [7. 🤔 如何封装和复用自定义组合式函数（Composables）？](#7--如何封装和复用自定义组合式函数composables)
+- [1. 本节内容](#1-本节内容)
+- [2. 评价](#2-评价)
+- [3. setup 函数和 script setup 语法糖有什么区别？](#3-setup-函数和-script-setup-语法糖有什么区别)
+- [4. ref 和 reactive 有什么区别？什么场景用哪个？](#4-ref-和-reactive-有什么区别什么场景用哪个)
+- [5. watch 和 watchEffect 有什么区别？](#5-watch-和-watcheffect-有什么区别)
+- [6. 组合式 API 中的生命周期钩子如何使用？](#6-组合式-api-中的生命周期钩子如何使用)
+- [7. 如何封装和复用自定义组合式函数（Composables）？](#7-如何封装和复用自定义组合式函数composables)
 
 <!-- endregion:toc -->
 
-## 1. 🎯 本节内容
+## 1. 本节内容
 
 - setup 函数与 setup 语法糖（script setup）
 - 响应式数据：ref 与 reactive
@@ -21,11 +21,11 @@
 - 生命周期钩子在组合式 API 中的使用
 - 自定义组合式函数（Composables）的封装与复用
 
-## 2. 🫧 评价
+## 2. 评价
 
 - todo
 
-## 3. 🤔 setup 函数和 script setup 语法糖有什么区别？
+## 3. setup 函数和 script setup 语法糖有什么区别？
 
 setup 函数是组合式 API 的入口点，它在组件实例创建之后、beforeCreate 之前执行。setup 函数接收两个参数：props 和 context（包含 attrs、slots、emit、expose）。setup 函数需要返回一个对象，对象中的属性和方法会暴露给模板使用。
 
@@ -129,7 +129,7 @@ script setup 是 setup 函数的编译时语法糖，在 Vue 3.2 中正式发布
 </script>
 ```
 
-## 4. 🤔 ref 和 reactive 有什么区别？什么场景用哪个？
+## 4. ref 和 reactive 有什么区别？什么场景用哪个？
 
 ref 和 reactive 是 Vue 3 组合式 API 中创建响应式数据的两种方式，各有适用场景。
 
@@ -232,7 +232,7 @@ const form = reactive({
 })
 ```
 
-## 5. 🤔 watch 和 watchEffect 有什么区别？
+## 5. watch 和 watchEffect 有什么区别？
 
 watch 和 watchEffect 都是用来监听响应式数据变化的，但它们在使用方式和行为上有明显的区别。
 
@@ -345,7 +345,7 @@ stop()
 
 在 setup 或 script setup 中创建的 watcher 会在组件卸载时自动停止，无需手动调用。
 
-## 6. 🤔 组合式 API 中的生命周期钩子如何使用？
+## 6. 组合式 API 中的生命周期钩子如何使用？
 
 在组合式 API 中，生命周期钩子通过从 vue 中导入对应的函数来注册。大部分生命周期钩子都有对应的组合式 API 版本，名称前加 on 前缀。
 
@@ -477,7 +477,7 @@ onMounted(async () => {
 })
 ```
 
-## 7. 🤔 如何封装和复用自定义组合式函数（Composables）？
+## 7. 如何封装和复用自定义组合式函数（Composables）？
 
 Composables（组合式函数）是 Vue 3 中封装和复用有状态逻辑的核心模式。一个 Composable 是一个利用 Vue 组合式 API 来封装和复用有状态逻辑的函数，按照约定以 use 开头命名。
 

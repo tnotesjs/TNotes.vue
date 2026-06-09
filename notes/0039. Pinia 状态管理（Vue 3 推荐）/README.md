@@ -2,16 +2,16 @@
 
 <!-- region:toc -->
 
-- [1. 🎯 本节内容](#1--本节内容)
-- [2. 🫧 评价](#2--评价)
-- [3. 🤔 Pinia 的设计哲学是什么？相比 Vuex 有哪些优势？](#3--pinia-的设计哲学是什么相比-vuex-有哪些优势)
-- [4. 🤔 如何使用 defineStore 创建 Store？](#4--如何使用-definestore-创建-store)
-- [5. 🤔 Pinia 中的 State、Getters 和 Actions 如何使用？](#5--pinia-中的-stategetters-和-actions-如何使用)
-- [6. 🤔 Pinia 的模块化和插件系统如何工作？](#6--pinia-的模块化和插件系统如何工作)
+- [1. 本节内容](#1-本节内容)
+- [2. 评价](#2-评价)
+- [3. Pinia 的设计哲学是什么？相比 Vuex 有哪些优势？](#3-pinia-的设计哲学是什么相比-vuex-有哪些优势)
+- [4. 如何使用 defineStore 创建 Store？](#4-如何使用-definestore-创建-store)
+- [5. Pinia 中的 State、Getters 和 Actions 如何使用？](#5-pinia-中的-stategetters-和-actions-如何使用)
+- [6. Pinia 的模块化和插件系统如何工作？](#6-pinia-的模块化和插件系统如何工作)
 
 <!-- endregion:toc -->
 
-## 1. 🎯 本节内容
+## 1. 本节内容
 
 - Pinia 的设计哲学与优势
 - 创建 Store（defineStore）
@@ -19,11 +19,11 @@
 - Pinia 的模块化与组合式风格
 - Pinia 插件与持久化
 
-## 2. 🫧 评价
+## 2. 评价
 
 - todo
 
-## 3. 🤔 Pinia 的设计哲学是什么？相比 Vuex 有哪些优势？
+## 3. Pinia 的设计哲学是什么？相比 Vuex 有哪些优势？
 
 Pinia 是 Vue 3 官方推荐的状态管理库，它的设计目标是提供一个更简单、更直观、更符合组合式 API 风格的状态管理方案。Pinia 最初是作为 Vuex 5 的提案开始设计的，后来演变成了一个独立的库，并最终成为 Vue 官方推荐的状态管理方案。
 
@@ -104,7 +104,7 @@ export const useCounterStore = defineStore('counter', () => {
 
 第六，Devtools 支持更好。Pinia 提供了完整的 Vue Devtools 集成。你可以在 Devtools 中查看每个 Store 的状态、追踪 Action 调用和状态变更的时间线。
 
-## 4. 🤔 如何使用 defineStore 创建 Store？
+## 4. 如何使用 defineStore 创建 Store？
 
 Pinia 使用 defineStore 函数来创建 Store。defineStore 接收两个主要参数：Store 的唯一 ID 和 Store 的定义。Store 的定义有两种风格：Options Store（选项式）和 Setup Store（组合式）。
 
@@ -304,7 +304,7 @@ app.mount('#app')
 </script>
 ```
 
-## 5. 🤔 Pinia 中的 State、Getters 和 Actions 如何使用？
+## 5. Pinia 中的 State、Getters 和 Actions 如何使用？
 
 在 Pinia 中，State、Getters 和 Actions 的使用比 Vuex 更加简洁和直观。
 
@@ -481,7 +481,7 @@ export const useTodoStore = defineStore('todo', {
 </script>
 ```
 
-## 6. 🤔 Pinia 的模块化和插件系统如何工作？
+## 6. Pinia 的模块化和插件系统如何工作？
 
 Pinia 的模块化是天然的——每个 Store 本身就是一个独立的模块，不需要像 Vuex 那样配置 modules 和 namespace。Store 之间可以直接导入和互相调用。
 

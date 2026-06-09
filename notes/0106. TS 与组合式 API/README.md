@@ -2,29 +2,29 @@
 
 <!-- region:toc -->
 
-- [1. 🎯 本节内容](#1--本节内容)
-- [2. 🫧 评价](#2--评价)
-- [3. 🤔 为什么 TypeScript 和组合式 API 天然更合拍？](#3--为什么-typescript-和组合式-api-天然更合拍)
-- [4. 🤔 Props 和 Emits 在 `<script setup>` 里应该怎么写类型？](#4--props-和-emits-在-script-setup-里应该怎么写类型)
+- [1. 本节内容](#1-本节内容)
+- [2. 评价](#2-评价)
+- [3. 为什么 TypeScript 和组合式 API 天然更合拍？](#3-为什么-typescript-和组合式-api-天然更合拍)
+- [4. Props 和 Emits 在 `<script setup>` 里应该怎么写类型？](#4-props-和-emits-在-script-setup-里应该怎么写类型)
   - [4.1. Props 有两套写法，但不能混用](#41-props-有两套写法但不能混用)
   - [4.2. Props 默认值](#42-props-默认值)
   - [4.3. Emits 也支持运行时和基于类型两种声明](#43-emits-也支持运行时和基于类型两种声明)
-- [5. 🤔 `ref()`、`reactive()`、`computed()` 在 TS 下各有什么要点？](#5--refreactivecomputed-在-ts-下各有什么要点)
+- [5. `ref()`、`reactive()`、`computed()` 在 TS 下各有什么要点？](#5-refreactivecomputed-在-ts-下各有什么要点)
   - [5.1. `ref()`](#51-ref)
   - [5.2. `reactive()`](#52-reactive)
   - [5.3. `computed()`](#53-computed)
-- [6. 🤔 DOM 事件、provide/inject、模板 ref 该怎么标类型？](#6--dom-事件provideinject模板-ref-该怎么标类型)
+- [6. DOM 事件、provide/inject、模板 ref 该怎么标类型？](#6-dom-事件provideinject模板-ref-该怎么标类型)
   - [6.1. DOM 事件](#61-dom-事件)
   - [6.2. provide / inject](#62-provide--inject)
   - [6.3. 模板 ref](#63-模板-ref)
-- [7. 🤔 组件实例和全局指令类型什么时候需要显式声明？](#7--组件实例和全局指令类型什么时候需要显式声明)
+- [7. 组件实例和全局指令类型什么时候需要显式声明？](#7-组件实例和全局指令类型什么时候需要显式声明)
   - [7.1. 组件模板引用](#71-组件模板引用)
   - [7.2. 全局自定义指令](#72-全局自定义指令)
-- [8. 🔗 引用](#8--引用)
+- [8. 引用](#8-引用)
 
 <!-- endregion:toc -->
 
-## 1. 🎯 本节内容
+## 1. 本节内容
 
 - 组合式推导
 - Props 类型
@@ -35,11 +35,11 @@
 - 模板引用
 - 指令类型
 
-## 2. 🫧 评价
+## 2. 评价
 
 Vue 官方明确推荐：如果你使用 TypeScript，更推荐搭配组合式 API。原因很简单，组合式 API 的类型信息大多直接体现在变量、函数参数和返回值上，TypeScript 更容易推导，也更少依赖 `this` 上下文。
 
-## 3. 🤔 为什么 TypeScript 和组合式 API 天然更合拍？
+## 3. 为什么 TypeScript 和组合式 API 天然更合拍？
 
 因为组合式 API 的核心写法本来就是普通函数和变量声明，而 TypeScript 最擅长理解的正是这些结构。
 
@@ -51,7 +51,7 @@ Vue 官方明确推荐：如果你使用 TypeScript，更推荐搭配组合式 A
 
 这些类型关系都比较直接，不需要依赖 `this` 的动态上下文推导，所以整体会比选项式 API 更简单、稳定。
 
-## 4. 🤔 Props 和 Emits 在 `<script setup>` 里应该怎么写类型？
+## 4. Props 和 Emits 在 `<script setup>` 里应该怎么写类型？
 
 ### 4.1. Props 有两套写法，但不能混用
 
@@ -132,7 +132,7 @@ const emit = defineEmits<{
 - 参数类型受检查
 - 触发未声明事件会报错
 
-## 5. 🤔 `ref()`、`reactive()`、`computed()` 在 TS 下各有什么要点？
+## 5. `ref()`、`reactive()`、`computed()` 在 TS 下各有什么要点？
 
 ### 5.1. `ref()`
 
@@ -185,7 +185,7 @@ const double = computed(() => count.value * 2)
 const double = computed<number>(() => count.value * 2)
 ```
 
-## 6. 🤔 DOM 事件、provide/inject、模板 ref 该怎么标类型？
+## 6. DOM 事件、provide/inject、模板 ref 该怎么标类型？
 
 ### 6.1. DOM 事件
 
@@ -229,7 +229,7 @@ const el = useTemplateRef<HTMLInputElement>('el')
 
 因为模板 ref 在挂载前是 `null`，访问时通常要配合可选链或类型守卫。
 
-## 7. 🤔 组件实例和全局指令类型什么时候需要显式声明？
+## 7. 组件实例和全局指令类型什么时候需要显式声明？
 
 ### 7.1. 组件模板引用
 
@@ -264,7 +264,7 @@ declare module 'vue' {
 
 这样模板里使用 `v-highlight` 时就能获得类型提示和校验。
 
-## 8. 🔗 引用
+## 8. 引用
 
 - [Vue.js 官方文档 - TS 与组合式 API][1]
 - [Vue.js 官方文档 - TS 总览][2]

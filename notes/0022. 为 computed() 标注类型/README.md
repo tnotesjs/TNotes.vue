@@ -2,9 +2,9 @@
 
 <!-- region:toc -->
 
-- [1. 🎯 本节内容](#1--本节内容)
-- [2. 🫧 评价](#2--评价)
-- [3. 🤔 如何为 `computed()` 标注类型？](#3--如何为-computed-标注类型)
+- [1. 本节内容](#1-本节内容)
+- [2. 评价](#2-评价)
+- [3. 如何为 `computed()` 标注类型？](#3-如何为-computed-标注类型)
   - [3.1. 自动推导类型](#31-自动推导类型)
   - [3.2. 使用泛型标注 computed 类型](#32-使用泛型标注-computed-类型)
   - [3.3. 标注字符串、布尔值、联合类型](#33-标注字符串布尔值联合类型)
@@ -23,14 +23,14 @@
 
 <!-- endregion:toc -->
 
-## 1. 🎯 本节内容
+## 1. 本节内容
 
 - `ComputedRef<T>`（readonly）
 - `WritableComputedRef<T>`（writable）
 - `computed<T>()`
 - 无 setter 的 computed 默认 readonly
 
-## 2. 🫧 评价
+## 2. 评价
 
 在 Vue 3 + TypeScript + Composition API 中，`computed()` 的类型通常有三种处理方式：
 
@@ -40,7 +40,7 @@
 
 最常用的是前两种。
 
-## 3. 🤔 如何为 `computed()` 标注类型？
+## 3. 如何为 `computed()` 标注类型？
 
 ### 3.1. 自动推导类型
 

@@ -2,9 +2,9 @@
 
 <!-- region:toc -->
 
-- [1. 🎯 本节内容](#1--本节内容)
-- [2. 🫧 评价](#2--评价)
-- [3. 🤔 如何为 provide、inject 标注类型？](#3--如何为-provideinject-标注类型)
+- [1. 本节内容](#1-本节内容)
+- [2. 评价](#2-评价)
+- [3. 如何为 provide、inject 标注类型？](#3-如何为-provideinject-标注类型)
   - [3.1. 推荐写法：使用 `InjectionKey<T>`](#31-推荐写法使用-injectionkeyt)
   - [3.2. `provide()` 也会被类型检查](#32-provide-也会被类型检查)
   - [3.3. 处理 `inject()` 的 `undefined`](#33-处理-inject-的-undefined)
@@ -30,20 +30,20 @@
 
 <!-- endregion:toc -->
 
-## 1. 🎯 本节内容
+## 1. 本节内容
 
 - `InjectionKey<T>`
 - 非空断言
 - 封装注入函数解决 `inject()` 的 `undefined` 问题
 
-## 2. 🫧 评价
+## 2. 评价
 
 在 Vue 3 + TypeScript + Composition API 中，`provide / inject` 最推荐的类型标注方式是：使用 `InjectionKey<T>`。它可以同时约束：
 
 - `provide()` 提供的值类型
 - `inject()` 注入得到的值的类型
 
-## 3. 🤔 如何为 provide、inject 标注类型？
+## 3. 如何为 provide、inject 标注类型？
 
 ### 3.1. 推荐写法：使用 `InjectionKey<T>`
 

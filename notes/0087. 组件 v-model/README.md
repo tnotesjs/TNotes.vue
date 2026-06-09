@@ -2,32 +2,32 @@
 
 <!-- region:toc -->
 
-- [1. 🎯 本节内容](#1--本节内容)
-- [2. 🫧 评价](#2--评价)
-- [3. 🤔 组件上的 `v-model` 到底是什么？](#3--组件上的-v-model-到底是什么)
-- [4. 🤔 `defineModel()` 是什么？](#4--definemodel-是什么)
-- [5. 🤔 如何使用带参数的 `v-model`？](#5--如何使用带参数的-v-model)
-- [6. 🤔 一个组件里可以同时存在多个 `v-model` 吗？](#6--一个组件里可以同时存在多个-v-model-吗)
-- [7. 🤔 `v-model` 修饰符在组件上应该怎么处理？](#7--v-model-修饰符在组件上应该怎么处理)
-- [8. 🤔 使用 `defineModel()` 时有哪些边界和注意事项？](#8--使用-definemodel-时有哪些边界和注意事项)
+- [1. 本节内容](#1-本节内容)
+- [2. 评价](#2-评价)
+- [3. 组件上的 `v-model` 到底是什么？](#3-组件上的-v-model-到底是什么)
+- [4. `defineModel()` 是什么？](#4-definemodel-是什么)
+- [5. 如何使用带参数的 `v-model`？](#5-如何使用带参数的-v-model)
+- [6. 一个组件里可以同时存在多个 `v-model` 吗？](#6-一个组件里可以同时存在多个-v-model-吗)
+- [7. `v-model` 修饰符在组件上应该怎么处理？](#7-v-model-修饰符在组件上应该怎么处理)
+- [8. 使用 `defineModel()` 时有哪些边界和注意事项？](#8-使用-definemodel-时有哪些边界和注意事项)
   - [8.1. 版本差异问题](#81-版本差异问题)
   - [8.2. 默认值问题](#82-默认值问题)
   - [8.3. 数据边界问题](#83-数据边界问题)
-- [9. 🤔 这篇笔记对应的官方文档有什么特点？](#9--这篇笔记对应的官方文档有什么特点)
-- [10. 💻 demos.1 - `defineModel()` 基本用法](#10--demos1---definemodel-基本用法)
+- [9. 这篇笔记对应的官方文档有什么特点？](#9-这篇笔记对应的官方文档有什么特点)
+- [10. demos.1 - `defineModel()` 基本用法](#10-demos1---definemodel-基本用法)
   - [10.1. 使用 v-model + defineModel() 的写法实现](#101-使用-v-model--definemodel-的写法实现)
   - [10.2. 使用原生 props + emits 的写法实现](#102-使用原生-props--emits-的写法实现)
   - [10.3. 小结](#103-小结)
-- [11. 💻 demos.2 - `defineModel()` 的底层机制（prop + emit）](#11--demos2---definemodel-的底层机制prop--emit)
-- [12. 💻 demos.3 - 带参数的 `v-model`](#12--demos3---带参数的-v-model)
-- [13. 💻 demos.4 - 多个 `v-model` 绑定](#13--demos4---多个-v-model-绑定)
-- [14. 💻 demos.5 - `v-model` 修饰符与 get/set](#14--demos5---v-model-修饰符与-getset)
-- [15. 💻 demos.6 - `defineModel()` 默认值导致的父子不同步问题](#15--demos6---definemodel-默认值导致的父子不同步问题)
-- [16. 🔗 引用](#16--引用)
+- [11. demos.2 - `defineModel()` 的底层机制（prop + emit）](#11-demos2---definemodel-的底层机制prop--emit)
+- [12. demos.3 - 带参数的 `v-model`](#12-demos3---带参数的-v-model)
+- [13. demos.4 - 多个 `v-model` 绑定](#13-demos4---多个-v-model-绑定)
+- [14. demos.5 - `v-model` 修饰符与 get/set](#14-demos5---v-model-修饰符与-getset)
+- [15. demos.6 - `defineModel()` 默认值导致的父子不同步问题](#15-demos6---definemodel-默认值导致的父子不同步问题)
+- [16. 引用](#16-引用)
 
 <!-- endregion:toc -->
 
-## 1. 🎯 本节内容
+## 1. 本节内容
 
 - 双向绑定
 - defineModel
@@ -36,7 +36,7 @@
 - 多个模型
 - 修饰符
 
-## 2. 🫧 评价
+## 2. 评价
 
 组件上的 `v-model` 本质上还是 prop + 事件这一套，只不过 Vue 帮你把常见模式封装成了统一语法。你真正要掌握的是它的展开规则、参数写法、多模型绑定和修饰符处理，这样无论是用 `defineModel()` 还是手写旧写法，都不会被语法糖带偏。
 
@@ -47,7 +47,7 @@
 - 需要处理输入值读写逻辑时，用修饰符配合 `get` / `set`。
 - 需要排错时，退回到底层的 prop + emit 模型去看。
 
-## 3. 🤔 组件上的 `v-model` 到底是什么？
+## 3. 组件上的 `v-model` 到底是什么？
 
 你在原生表单元素上已经见过 `v-model`，它表示把「当前值」和「更新动作」绑定在一起。组件上的 `v-model` 也是同一件事，只不过绑定对象从原生元素变成了自定义组件。
 
@@ -85,7 +85,7 @@
 
 组件级的 `v-model` 和表单输入绑定中的 `v-model` 类似，都是把 `v-bind`「接收值」和 `v-on`「通知更新」这两个动作捏成了一个更顺手的 API。
 
-## 4. 🤔 `defineModel()` 是什么？
+## 4. `defineModel()` 是什么？
 
 `defineModel()` 是一个编译宏，本质上是语法糖。默认情况下，它会帮你生成两部分内容：
 
@@ -135,7 +135,7 @@
 
 在排查组件 `v-model` 异常时，不要只盯着语法糖看，直接退回到 `prop + emit` 这个底层模型，思路会清楚很多。
 
-## 5. 🤔 如何使用带参数的 `v-model`？
+## 5. 如何使用带参数的 `v-model`？
 
 组件上的 `v-model` 不一定只能绑定 `modelValue`。你可以通过参数指定绑定哪一个字段。
 
@@ -179,7 +179,7 @@ const title = defineModel('title', {
 
 这个参数写法很适合那些一个组件里本来就有多个「可双向绑定字段」的场景，比如表单组件、筛选器组件、日期范围组件等。
 
-## 6. 🤔 一个组件里可以同时存在多个 `v-model` 吗？
+## 6. 一个组件里可以同时存在多个 `v-model` 吗？
 
 可以，而且这正是参数式 `v-model` 的典型用法。
 
@@ -203,7 +203,7 @@ const title = defineModel('title', {
 
 这样做的好处是非常明确：每个 `v-model` 都绑定一个独立字段，不需要你再把多个值硬塞进同一个对象里去拆。
 
-## 7. 🤔 `v-model` 修饰符在组件上应该怎么处理？
+## 7. `v-model` 修饰符在组件上应该怎么处理？
 
 原生输入元素支持 `.trim`、`.number`、`.lazy` 这些修饰符。组件上的 `v-model` 也支持修饰符，只是要由你在子组件里主动处理。
 
@@ -247,7 +247,7 @@ const title = defineModel('title', {
 
 如果是带参数的 `v-model`，同样也能拿到对应模型字段自己的修饰符。
 
-## 8. 🤔 使用 `defineModel()` 时有哪些边界和注意事项？
+## 8. 使用 `defineModel()` 时有哪些边界和注意事项？
 
 ### 8.1. 版本差异问题
 
@@ -271,7 +271,7 @@ const title = defineModel('title', {
 
 别把组件 `v-model` 理解成「谁都能随便改的共享状态」。它依然遵循组件边界（谁的数据谁负责），只不过默认约定了输入字段和更新事件名。
 
-## 9. 🤔 这篇笔记对应的官方文档有什么特点？
+## 9. 这篇笔记对应的官方文档有什么特点？
 
 这篇笔记对应的官方文档是：[Vue.js 官方文档 - 组件 v-model][1]。
 
@@ -287,7 +287,7 @@ const title = defineModel('title', {
 
 :::
 
-## 10. 💻 demos.1 - `defineModel()` 基本用法
+## 10. demos.1 - `defineModel()` 基本用法
 
 ### 10.1. 使用 v-model + defineModel() 的写法实现
 
@@ -394,7 +394,7 @@ $$
 
 `v-model="count"` 本质上就是 `:modelValue="count"` + `@update:modelValue="count = $event"` 的语法糖。而 `defineModel()` 只是把 props 声明 + emits 声明 + 读写桥接这些模板代码进一步封装了，运行时行为完全一致。
 
-## 11. 💻 demos.2 - `defineModel()` 的底层机制（prop + emit）
+## 11. demos.2 - `defineModel()` 的底层机制（prop + emit）
 
 ::: code-group
 
@@ -460,7 +460,7 @@ $$
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-15-20-13-11.png)
 
-## 12. 💻 demos.3 - 带参数的 `v-model`
+## 12. demos.3 - 带参数的 `v-model`
 
 ::: code-group
 
@@ -501,7 +501,7 @@ $$
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-15-20-15-35.png)
 
-## 13. 💻 demos.4 - 多个 `v-model` 绑定
+## 13. demos.4 - 多个 `v-model` 绑定
 
 ::: code-group
 
@@ -545,7 +545,7 @@ $$
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-15-20-17-21.png)
 
-## 14. 💻 demos.5 - `v-model` 修饰符与 get/set
+## 14. demos.5 - `v-model` 修饰符与 get/set
 
 ::: code-group
 
@@ -596,7 +596,7 @@ $$
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-15-20-19-07.png)
 
-## 15. 💻 demos.6 - `defineModel()` 默认值导致的父子不同步问题
+## 15. demos.6 - `defineModel()` 默认值导致的父子不同步问题
 
 ::: code-group
 
@@ -649,7 +649,7 @@ $$
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-15-20-21-41.png)
 
-## 16. 🔗 引用
+## 16. 引用
 
 - [Vue.js 官方文档 - 组件 v-model][1]
 

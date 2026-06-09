@@ -2,41 +2,41 @@
 
 <!-- region:toc -->
 
-- [1. 🎯 本节内容](#1--本节内容)
-- [2. 🫧 评价](#2--评价)
-- [3. 🤔 “异步组件”是什么？](#3--异步组件是什么)
+- [1. 本节内容](#1-本节内容)
+- [2. 评价](#2-评价)
+- [3. “异步组件”是什么？](#3-异步组件是什么)
   - [3.1. 异步组件](#31-异步组件)
   - [3.2. 代码分割](#32-代码分割)
-- [4. 🤔 `defineAsyncComponent()` 是什么？](#4--defineasynccomponent-是什么)
+- [4. `defineAsyncComponent()` 是什么？](#4-defineasynccomponent-是什么)
   - [4.1. `defineAsyncComponent()`](#41-defineasynccomponent)
   - [4.2. 如何配置异步组件的「加载状态」和「错误状态」](#42-如何配置异步组件的加载状态和错误状态)
-- [5. 🤔 异步组件的真正加载时机是什么？](#5--异步组件的真正加载时机是什么)
+- [5. 异步组件的真正加载时机是什么？](#5-异步组件的真正加载时机是什么)
   - [5.1. 异步组件的加载时机](#51-异步组件的加载时机)
   - [5.2. Vue Router 懒加载配置](#52-vue-router-懒加载配置)
-- [6. 🤔 异步组件的 loader 是否有缓存？【深入原理】](#6--异步组件的-loader-是否有缓存深入原理)
+- [6. 异步组件的 loader 是否有缓存？【深入原理】](#6-异步组件的-loader-是否有缓存深入原理)
   - [6.1. 异步组件首先显示的时候会触发 loader，非首次显示还会触发 loader 吗？](#61-异步组件首先显示的时候会触发-loader非首次显示还会触发-loader-吗)
   - [6.2. 核心源码位置](#62-核心源码位置)
   - [6.3. 缓存机制](#63-缓存机制)
   - [6.4. `load()` 函数的去重逻辑](#64-load-函数的去重逻辑)
   - [6.5. `setup()` 中的短路逻辑](#65-setup-中的短路逻辑)
   - [6.6. 注意事项](#66-注意事项)
-- [7. 🤔 Vue 3.5+ 的惰性激活是什么？【SSR】](#7--vue-35-的惰性激活是什么ssr)
-- [8. 🤔 异步组件和 `<Suspense>` 是什么关系？](#8--异步组件和-suspense-是什么关系)
+- [7. Vue 3.5+ 的惰性激活是什么？【SSR】](#7-vue-35-的惰性激活是什么ssr)
+- [8. 异步组件和 `<Suspense>` 是什么关系？](#8-异步组件和-suspense-是什么关系)
   - [8.1. `<Suspense>` 简介](#81-suspense-简介)
   - [8.2. 两者之间的关系](#82-两者之间的关系)
   - [8.3. 配合使用](#83-配合使用)
   - [8.4. 错误处理的最佳实践 - 外层用 `onErrorCaptured` 兜底](#84-错误处理的最佳实践---外层用-onerrorcaptured-兜底)
   - [8.5. 小结](#85-小结)
-- [9. 💻 demos.1 - 基本用法：按需加载](#9--demos1---基本用法按需加载)
-- [10. 💻 demos.2 - 加载状态与错误状态](#10--demos2---加载状态与错误状态)
-- [11. 💻 demos.3 - loader 缓存机制](#11--demos3---loader-缓存机制)
-- [12. 💻 demos.4 - 与 Suspense 配合使用](#12--demos4---与-suspense-配合使用)
-- [13. 💻 demos.5 - 加载失败重试机制](#13--demos5---加载失败重试机制)
-- [14. 🔗 引用](#14--引用)
+- [9. demos.1 - 基本用法：按需加载](#9-demos1---基本用法按需加载)
+- [10. demos.2 - 加载状态与错误状态](#10-demos2---加载状态与错误状态)
+- [11. demos.3 - loader 缓存机制](#11-demos3---loader-缓存机制)
+- [12. demos.4 - 与 Suspense 配合使用](#12-demos4---与-suspense-配合使用)
+- [13. demos.5 - 加载失败重试机制](#13-demos5---加载失败重试机制)
+- [14. 引用](#14-引用)
 
 <!-- endregion:toc -->
 
-## 1. 🎯 本节内容
+## 1. 本节内容
 
 - 异步加载
 - 异步定义
@@ -47,13 +47,13 @@
 - 惰性激活
 - Suspense
 
-## 2. 🫧 评价
+## 2. 评价
 
 异步组件就是“只有在真正需要渲染它时，才去加载它的组件实现”，构建工具通常会把它识别成天然的代码分割点，将一些大型组件拆分成独立的代码块 chunk，从主 chunk 中分离出来，从而减少主 chunk 的体积。
 
 对于大型项目来说，合理使用异步组件可以显著降低首屏加载体积，提升用户体验。配合 Vue 的 `<Suspense>` 还可以统一管理多个异步组件的加载状态。
 
-## 3. 🤔 “异步组件”是什么？
+## 3. “异步组件”是什么？
 
 ### 3.1. 异步组件
 
@@ -92,7 +92,7 @@ dist/
 
 :::
 
-## 4. 🤔 `defineAsyncComponent()` 是什么？
+## 4. `defineAsyncComponent()` 是什么？
 
 ### 4.1. `defineAsyncComponent()`
 
@@ -220,7 +220,7 @@ const AsyncChart = defineAsyncComponent({
 - `delay`：延迟多久再显示 loading，默认是 200ms
 - `timeout`：超时时间，超时后会进入错误状态
 
-## 5. 🤔 异步组件的真正加载时机是什么？
+## 5. 异步组件的真正加载时机是什么？
 
 ### 5.1. 异步组件的加载时机
 
@@ -283,7 +283,7 @@ const router = createRouter({
 })
 ```
 
-## 6. 🤔 异步组件的 loader 是否有缓存？【深入原理】
+## 6. 异步组件的 loader 是否有缓存？【深入原理】
 
 ### 6.1. 异步组件首先显示的时候会触发 loader，非首次显示还会触发 loader 吗？
 
@@ -346,7 +346,7 @@ setup() {
 
 `pendingRequest` 和 `resolvedComp` 缓存是在“定义级别”（闭包），而非实例级别（就是 Vue 实例的生命周期还是会正常走，但是 load 回调不会重复跑）。缓存的生命周期与 `defineAsyncComponent(...)` 的“调用结果”绑定。通常异步组件定义是模块级别的常量，所以缓存在整个应用生命周期内都有效。如果每次渲染都调用 `defineAsyncComponent(...)` 创建新定义，则缓存不会跨定义共享。
 
-## 7. 🤔 Vue 3.5+ 的惰性激活是什么？【SSR】
+## 7. Vue 3.5+ 的惰性激活是什么？【SSR】
 
 ::: tip
 
@@ -437,7 +437,7 @@ const AsyncComp = defineAsyncComponent({
 
 如果内置策略还不够，你也可以传入自定义激活策略函数，自行决定何时调用 `hydrate()`。
 
-## 8. 🤔 异步组件和 `<Suspense>` 是什么关系？
+## 8. 异步组件和 `<Suspense>` 是什么关系？
 
 ### 8.1. `<Suspense>` 简介
 
@@ -662,7 +662,7 @@ Suspense 内部的异步错误（如顶层 await 的 fetch 失败）不会被异
 
 :::
 
-## 9. 💻 demos.1 - 基本用法：按需加载
+## 9. demos.1 - 基本用法：按需加载
 
 ::: code-group
 
@@ -716,7 +716,7 @@ Suspense 内部的异步错误（如顶层 await 的 fetch 失败）不会被异
 
 :::
 
-## 10. 💻 demos.2 - 加载状态与错误状态
+## 10. demos.2 - 加载状态与错误状态
 
 ::: code-group
 
@@ -812,7 +812,7 @@ Suspense 内部的异步错误（如顶层 await 的 fetch 失败）不会被异
 
 ![gif](./assets/1.gif)
 
-## 11. 💻 demos.3 - loader 缓存机制
+## 11. demos.3 - loader 缓存机制
 
 ::: code-group
 
@@ -888,7 +888,7 @@ demo 里两个按钮的作用是：
 - `defineAsyncComponent(() => import('./CachedComp.vue'))` 里的回调函数 => 只跑了 1 次，这就是「缓存」
 - 但每次你挂载 `<CachedComp />`，Vue 都会创建一个「全新的组件实例」，所以 `<script setup>` 里的 `const now = new Date()` 自然会重新执行，拿到新时间
 
-## 12. 💻 demos.4 - 与 Suspense 配合使用
+## 12. demos.4 - 与 Suspense 配合使用
 
 ::: code-group
 
@@ -949,7 +949,7 @@ demo 里两个按钮的作用是：
 
 ![gif](./assets/2.gif)
 
-## 13. 💻 demos.5 - 加载失败重试机制
+## 13. demos.5 - 加载失败重试机制
 
 ::: code-group
 
@@ -1068,7 +1068,7 @@ const ResilientComp = defineAsyncComponent({
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-05-17-17-02-56.png)
 
-## 14. 🔗 引用
+## 14. 引用
 
 - [Vue.js 官方文档 - 异步组件][1]
 - [Vue.js 官方文档 - Suspense][2]

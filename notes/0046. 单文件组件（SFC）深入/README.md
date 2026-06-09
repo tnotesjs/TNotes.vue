@@ -2,27 +2,27 @@
 
 <!-- region:toc -->
 
-- [1. 🎯 本节内容](#1--本节内容)
-- [2. 🫧 评价](#2--评价)
-- [3. 🤔 template、script、style 标签有哪些高级用法？](#3--templatescriptstyle-标签有哪些高级用法)
-- [4. 🤔 Scoped CSS 和 CSS Modules 有什么区别？如何选择？](#4--scoped-css-和-css-modules-有什么区别如何选择)
-- [5. 🤔 深度作用选择器 :deep() 在什么场景使用？](#5--深度作用选择器-deep-在什么场景使用)
-- [6. 🤔 v-bind() 在 CSS 中如何实现状态驱动的动态样式？](#6--v-bind-在-css-中如何实现状态驱动的动态样式)
+- [1. 本节内容](#1-本节内容)
+- [2. 评价](#2-评价)
+- [3. template、script、style 标签有哪些高级用法？](#3-templatescriptstyle-标签有哪些高级用法)
+- [4. Scoped CSS 和 CSS Modules 有什么区别？如何选择？](#4-scoped-css-和-css-modules-有什么区别如何选择)
+- [5. 深度作用选择器 :deep() 在什么场景使用？](#5-深度作用选择器-deep-在什么场景使用)
+- [6. v-bind() 在 CSS 中如何实现状态驱动的动态样式？](#6-v-bind-在-css-中如何实现状态驱动的动态样式)
 
 <!-- endregion:toc -->
 
-## 1. 🎯 本节内容
+## 1. 本节内容
 
 - template、script、style 标签的高级用法
 - Scoped CSS 与 CSS Modules
 - 深度作用选择器（:deep）
 - 状态驱动的动态 CSS（v-bind in CSS）
 
-## 2. 🫧 评价
+## 2. 评价
 
 - todo
 
-## 3. 🤔 template、script、style 标签有哪些高级用法？
+## 3. template、script、style 标签有哪些高级用法？
 
 Vue 单文件组件（SFC）的三个核心标签都支持一些高级特性，充分利用它们可以提升开发效率和代码组织。
 
@@ -130,7 +130,7 @@ style 标签的高级用法：
 <docs> # MyComponent 这个组件用于展示... </docs>
 ```
 
-## 4. 🤔 Scoped CSS 和 CSS Modules 有什么区别？如何选择？
+## 4. Scoped CSS 和 CSS Modules 有什么区别？如何选择？
 
 Scoped CSS 和 CSS Modules 都是 Vue SFC 中实现样式隔离的方案，但实现原理和使用方式不同。
 
@@ -258,7 +258,7 @@ CSS Modules 也支持命名模块：
 
 选择建议：大多数 Vue 项目使用 Scoped CSS 即可，它简单直观。如果你需要更严格的样式隔离、或在 JS 中动态操作样式，CSS Modules 更合适。
 
-## 5. 🤔 深度作用选择器 :deep() 在什么场景使用？
+## 5. 深度作用选择器 :deep() 在什么场景使用？
 
 当使用 Scoped CSS 时，样式只作用于当前组件的元素。但有时你需要从父组件修改子组件内部的样式（比如覆盖第三方组件库的样式），这时就需要深度作用选择器 :deep()。
 
@@ -355,7 +355,7 @@ Vue 2 中使用 >>> 或 /deep/ 或 ::v-deep，Vue 3 中统一使用 :deep()。
 
 使用 :deep() 时要注意：过度使用深度选择器会破坏组件的样式封装性，增加组件间的耦合。如果你发现自己频繁使用 :deep()，可能需要考虑：子组件是否应该通过 props 或 CSS 变量来支持样式定制。
 
-## 6. 🤔 v-bind() 在 CSS 中如何实现状态驱动的动态样式？
+## 6. v-bind() 在 CSS 中如何实现状态驱动的动态样式？
 
 Vue 3.2 引入了在 style 标签中使用 v-bind() 的能力，可以直接将组件的响应式状态绑定到 CSS 属性上，实现真正的状态驱动样式。
 

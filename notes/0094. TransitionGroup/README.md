@@ -2,29 +2,29 @@
 
 <!-- region:toc -->
 
-- [1. 🎯 本节内容](#1--本节内容)
-- [2. 🫧 评价](#2--评价)
-- [3. 🤔 `<TransitionGroup>` 和 `<Transition>` 都有哪些区别？](#3--transitiongroup-和-transition-都有哪些区别)
-- [4. 🤔 列表的进入 / 离开动画要怎么写？](#4--列表的进入--离开动画要怎么写)
-- [5. 🤔 列表重排时会“跳”，移动动画怎么补上？](#5--列表重排时会跳移动动画怎么补上)
-- [6. 🤔 `moveClass` 和 JavaScript 钩子各自适合什么场景？](#6--moveclass-和-javascript-钩子各自适合什么场景)
+- [1. 本节内容](#1-本节内容)
+- [2. 评价](#2-评价)
+- [3. `<TransitionGroup>` 和 `<Transition>` 都有哪些区别？](#3-transitiongroup-和-transition-都有哪些区别)
+- [4. 列表的进入 / 离开动画要怎么写？](#4-列表的进入--离开动画要怎么写)
+- [5. 列表重排时会“跳”，移动动画怎么补上？](#5-列表重排时会跳移动动画怎么补上)
+- [6. `moveClass` 和 JavaScript 钩子各自适合什么场景？](#6-moveclass-和-javascript-钩子各自适合什么场景)
   - [6.1. 官方示例](#61-官方示例)
-- [7. 🤔 使用 `<TransitionGroup>` 时都有哪些坑点需要注意？](#7--使用-transitiongroup-时都有哪些坑点需要注意)
+- [7. 使用 `<TransitionGroup>` 时都有哪些坑点需要注意？](#7-使用-transitiongroup-时都有哪些坑点需要注意)
   - [7.1. 忘了写稳定 `key`](#71-忘了写稳定-key)
   - [7.2. 误以为 `<TransitionGroup>` 和 `<Transition>` 完全一样](#72-误以为-transitiongroup-和-transition-完全一样)
   - [7.3. 只写 enter / leave，没写 move](#73-只写-enter--leave没写-move)
   - [7.4. 没处理离开项的定位](#74-没处理离开项的定位)
   - [7.5. 需要容器却忘了 `tag`](#75-需要容器却忘了-tag)
-- [8. 🤔 为什么列表重排时会“跳”，Vue 内部是如何使用 FLIP 技术解决该问题的？【深入原理】](#8--为什么列表重排时会跳vue-内部是如何使用-flip-技术解决该问题的深入原理)
+- [8. 为什么列表重排时会“跳”，Vue 内部是如何使用 FLIP 技术解决该问题的？【深入原理】](#8-为什么列表重排时会跳vue-内部是如何使用-flip-技术解决该问题的深入原理)
   - [8.1. 为什么“跳”](#81-为什么跳)
   - [8.2. `<TransitionGroup>` 用 FLIP 技术解决](#82-transitiongroup-用-flip-技术解决)
     - [实际时序](#实际时序)
     - [关键细节](#关键细节)
-- [9. 🔗 引用](#9--引用)
+- [9. 引用](#9-引用)
 
 <!-- endregion:toc -->
 
-## 1. 🎯 本节内容
+## 1. 本节内容
 
 - 组件区别
 - 列表过渡
@@ -35,11 +35,11 @@
 - tag 容器
 - key 要求
 
-## 2. 🫧 评价
+## 2. 评价
 
 `<TransitionGroup>` 的核心不多，但非常容易写出“能运行、却不丝滑”的列表动画。你需要重点理解它和 `<Transition>` 的差异、为什么列表重排需要额外的移动动画，以及为什么每一项必须提供稳定的 `key`。
 
-## 3. 🤔 `<TransitionGroup>` 和 `<Transition>` 都有哪些区别？
+## 3. `<TransitionGroup>` 和 `<Transition>` 都有哪些区别？
 
 `<TransitionGroup>` 是给 `v-for` 列表准备的过渡组件，用来处理这三类变化：
 
@@ -70,7 +70,7 @@
 - 单节点切换，用 `<Transition>`
 - 列表增删改排，用 `<TransitionGroup>`
 
-## 4. 🤔 列表的进入 / 离开动画要怎么写？
+## 4. 列表的进入 / 离开动画要怎么写？
 
 最基础的写法和 `<Transition>` 很接近，仍然是 `name + CSS class`。
 
@@ -111,7 +111,7 @@
 
 这里的进入和离开 class 规则与 `<Transition>` 基本一致，只是作用对象变成了列表中的每一项。
 
-## 5. 🤔 列表重排时会“跳”，移动动画怎么补上？
+## 5. 列表重排时会“跳”，移动动画怎么补上？
 
 这是 `<TransitionGroup>` 最关键的知识点。
 
@@ -252,7 +252,7 @@ https://aerotwist.com/blog/flip-your-animations/
 
 ![gif](./assets/2.gif)
 
-## 6. 🤔 `moveClass` 和 JavaScript 钩子各自适合什么场景？
+## 6. `moveClass` 和 JavaScript 钩子各自适合什么场景？
 
 如果默认的 `name-move` 不够用，你可以通过 `moveClass` 自定义移动 class：
 
@@ -355,7 +355,7 @@ https://aerotwist.com/blog/flip-your-animations/
 
 ![gif](./assets/3.gif)
 
-## 7. 🤔 使用 `<TransitionGroup>` 时都有哪些坑点需要注意？
+## 7. 使用 `<TransitionGroup>` 时都有哪些坑点需要注意？
 
 最常见的坑基本就这几类：
 
@@ -380,7 +380,7 @@ https://aerotwist.com/blog/flip-your-animations/
 - 如果没有显式写 `tag`，默认情况下它不渲染容器，有些场景下即便没有容器也能正常工作，但这并非最佳实践。
 - 如果你依赖语义标签或布局容器，比如 `ul`、`div`，记得显式写 `tag`。
 
-## 8. 🤔 为什么列表重排时会“跳”，Vue 内部是如何使用 FLIP 技术解决该问题的？【深入原理】
+## 8. 为什么列表重排时会“跳”，Vue 内部是如何使用 FLIP 技术解决该问题的？【深入原理】
 
 核心源码位置：vuejs/core => `packages/runtime-dom/src/components/TransitionGroup.ts`
 
@@ -475,7 +475,7 @@ s.transform = `translate(${dx / scaleX}px,${dy / scaleY}px)`
 
 `getBoundingClientRect` 返回的是缩放后的像素值。如果父元素有 `transform: scale(0.5)`，直接用这个值算 translate 会偏大两倍，必须除以 scale 补偿。
 
-## 9. 🔗 引用
+## 9. 引用
 
 - [Vue.js 官方文档 - TransitionGroup][1]
 - [Vue.js 官方文档 - Transition][2]

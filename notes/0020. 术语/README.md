@@ -2,17 +2,17 @@
 
 <!-- region:toc -->
 
-- [1. 📝 summary](#1--summary)
-- [2. 💡 mindmap](#2--mindmap)
-- [3. 🔗 links](#3--links)
+- [1. summary](#1-summary)
+- [2. mindmap](#2-mindmap)
+- [3. links](#3-links)
 
 <!-- endregion:toc -->
 
-## 1. 📝 summary
+## 1. summary
 
 - 了解术语 i18n、l10n、g11n
 
-## 2. 💡 mindmap
+## 2. mindmap
 
 ```mermaid
 mindmap
@@ -28,7 +28,7 @@ mindmap
         11 意味着“globalization”这个单词中，g 和 n 之间有 11 个字母
 ```
 
-## 3. 🔗 links
+## 3. links
 
 - https://www.w3.org/International/i18n-drafts/nav/about.zh-hans.html
   - W3C 文章 - 关于国际化

@@ -2,29 +2,29 @@
 
 <!-- region:toc -->
 
-- [1. 📝 summary](#1--summary)
-- [2. 🔗 links](#2--links)
-- [3. 📒 notes](#3--notes)
-- [4. 💻 demo](#4--demo)
+- [1. summary](#1-summary)
+- [2. links](#2-links)
+- [3. notes](#3-notes)
+- [4. demo](#4-demo)
 
 <!-- endregion:toc -->
 
-## 1. 📝 summary
+## 1. summary
 
 - `i18n.setLocaleMessage(locale, message)`
 - `i18n.locale.value = 'target-lang'`
 - 如何实现国际化语言模块的按需加载
 
-## 2. 🔗 links
+## 2. links
 
 - https://vue-i18n.intlify.dev/api/composition#setlocalemessage-locale-message - Vue-i18n 官方文档，v9.x 版本，setLocaleMessage(locale, message)。
 - https://github.com/vbenjs/vue-vben-admin - Vben Github。在 Vben Admin 中，对国际化模块的处理逻辑，就是采用文中这种按需引入的方式来实现的。
 
-## 3. 📒 notes
+## 3. notes
 
 i18n 的 messages 缓存机制主要是通过 i18n.setLocaleMessage(locale, message) 这个 API 来实现的。通过这种缓存机制，我们可以仅在必要的时候再去导对应语言的 message，实现 **按需加载** 的效果。
 
-## 4. 💻 demo
+## 4. demo
 
 ```ts
 // main.ts

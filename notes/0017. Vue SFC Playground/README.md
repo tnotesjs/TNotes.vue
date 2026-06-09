@@ -2,34 +2,34 @@
 
 <!-- region:toc -->
 
-- [1. 🎯 本节内容](#1--本节内容)
-- [2. 🫧 评价](#2--评价)
-- [3. 🤔 Vue SFC Playground 是什么？](#3--vue-sfc-playground-是什么)
-- [4. 🤔 Vue SFC Playground 适用于哪些场景？它的使用边界是？](#4--vue-sfc-playground-适用于哪些场景它的使用边界是)
+- [1. 本节内容](#1-本节内容)
+- [2. 评价](#2-评价)
+- [3. Vue SFC Playground 是什么？](#3-vue-sfc-playground-是什么)
+- [4. Vue SFC Playground 适用于哪些场景？它的使用边界是？](#4-vue-sfc-playground-适用于哪些场景它的使用边界是)
   - [4.1. Playground 实际支持的文件类型](#41-playground-实际支持的文件类型)
   - [4.2. 开发者可以通过 `main.js/main.ts` 这样的入口来接管 Vue 实例 app 对象的初始化吗？](#42-开发者可以通过-mainjsmaints-这样的入口来接管-vue-实例-app-对象的初始化吗)
-- [5. 🔗 引用](#5--引用)
+- [5. 引用](#5-引用)
 
 <!-- endregion:toc -->
 
-## 1. 🎯 本节内容
+## 1. 本节内容
 
 - Vue SFC Playground
 - 适用场景及使用边界
 
-## 2. 🫧 评价
+## 2. 评价
 
 该知识库中的大量示例都可以直接丢到 Vue SFC Playground 中在线测试，查看效果。
 
 对于一些特殊示例，比如需要依赖外部第三方库或者需要访问 Vue 实例 `app` 的示例，不太推荐通过 Vue SFC Playground 来测试，因为它的环境比较受限，可能无法满足这些示例的需求。对于这类示例，更推荐在本地搭建一个 Vue 项目来测试，这样可以更灵活地配置环境和依赖。
 
-## 3. 🤔 Vue SFC Playground 是什么？
+## 3. Vue SFC Playground 是什么？
 
 Vue SFC Playground 是一个 Vue 官方提供的工具，用于在线快速上手测试一些简单的 Vue 单文件组件。读者可以在文档页面中直接编辑和运行 Vue 单文件组件代码，无需本地搭建开发环境。这对于快速验证想法、理解某个 API 的行为非常方便。
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-04-25-22-02-46.png)
 
-## 4. 🤔 Vue SFC Playground 适用于哪些场景？它的使用边界是？
+## 4. Vue SFC Playground 适用于哪些场景？它的使用边界是？
 
 先给结论：
 
@@ -125,7 +125,7 @@ _mount()
 </script>
 ```
 
-## 5. 🔗 引用
+## 5. 引用
 
 - [vuejs/repl][2]
 - [Vue SFC Playground][1]

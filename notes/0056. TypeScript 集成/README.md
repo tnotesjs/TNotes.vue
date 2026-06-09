@@ -2,27 +2,27 @@
 
 <!-- region:toc -->
 
-- [1. 🎯 本节内容](#1--本节内容)
-- [2. 🫧 评价](#2--评价)
-- [3. 🤔 如何使用 TypeScript 创建 Vue 项目？](#3--如何使用-typescript-创建-vue-项目)
-- [4. 🤔 如何为组件的 Props 和 Emits 定义类型？](#4--如何为组件的-props-和-emits-定义类型)
-- [5. 🤔 如何为 ref 和 reactive 定义类型？](#5--如何为-ref-和-reactive-定义类型)
-- [6. 🤔 Vue 项目中的类型声明文件如何组织和使用？](#6--vue-项目中的类型声明文件如何组织和使用)
+- [1. 本节内容](#1-本节内容)
+- [2. 评价](#2-评价)
+- [3. 如何使用 TypeScript 创建 Vue 项目？](#3-如何使用-typescript-创建-vue-项目)
+- [4. 如何为组件的 Props 和 Emits 定义类型？](#4-如何为组件的-props-和-emits-定义类型)
+- [5. 如何为 ref 和 reactive 定义类型？](#5-如何为-ref-和-reactive-定义类型)
+- [6. Vue 项目中的类型声明文件如何组织和使用？](#6-vue-项目中的类型声明文件如何组织和使用)
 
 <!-- endregion:toc -->
 
-## 1. 🎯 本节内容
+## 1. 本节内容
 
 - 使用 TypeScript 创建 Vue 项目
 - 为组件 Props、Emits 定义类型
 - 为 ref、reactive 定义类型
 - 类型声明文件的使用
 
-## 2. 🫧 评价
+## 2. 评价
 
 - todo
 
-## 3. 🤔 如何使用 TypeScript 创建 Vue 项目？
+## 3. 如何使用 TypeScript 创建 Vue 项目？
 
 使用 TypeScript 创建 Vue 项目有两种主流方式：通过 create-vue（推荐）或通过 Vite 模板。
 
@@ -130,7 +130,7 @@ app.mount('#app')
 
 vue-tsc 是专门用于 Vue SFC 的 TypeScript 类型检查工具，它基于 Volar 的核心引擎，能够检查 .vue 文件中 template 和 script 的类型错误。
 
-## 4. 🤔 如何为组件的 Props 和 Emits 定义类型？
+## 4. 如何为组件的 Props 和 Emits 定义类型？
 
 Vue 3 的 script setup 结合 TypeScript 提供了非常优雅的 Props 和 Emits 类型定义方式。
 
@@ -283,7 +283,7 @@ defineSlots 的类型定义（Vue 3.3+）：
 <!-- 此时 T 被推导为 User 类型 -->
 ```
 
-## 5. 🤔 如何为 ref 和 reactive 定义类型？
+## 5. 如何为 ref 和 reactive 定义类型？
 
 在组合式 API 中，ref 和 reactive 的类型通常可以自动推导，但在某些情况下需要手动标注。
 
@@ -402,7 +402,7 @@ const user = inject(UserKey) // User | undefined
 const userWithDefault = inject(UserKey, { id: 0, name: '游客', email: '' })
 ```
 
-## 6. 🤔 Vue 项目中的类型声明文件如何组织和使用？
+## 6. Vue 项目中的类型声明文件如何组织和使用？
 
 类型声明文件（.d.ts）用于为非 TypeScript 的代码提供类型信息。在 Vue 项目中，需要管理几类类型声明。
 

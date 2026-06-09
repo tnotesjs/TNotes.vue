@@ -2,26 +2,26 @@
 
 <!-- region:toc -->
 
-- [1. 🎯 本节内容](#1--本节内容)
-- [2. 🫧 评价](#2--评价)
-- [3. 🤔 选项式 API 能否和 TypeScript 一起稳定工作？](#3--选项式-api-能否和-typescript-一起稳定工作)
-- [4. 🤔 Props、Emits、计算属性在 Options API 里怎么拿到类型？](#4--propsemits计算属性在-options-api-里怎么拿到类型)
+- [1. 本节内容](#1-本节内容)
+- [2. 评价](#2-评价)
+- [3. 选项式 API 能否和 TypeScript 一起稳定工作？](#3-选项式-api-能否和-typescript-一起稳定工作)
+- [4. Props、Emits、计算属性在 Options API 里怎么拿到类型？](#4-propsemits计算属性在-options-api-里怎么拿到类型)
   - [4.1. Props](#41-props)
   - [4.2. Emits](#42-emits)
   - [4.3. 计算属性](#43-计算属性)
-- [5. 🤔 复杂 Props、DOM 事件和低版本 TS 有哪些坑？](#5--复杂-propsdom-事件和低版本-ts-有哪些坑)
+- [5. 复杂 Props、DOM 事件和低版本 TS 有哪些坑？](#5-复杂-propsdom-事件和低版本-ts-有哪些坑)
   - [5.1. 复杂 Props 用 `PropType`](#51-复杂-props-用-proptype)
   - [5.2. DOM 事件不要让参数掉成 `any`](#52-dom-事件不要让参数掉成-any)
   - [5.3. TypeScript 4.7 之前的注意点](#53-typescript-47-之前的注意点)
-- [6. 🤔 全局属性和自定义选项为什么要做模块扩展？](#6--全局属性和自定义选项为什么要做模块扩展)
+- [6. 全局属性和自定义选项为什么要做模块扩展？](#6-全局属性和自定义选项为什么要做模块扩展)
   - [6.1. 扩展全局属性](#61-扩展全局属性)
   - [6.2. 扩展自定义选项](#62-扩展自定义选项)
   - [6.3. 全局自定义指令](#63-全局自定义指令)
-- [7. 🔗 引用](#7--引用)
+- [7. 引用](#7-引用)
 
 <!-- endregion:toc -->
 
-## 1. 🎯 本节内容
+## 1. 本节内容
 
 - defineComponent
 - Props 推导
@@ -32,11 +32,11 @@
 - 模块扩展
 - 自定义选项
 
-## 2. 🫧 评价
+## 2. 评价
 
 官方明确说过：如果用了 TypeScript，更推荐组合式 API，因为它的推导更简单、高效、可靠。但这不代表选项式 API 不能用。只要你掌握 `defineComponent()`、`PropType` 和模块扩展，TypeScript 在选项式 API 下仍然可以工作得很稳。
 
-## 3. 🤔 选项式 API 能否和 TypeScript 一起稳定工作？
+## 3. 选项式 API 能否和 TypeScript 一起稳定工作？
 
 可以，但前提是要用 `defineComponent()` 包装组件。
 
@@ -57,7 +57,7 @@ export default defineComponent({
 
 `defineComponent()` 的作用是把 `props`、`data`、`computed`、`methods` 等选项串成一套可推导的类型信息。没有它，TypeScript 很难在 Options API 下给出可靠推断。
 
-## 4. 🤔 Props、Emits、计算属性在 Options API 里怎么拿到类型？
+## 4. Props、Emits、计算属性在 Options API 里怎么拿到类型？
 
 ### 4.1. Props
 
@@ -134,7 +134,7 @@ computed: {
 }
 ```
 
-## 5. 🤔 复杂 Props、DOM 事件和低版本 TS 有哪些坑？
+## 5. 复杂 Props、DOM 事件和低版本 TS 有哪些坑？
 
 ### 5.1. 复杂 Props 用 `PropType`
 
@@ -186,7 +186,7 @@ bookA: {
 }
 ```
 
-## 6. 🤔 全局属性和自定义选项为什么要做模块扩展？
+## 6. 全局属性和自定义选项为什么要做模块扩展？
 
 因为插件往往会往组件实例上挂新东西，TypeScript 默认并不知道这些属性存在。
 
@@ -234,7 +234,7 @@ declare module 'vue' {
 
 这部分在官方文档里直接指向“TS 与组合式 API”里的全局指令类型写法，因为底层思路相同，本质上也是在扩展 Vue 暴露出来的类型入口。
 
-## 7. 🔗 引用
+## 7. 引用
 
 - [Vue.js 官方文档 - TS 与选项式 API][1]
 - [Vue.js 官方文档 - TS 总览][2]

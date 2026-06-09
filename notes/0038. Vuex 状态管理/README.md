@@ -2,16 +2,16 @@
 
 <!-- region:toc -->
 
-- [1. 🎯 本节内容](#1--本节内容)
-- [2. 🫧 评价](#2--评价)
-- [3. 🤔 Vuex 的核心概念是什么？什么场景需要使用状态管理？](#3--vuex-的核心概念是什么什么场景需要使用状态管理)
-- [4. 🤔 State 和 Getters 如何管理和派发状态？](#4--state-和-getters-如何管理和派发状态)
-- [5. 🤔 Mutations 和 Actions 有什么区别？](#5--mutations-和-actions-有什么区别)
-- [6. 🤔 Vuex 的模块化和命名空间如何使用？](#6--vuex-的模块化和命名空间如何使用)
+- [1. 本节内容](#1-本节内容)
+- [2. 评价](#2-评价)
+- [3. Vuex 的核心概念是什么？什么场景需要使用状态管理？](#3-vuex-的核心概念是什么什么场景需要使用状态管理)
+- [4. State 和 Getters 如何管理和派发状态？](#4-state-和-getters-如何管理和派发状态)
+- [5. Mutations 和 Actions 有什么区别？](#5-mutations-和-actions-有什么区别)
+- [6. Vuex 的模块化和命名空间如何使用？](#6-vuex-的模块化和命名空间如何使用)
 
 <!-- endregion:toc -->
 
-## 1. 🎯 本节内容
+## 1. 本节内容
 
 - Vuex 的核心概念与使用场景
 - State（单一状态树）与 mapState
@@ -20,11 +20,11 @@
 - Actions（异步操作）与 mapActions
 - Modules（模块化）与命名空间
 
-## 2. 🫧 评价
+## 2. 评价
 
 - todo
 
-## 3. 🤔 Vuex 的核心概念是什么？什么场景需要使用状态管理？
+## 3. Vuex 的核心概念是什么？什么场景需要使用状态管理？
 
 Vuex 是 Vue.js 的官方状态管理库，它采用集中式存储来管理应用中所有组件的共享状态，并以规则确保状态只能以可预测的方式发生变化。Vuex 借鉴了 Flux 和 Redux 的设计思想，但针对 Vue 的响应式系统做了适配。
 
@@ -108,7 +108,7 @@ createApp(App).use(store).mount('#app')
 
 但并非所有应用都需要 Vuex。如果应用足够简单，使用 props/emit 和 provide/inject 就能解决问题，引入 Vuex 反而会增加不必要的复杂度。
 
-## 4. 🤔 State 和 Getters 如何管理和派发状态？
+## 4. State 和 Getters 如何管理和派发状态？
 
 State 是 Vuex 中存储数据的核心。Vuex 使用单一状态树——一个对象就包含了应用的全部状态。这使得我们能够直接定位任何一个特定的状态片段，在调试时也能轻松获取当前应用的状态快照。
 
@@ -223,7 +223,7 @@ const store = createStore({
 </script>
 ```
 
-## 5. 🤔 Mutations 和 Actions 有什么区别？
+## 5. Mutations 和 Actions 有什么区别？
 
 Mutations 是更改 Vuex Store 中状态的唯一合法方式。每个 Mutation 都有一个字符串类型的事件名（type）和一个处理函数（handler）。处理函数接收 state 作为第一个参数，第二个参数是可选的载荷（payload）。
 
@@ -371,7 +371,7 @@ const store = createStore({
 
 总结：Mutations 负责同步地修改状态，是唯一能直接更改 State 的途径。Actions 负责处理业务逻辑和异步操作，通过提交 Mutations 来间接修改状态。在实际开发中，组件 dispatch Action，Action 内部做异步处理后 commit Mutation，Mutation 直接修改 State。
 
-## 6. 🤔 Vuex 的模块化和命名空间如何使用？
+## 6. Vuex 的模块化和命名空间如何使用？
 
 当应用变得复杂时，将所有状态集中在一个 Store 中会使代码变得臃肿且难以维护。Vuex 的模块化（Modules）允许将 Store 分割成独立的模块，每个模块拥有自己的 state、getters、mutations 和 actions。
 

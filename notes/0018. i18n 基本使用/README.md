@@ -2,12 +2,12 @@
 
 <!-- region:toc -->
 
-- [1. 📝 summary](#1--summary)
-- [2. 💻 demo - i18n 基本是用](#2--demo---i18n-基本是用)
+- [1. summary](#1-summary)
+- [2. demo - i18n 基本是用](#2-demo---i18n-基本是用)
 
 <!-- endregion:toc -->
 
-## 1. 📝 summary
+## 1. summary
 
 - i18n 基本使用
 - 理解 legacy 配置
@@ -15,7 +15,7 @@
 - 理解 fallbackLocale 配置
 - 理解 messages 配置本文介绍了如何将 i18n 加入到 vite 搭建的 vue-ts 工程中，并对其中的一些常见配置项做了简单的介绍。
 
-## 2. 💻 demo - i18n 基本是用
+## 2. demo - i18n 基本是用
 
 **demo 初始化**
 
