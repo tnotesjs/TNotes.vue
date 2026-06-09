@@ -4,7 +4,9 @@
 
 - [1. 本节内容](#1-本节内容)
 - [2. 评价](#2-评价)
-- [3. 为什么 TypeScript 和组合式 API 天然更合拍？](#3-为什么-typescript-和组合式-api-天然更合拍)
+- [3. TypeScript 和组合式 API 天然更合拍](#3-typescript-和组合式-api-天然更合拍)
+  - [3.1. 官方文档](#31-官方文档)
+  - [3.2. 组合式 API](#32-组合式-api)
 - [4. Props 和 Emits 在 `<script setup>` 里应该怎么写类型？](#4-props-和-emits-在-script-setup-里应该怎么写类型)
   - [4.1. Props 有两套写法，但不能混用](#41-props-有两套写法但不能混用)
   - [4.2. Props 默认值](#42-props-默认值)
@@ -39,7 +41,17 @@
 
 Vue 官方明确推荐：如果你使用 TypeScript，更推荐搭配组合式 API。原因很简单，组合式 API 的类型信息大多直接体现在变量、函数参数和返回值上，TypeScript 更容易推导，也更少依赖 `this` 上下文。
 
-## 3. 为什么 TypeScript 和组合式 API 天然更合拍？
+## 3. TypeScript 和组合式 API 天然更合拍
+
+### 3.1. 官方文档
+
+来看看 Vue 官方文档原文：虽然 Vue 的确支持在选项式 API 中使用 TypeScript，但在使用 TypeScript 的前提下更推荐使用组合式 API，因为它提供了更简单、高效和可靠的类型推导。
+
+![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-09-11-06-23.png)
+
+### 3.2. 组合式 API
+
+这里提到的“更合拍”，主要是相对于选项式 API 而言的。
 
 因为组合式 API 的核心写法本来就是普通函数和变量声明，而 TypeScript 最擅长理解的正是这些结构。
 

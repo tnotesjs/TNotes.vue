@@ -7,5 +7,5 @@
   "description": "<Suspense> 的价值主要体现在复杂异步组件树里，可用于统一管理异步加载期间的页面 UI 状态。",
   "id": "fa4ccf92-60d8-4226-bb69-7d40edf1a3ab",
   "created_at": 1778414161000,
-  "updated_at": 1780502212000
+  "updated_at": 1780970873000
 }

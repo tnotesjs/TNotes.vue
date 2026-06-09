@@ -4,28 +4,27 @@
 
 - [1. 本节内容](#1-本节内容)
 - [2. 评价](#2-评价)
-- [3. 如何为事件处理函数标注类型？](#3-如何为事件处理函数标注类型)
-  - [3.1. 基本写法](#31-基本写法)
-  - [3.2. 常见 DOM 事件类型](#32-常见-dom-事件类型)
-  - [3.3. 点击事件](#33-点击事件)
-  - [3.4. 输入框事件](#34-输入框事件)
-  - [3.5. 更安全的写法：使用类型守卫](#35-更安全的写法使用类型守卫)
-  - [3.6. checkbox 事件](#36-checkbox-事件)
-  - [3.7. select 事件](#37-select-事件)
-  - [3.8. textarea 事件](#38-textarea-事件)
-  - [3.9. 键盘事件](#39-键盘事件)
-  - [3.10. 表单提交事件](#310-表单提交事件)
-  - [3.11. `target` 和 `currentTarget` 的区别](#311-target-和-currenttarget-的区别)
-  - [3.12. 如果不用事件对象，就不需要参数](#312-如果不用事件对象就不需要参数)
-  - [3.13. 自定义组件事件的处理函数类型](#313-自定义组件事件的处理函数类型)
-  - [3.14. 推荐写法总结](#314-推荐写法总结)
+- [3. 基本写法](#3-基本写法)
+- [4. 常见 DOM 事件类型](#4-常见-dom-事件类型)
+- [5. 点击事件](#5-点击事件)
+- [6. 输入框事件](#6-输入框事件)
+- [7. 更安全的写法：使用类型守卫](#7-更安全的写法使用类型守卫)
+- [8. checkbox 事件](#8-checkbox-事件)
+- [9. select 事件](#9-select-事件)
+- [10. textarea 事件](#10-textarea-事件)
+- [11. 键盘事件](#11-键盘事件)
+- [12. 表单提交事件](#12-表单提交事件)
+- [13. `target` 和 `currentTarget` 的区别](#13-target-和-currenttarget-的区别)
+- [14. 如果不用事件对象，就不需要参数](#14-如果不用事件对象就不需要参数)
+- [15. 自定义组件事件的处理函数类型](#15-自定义组件事件的处理函数类型)
+- [16. 推荐写法总结](#16-推荐写法总结)
     - [点击事件](#点击事件)
     - [输入事件](#输入事件)
     - [键盘事件](#键盘事件)
     - [表单提交](#表单提交)
     - [自定义组件事件](#自定义组件事件)
-- [4. 在哪查看原生 DOM 都有哪些事件？](#4-在哪查看原生-dom-都有哪些事件)
-- [5. 引用](#5-引用)
+- [17. 在哪查看原生 DOM 都有哪些事件？](#17-在哪查看原生-dom-都有哪些事件)
+- [18. 引用](#18-引用)
 
 <!-- endregion:toc -->
 
@@ -56,9 +55,7 @@
 </template>
 ```
 
-## 3. 如何为事件处理函数标注类型？
-
-### 3.1. 基本写法
+## 3. 基本写法
 
 ```ts
 function handleClick(event: PointerEvent) {
@@ -89,7 +86,7 @@ const handleClick = (event: PointerEvent): void => {
 <button @click="handleClick($event)">点击</button>
 ```
 
-### 3.2. 常见 DOM 事件类型
+## 4. 常见 DOM 事件类型
 
 | 事件                                     | 推荐类型         |
 | ---------------------------------------- | ---------------- |
@@ -215,7 +212,7 @@ export interface Events {
 
 :::
 
-### 3.3. 点击事件
+## 5. 点击事件
 
 ```html
 <script setup lang="ts">
@@ -245,7 +242,7 @@ export interface Events {
 </template>
 ```
 
-### 3.4. 输入框事件
+## 6. 输入框事件
 
 `@input` 通常标注为 `InputEvent`，`@change` 通常标注为 `Event`。
 
@@ -278,7 +275,7 @@ export interface Events {
 
 ![img](https://cdn.jsdelivr.net/gh/tnotesjs/imgs-2026@main/2026-06-07-19-22-39.png)
 
-### 3.5. 更安全的写法：使用类型守卫
+## 7. 更安全的写法：使用类型守卫
 
 如果不想直接断言，可以这样写：
 
@@ -298,7 +295,7 @@ function handleInput(event: Event): void {
 target // HTMLInputElement
 ```
 
-### 3.6. checkbox 事件
+## 8. checkbox 事件
 
 ```html
 <script setup lang="ts">
@@ -331,7 +328,7 @@ input.value
 input.checked
 ```
 
-### 3.7. select 事件
+## 9. select 事件
 
 ```html
 <script setup lang="ts">
@@ -353,7 +350,7 @@ input.checked
 </template>
 ```
 
-### 3.8. textarea 事件
+## 10. textarea 事件
 
 ```ts
 function handleTextareaInput(event: Event): void {
@@ -362,7 +359,7 @@ function handleTextareaInput(event: Event): void {
 }
 ```
 
-### 3.9. 键盘事件
+## 11. 键盘事件
 
 ```html
 <script setup lang="ts">
@@ -394,7 +391,7 @@ event.altKey
 event.metaKey
 ```
 
-### 3.10. 表单提交事件
+## 12. 表单提交事件
 
 ```html
 <script setup lang="ts">
@@ -432,7 +429,7 @@ function handleSubmit(event: Event): void {
 }
 ```
 
-### 3.11. `target` 和 `currentTarget` 的区别
+## 13. `target` 和 `currentTarget` 的区别
 
 - `event.target` 表示真正触发事件的元素
 - `event.currentTarget` 表示绑定事件监听器的元素
@@ -461,7 +458,7 @@ function handleClick(event: PointerEvent): void {
 }
 ```
 
-### 3.12. 如果不用事件对象，就不需要参数
+## 14. 如果不用事件对象，就不需要参数
 
 ```ts
 function handleClick(): void {
@@ -477,7 +474,7 @@ function handleClick(): void {
 
 虽然浏览器会传事件对象，但你的函数不接收它也没问题。
 
-### 3.13. 自定义组件事件的处理函数类型
+## 15. 自定义组件事件的处理函数类型
 
 如果是组件自定义事件，处理函数参数不是 DOM Event，而是子组件 `emit` 出来的数据。
 
@@ -541,7 +538,7 @@ event: Event
 
 因为它接收的是子组件传出来的 payload。
 
-### 3.14. 推荐写法总结
+## 16. 推荐写法总结
 
 #### 点击事件
 
@@ -576,7 +573,7 @@ function handleSubmit(event: SubmitEvent): void {}
 function handleSelect(user: User): void {}
 ```
 
-## 4. 在哪查看原生 DOM 都有哪些事件？
+## 17. 在哪查看原生 DOM 都有哪些事件？
 
 可以直接在 MDN 上查阅相关接口：[MDN - Web APIs Event][1]
 
@@ -584,7 +581,7 @@ function handleSelect(user: User): void {}
 
 需要用到哪个事件就点开哪个去查阅详情项目即可。
 
-## 5. 引用
+## 18. 引用
 
 - [MDN - Web APIs Event][1]
 

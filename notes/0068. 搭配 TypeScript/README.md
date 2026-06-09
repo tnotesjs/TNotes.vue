@@ -4,7 +4,7 @@
 
 - [1. 本节内容](#1-本节内容)
 - [2. 评价](#2-评价)
-- [3. 这一章的一些代码片段可以丢到 Vue SFC Playground 中在线测试吗？](#3-这一章的一些代码片段可以丢到-vue-sfc-playground-中在线测试吗)
+- [3. 推荐使用本地环境验证 TypeScript 类型](#3-推荐使用本地环境验证-typescript-类型)
 
 <!-- endregion:toc -->
 
@@ -39,9 +39,9 @@
 '0107',
 ]"/>
 
-## 3. 这一章的一些代码片段可以丢到 Vue SFC Playground 中在线测试吗？
+## 3. 推荐使用本地环境验证 TypeScript 类型
 
-在 Vue SFC Playground 环境中不便于测试和 TS 相关的报错。
+这一章的一些代码片段在 Vue SFC Playground 环境中不便于测试 TS 相关的报错。
 
 以下面这个示例为例：
 
