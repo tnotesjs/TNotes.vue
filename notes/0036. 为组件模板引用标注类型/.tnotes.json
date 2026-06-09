@@ -2,10 +2,10 @@
   "bilibili": [],
   "tnotes": [],
   "yuque": [],
-  "done": false,
-  "enableDiscussions": false,
-  "description": "",
+  "done": true,
+  "enableDiscussions": true,
+  "description": "为组件模板引用标注类型，最常用的是：InstanceType<typeof Component>",
   "id": "7d01ec29-2edc-4821-b924-b7bbeca4f308",
   "created_at": 1780551712851,
-  "updated_at": 1780551712851
+  "updated_at": 1780997963037
 }
