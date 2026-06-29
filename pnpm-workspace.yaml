@@ -1,2 +1,7 @@
 # overrides:
 #   '@tnotesjs/core': link:../core
+
+allowBuilds:
+  esbuild: false
+minimumReleaseAgeExclude:
+  - '@tnotesjs/core@0.2.2'
