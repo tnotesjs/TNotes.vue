@@ -1,9 +1,0 @@
-{
-  "bilibili": [],
-  "tnotes": [],
-  "yuque": [],
-  "done": true,
-  "enableDiscussions": true,
-  "description": "Vue 生命周期介绍，包括创建、挂载、更新和卸载阶段的钩子函数使用场景和相关注意事项。",
-  "id": "6b9430de-b854-46fa-a32d-59f7e2ed79a1"
-}
