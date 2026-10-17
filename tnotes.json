@@ -3,7 +3,7 @@
   "name": "TNotes.vue",
   "description": "Vue.js 笔记",
   "icon": {
-    "src": "https://cdn.jsdelivr.net/gh/tnotesjs/imgs@main/assets/icon--vue.svg"
+    "src": "../assets/kb-icon.svg"
   },
   "repositoryUrl": "https://github.com/tnotesjs/TNotes.vue",
   "port": 9379,
