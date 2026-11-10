@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="importmap">
+      {
+        "imports": {
+          "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+        }
+      }
+    </script>
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- 第一个 Vue 应用 -->
+    <div id="app1">
+      <h1>{{ title }}</h1>
+    </div>
+    <!-- 第二个 Vue 应用 -->
+    <div id="app2">
+      <p>{{ message }}</p>
+    </div>
+
+    <script type="module">
+      import { createApp } from 'vue'
+
+      // 第一个应用
+      const app1 = createApp({
+        data() {
+          return { title: '应用一' }
+        },
+      })
+      app1.mount('#app1')
+
+      // 第二个应用
+      const app2 = createApp({
+        data() {
+          return { message: '这是第二个独立的应用' }
+        },
+      })
+      app2.mount('#app2')
+    </script>
+  </body>
+</html>

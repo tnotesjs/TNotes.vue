@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="importmap">
+      {
+        "imports": {
+          "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+        }
+      }
+    </script>
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">
+      <!-- 根组件渲染的内容会出现在这里 -->
+    </div>
+    <script type="module">
+      import { createApp } from 'vue'
+
+      const app = createApp({
+        data() {
+          return { message: 'Hello Vue!' }
+        },
+        template: `
+          <h1>{{ message }}</h1>
+          <p>欢迎学习 Vue 3</p>
+        `,
+      })
+
+      app.mount('#app')
+    </script>
+  </body>
+</html>

@@ -1,0 +1,4 @@
+{
+  "0001": { "description": "用 createApp 挂载根组件到页面容器" },
+  "0002": { "description": "同一页挂载两个独立的 createApp 实例" }
+}
